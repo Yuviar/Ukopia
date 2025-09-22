@@ -16,7 +16,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.example.ukopia.ui.home.HomeFragment
 
 class LoginActivity : AppCompatActivity() {
     private var isPasswordVisible = false
@@ -47,7 +46,7 @@ class LoginActivity : AppCompatActivity() {
 
         btnMasuk.setOnClickListener {
             btnMasuk.animate().scaleX(1.2f).scaleY(1.2f).setDuration(100).withEndAction {
-                val intent = Intent(this, HomeFragment::class.java)
+                val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
 //                overridePendingTransition(R.anim.scale_in, R.anim.scale_out)
                 btnMasuk.scaleX = 1f

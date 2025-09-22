@@ -22,6 +22,7 @@
         android:gravity="center"
         android:textColor="@color/black"
         android:textSize="15sp"
+        android:textFontWeight="800"
         android:fontFamily="@font/montserrat_extrabold"
         android:layout_marginTop="16dp"/>
 </LinearLayout>

@@ -32,8 +32,8 @@
         android:layout_width="match_parent"
         style="@style/Widget.App.BottomNavigationView"
         android:layout_height="68dp"
-        android:background="#fff"
-        app:itemIconSize="28sp"
+        android:background="@color/cream"
+        app:itemIconSize="30dp"
         app:itemIconTint="@color/bottom_nav_icon_tint"
         app:labelVisibilityMode="unlabeled"
         app:itemRippleColor="@android:color/transparent"
@@ -41,6 +41,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_navigation_menu" />
+        app:menu="@menu/bottom_navigation_menu"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

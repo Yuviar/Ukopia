@@ -1,33 +1,95 @@
-package com.example.ukopia.ui.auth
+package com.example.ukopia
 
+import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.LinkMovementMethod
+import android.text.method.PasswordTransformationMethod
+import android.text.style.ClickableSpan
+import android.view.View
 import android.widget.Button
-import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.ukopia.R
-import com.example.ukopia.SessionManager
+import androidx.core.content.ContextCompat
+import com.example.ukopia.ui.home.HomeFragment
 
 class LoginActivity : AppCompatActivity() {
+    private var isPasswordVisible = false
+    private lateinit var btnMasuk: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_login)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-        val btnLogin = findViewById<Button>(R.id.btnLogin)
-        btnLogin.setOnClickListener {
-            // Tambahkan logika autentikasi di sini
-            // Jika berhasil, set isLoggedIn menjadi true
-            SessionManager.SessionManager.setLoggedIn(this, true)
-            Toast.makeText(this, "Login berhasil", Toast.LENGTH_SHORT).show()
-            finish()
+
+        val editPassword = findViewById<EditText>(R.id.editPassword)
+        val togglePassword = findViewById<ImageView>(R.id.btnTogglePassword)
+        btnMasuk = findViewById(R.id.btnMasuk)
+        val btnLupaPassword = findViewById<Button>(R.id.btnLupaPassword)
+        val txtBuatAkun = findViewById<TextView>(R.id.txtBuatAkun)
+
+        togglePassword.setOnClickListener {
+            if (isPasswordVisible) {
+                editPassword.transformationMethod = PasswordTransformationMethod.getInstance()
+                togglePassword.setImageResource(R.drawable.ic_eye)
+                isPasswordVisible = false
+            } else {
+                editPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
+                togglePassword.setImageResource(R.drawable.ic_eye_off)
+                isPasswordVisible = true
+            }
+            editPassword.setSelection(editPassword.text.length)
         }
 
+        btnMasuk.setOnClickListener {
+            btnMasuk.animate().scaleX(1.2f).scaleY(1.2f).setDuration(100).withEndAction {
+                val intent = Intent(this, HomeFragment::class.java)
+                startActivity(intent)
+//                overridePendingTransition(R.anim.scale_in, R.anim.scale_out)
+                btnMasuk.scaleX = 1f
+                btnMasuk.scaleY = 1f
+            }.start()
+        }
+
+        btnLupaPassword.setOnClickListener {
+            val intent = Intent(this, LupaPasswordActivity::class.java)
+            startActivity(intent)
+//            overridePendingTransition(R.anim.scale_in, R.anim.scale_out)
+        }
+
+        val text = "Belum Punya Akun? Buat Akun Disini"
+        val spannableString = SpannableString(text)
+        val start = text.indexOf("Buat Akun Disini")
+        val end = start + "Buat Akun Disini".length
+
+        val clickableSpan = object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
+                startActivity(intent)
+//                overridePendingTransition(R.anim.scale_in, R.anim.scale_out)
+            }
+
+            override fun updateDrawState(ds: android.text.TextPaint) {
+                super.updateDrawState(ds)
+                ds.isUnderlineText = false
+                ds.color = ContextCompat.getColor(this@LoginActivity, R.color.blue)
+                ds.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            }
+        }
+
+        spannableString.setSpan(clickableSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        txtBuatAkun.text = spannableString
+        txtBuatAkun.movementMethod = LinkMovementMethod.getInstance()
+        txtBuatAkun.highlightColor = android.graphics.Color.TRANSPARENT
+    }
+
+    override fun onResume() {
+        super.onResume()
+        btnMasuk.scaleX = 1f
+        btnMasuk.scaleY = 1f
     }
 }

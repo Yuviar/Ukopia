@@ -9,7 +9,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.example.ukopia.ui.akun.AkunFragment
-import com.example.ukopia.ui.auth.LoginActivity
 import com.example.ukopia.ui.home.HomeFragment
 import com.example.ukopia.ui.resep.ResepFragment
 import com.example.ukopia.ui.royalti.RoyaltiFragment

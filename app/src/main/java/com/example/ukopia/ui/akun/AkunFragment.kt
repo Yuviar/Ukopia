@@ -1,12 +1,18 @@
 package com.example.ukopia.ui.akun
 
+
+import android.content.Intent
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import com.example.ukopia.LoginActivity
 import com.example.ukopia.R
+import com.example.ukopia.RegisterActivity
+import com.example.ukopia.SessionManager
 
 class AkunFragment : Fragment() {
 
@@ -19,7 +25,6 @@ class AkunFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // TODO: Use the ViewModel
     }
 
     override fun onCreateView(
@@ -27,5 +32,26 @@ class AkunFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         return inflater.inflate(R.layout.fragment_akun, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val btnMasuk = view.findViewById<Button>(R.id.btnMasuk)
+        val btnDaftar = view.findViewById<Button>(R.id.btnDaftar)
+        val btnLogout = view.findViewById<Button>(R.id.btnLogout)
+
+        btnMasuk?.setOnClickListener {
+            val intent = Intent(requireContext(), LoginActivity::class.java)
+            startActivity(intent)
+        }
+        btnDaftar?.setOnClickListener {
+            val intent = Intent(requireContext(), RegisterActivity::class.java)
+            startActivity(intent)
+        }
+        if(SessionManager.SessionManager.isLoggedIn(requireContext())){
+            btnLogout.visibility = View.VISIBLE
+        }else{
+            btnLogout.visibility = View.GONE
+        }
     }
 }

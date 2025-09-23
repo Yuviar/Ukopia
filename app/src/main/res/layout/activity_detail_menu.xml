@@ -136,12 +136,15 @@
                     <ImageView
                         android:id="@+id/star_1"
                         android:layout_width="32dp"
+                        android:layout_weight="1"
                         android:layout_height="32dp"
                         android:layout_marginHorizontal="4dp"
                         android:src="@drawable/ic_star" />
 
                     <ImageView
                         android:id="@+id/star_2"
+                        android:layout_weight="1"
+
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_marginHorizontal="4dp"
@@ -150,12 +153,16 @@
                     <ImageView
                         android:id="@+id/star_3"
                         android:layout_width="32dp"
+                        android:layout_weight="1"
+
                         android:layout_height="32dp"
                         android:layout_marginHorizontal="4dp"
                         android:src="@drawable/ic_star" />
 
                     <ImageView
                         android:id="@+id/star_4"
+                        android:layout_weight="1"
+
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_marginHorizontal="4dp"
@@ -164,6 +171,7 @@
                     <ImageView
                         android:id="@+id/star_5"
                         android:layout_width="32dp"
+                        android:layout_weight="1"
                         android:layout_height="32dp"
                         android:layout_marginHorizontal="4dp"
                         android:src="@drawable/ic_star" />

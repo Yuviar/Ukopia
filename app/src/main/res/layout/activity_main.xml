@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         style="@style/Widget.App.BottomNavigationView"
         android:layout_height="68dp"
-        android:background="@color/cream"
+        android:background="@color/secondary"
         app:itemIconSize="30dp"
         app:itemIconTint="@color/bottom_nav_icon_tint"
         app:labelVisibilityMode="unlabeled"

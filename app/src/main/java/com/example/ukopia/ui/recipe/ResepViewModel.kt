@@ -1,4 +1,4 @@
-package com.example.ukopia.ui.resep
+package com.example.ukopia.ui.recipe
 
 import androidx.lifecycle.ViewModel
 

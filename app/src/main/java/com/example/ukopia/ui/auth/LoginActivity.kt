@@ -46,12 +46,14 @@ class LoginActivity : AppCompatActivity() {
 
         btnMasuk.setOnClickListener {
             btnMasuk.animate().scaleX(1.2f).scaleY(1.2f).setDuration(100).withEndAction {
+                SessionManager.SessionManager.setLoggedIn(this, true)
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
 //                overridePendingTransition(R.anim.scale_in, R.anim.scale_out)
                 btnMasuk.scaleX = 1f
                 btnMasuk.scaleY = 1f
             }.start()
+            finish()
         }
 
         btnLupaPassword.setOnClickListener {
@@ -60,10 +62,10 @@ class LoginActivity : AppCompatActivity() {
 //            overridePendingTransition(R.anim.scale_in, R.anim.scale_out)
         }
 
-        val text = "Belum Punya Akun? Buat Akun Disini"
+        val text = "Belum punya akun? Buat akun di sini"
         val spannableString = SpannableString(text)
-        val start = text.indexOf("Buat Akun Disini")
-        val end = start + "Buat Akun Disini".length
+        val start = text.indexOf("Buat akun di sini")
+        val end = start + "Buat akun di sini".length
 
         val clickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {

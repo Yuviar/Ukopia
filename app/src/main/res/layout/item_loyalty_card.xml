@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp">
+
+        <TextView
+            android:id="@+id/textViewNamaMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kopi Ijen cm"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/textViewTanggal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewNamaMenu"
+            android:layout_marginTop="8dp"
+            tools:text="Tanggal: 23/09/2025" />
+
+        <TextView
+            android:id="@+id/textViewBeans"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewTanggal"
+            tools:text="Biji Kopi: Arabica" />
+
+        <Button
+            android:id="@+id/btnSelengkapnya"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignBaseline="@id/textViewBeans"
+            android:backgroundTint="@color/black"
+            android:text="Selengkapnya"
+            android:textSize="14sp"
+            android:paddingHorizontal="16dp"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.ukopia.ui.akun.AkunFragment
+import com.example.ukopia.ui.peralatan.PeralatanFragment
 import com.example.ukopia.ui.home.HomeFragment
 import com.example.ukopia.ui.recipe.RecipeFragment
 import com.example.ukopia.ui.loyalty.LoyaltyFragment
@@ -19,7 +20,7 @@ import com.example.ukopia.ui.loyalty.AddLoyaltyFragment
 
 import com.example.ukopia.SessionManager
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), AkunFragment.OnAkunFragmentInteractionListener {
     private lateinit var fabAddData: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,13 +74,18 @@ class MainActivity : AppCompatActivity() {
         } else {
             supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
-        transaction.commit()
+        transaction
+            .replace(R.id.container, fragment, fragment.javaClass.simpleName)
+            .addToBackStack(null)
+            .commit()
     }
 
     private val menuItemSelected = BottomNavigationView.OnNavigationItemSelectedListener { it ->
         when (it.itemId) {
             R.id.itemHome -> {
+
                 fabAddData.hide()
+
                 addFragment(HomeFragment(), false)
                 return@OnNavigationItemSelectedListener true
             }
@@ -100,5 +106,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
         false
+    }
+    override fun OnPeralatanClicked() {
+        addFragment(PeralatanFragment(),true)
     }
 }

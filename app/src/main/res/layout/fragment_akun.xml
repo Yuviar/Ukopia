@@ -54,50 +54,68 @@
                     android:gravity="center"
                     android:orientation="horizontal">
 
-                    <Button
-                        android:id="@+id/btnMasuk"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/displayBtn"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="5dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="@color/black"
-                        android:elevation="5dp"
-                        android:text="Masuk" />
+                        android:orientation="horizontal"
+                        android:visibility="visible"
+                        >
 
-                    <Button
-                        android:id="@+id/btnDaftar"
-                        android:layout_width="wrap_content"
+                        <Button
+                            android:id="@+id/btnMasuk"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="5dp"
+                            android:layout_weight="1"
+                            android:backgroundTint="@color/black"
+                            android:elevation="5dp"
+                            android:text="Masuk" />
+
+                        <Button
+                            android:id="@+id/btnDaftar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="5dp"
+                            android:layout_weight="1"
+                            android:backgroundTint="@color/black"
+                            android:elevation="5dp"
+                            android:text="Daftar" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/displayName"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="5dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="@color/black"
-                        android:elevation="5dp"
-                        android:text="Daftar" />
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        >
 
-                    <!--                <TextView-->
-                    <!--                    android:id="@+id/tvNama"-->
-                    <!--                    android:layout_width="wrap_content"-->
-                    <!--                    android:layout_height="wrap_content"-->
-                    <!--                    android:text="Rama Ganteng"-->
-                    <!--                    android:textSize="20sp"-->
-                    <!--                    android:textStyle="bold"-->
-                    <!--                    android:textColor="@color/black" />-->
+                        <TextView
+                            android:id="@+id/tvNama"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Rama Ganteng"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
 
-                    <!--                <TextView-->
-                    <!--                    android:id="@+id/tvEmail"-->
-                    <!--                    android:layout_width="wrap_content"-->
-                    <!--                    android:layout_height="wrap_content"-->
-                    <!--                    android:text="ramaganteng@gmail.com"-->
-                    <!--                    android:textSize="14sp"-->
-                    <!--                    android:textColor="@color/black" />-->
+                        <TextView
+                            android:id="@+id/tvEmail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ramaganteng@gmail.com"
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
                 android:layout_gravity="center_vertical"
+                android:gravity="center_horizontal"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -167,7 +185,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="20dp"
-                        android:text="Dukung Kamu"
+                        android:text="Dukung kami"
                         android:textFontWeight="600" />
 
                     <FrameLayout
@@ -196,22 +214,21 @@
                                     android:layout_height="32dp"
                                     android:layout_marginEnd="8dp"
                                     android:src="@drawable/ic_instagram"
-                                    android:tint="@color/black"
-                                    />
+                                    android:tint="@color/black" />
 
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:orientation="vertical"
                                     android:layout_weight="1"
-                                    >
+                                    android:orientation="vertical">
+
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
                                         android:text="Instagram"
-                                        android:textSize="10sp"
-                                        android:textFontWeight="400" />
+                                        android:textFontWeight="400"
+                                        android:textSize="10sp" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
@@ -220,6 +237,7 @@
                                         android:text="#ukopiaindonesia"
                                         android:textFontWeight="500" />
                                 </LinearLayout>
+
                                 <ImageView
                                     android:layout_width="24dp"
                                     android:layout_height="24dp"
@@ -227,6 +245,7 @@
                                     android:src="@drawable/ic_arrow_forward"
                                     android:tint="@color/secondary" />
                             </LinearLayout>
+
                             <LinearLayout
                                 android:id="@+id/btnInstagram2"
                                 android:layout_width="match_parent"
@@ -240,22 +259,21 @@
                                     android:layout_height="32dp"
                                     android:layout_marginEnd="8dp"
                                     android:src="@drawable/ic_instagram"
-                                    android:tint="@color/black"
-                                    />
+                                    android:tint="@color/black" />
 
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:orientation="vertical"
                                     android:layout_weight="1"
-                                    >
+                                    android:orientation="vertical">
+
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
                                         android:text="Instagram"
-                                        android:textSize="10sp"
-                                        android:textFontWeight="400" />
+                                        android:textFontWeight="400"
+                                        android:textSize="10sp" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
@@ -264,13 +282,16 @@
                                         android:text="#ruangseduhukopia"
                                         android:textFontWeight="500" />
                                 </LinearLayout>
+
                                 <ImageView
                                     android:layout_width="24dp"
                                     android:layout_height="24dp"
                                     android:layout_marginEnd="8dp"
                                     android:src="@drawable/ic_arrow_forward"
                                     android:tint="@color/secondary" />
-                            </LinearLayout><LinearLayout
+                            </LinearLayout>
+
+                            <LinearLayout
                                 android:id="@+id/btnYoutube"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -283,22 +304,21 @@
                                     android:layout_height="32dp"
                                     android:layout_marginEnd="8dp"
                                     android:src="@drawable/ic_youtube"
-                                    android:tint="@color/black"
-                                    />
+                                    android:tint="@color/black" />
 
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:orientation="vertical"
                                     android:layout_weight="1"
-                                    >
+                                    android:orientation="vertical">
+
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
                                         android:text="Youtube"
-                                        android:textSize="10sp"
-                                        android:textFontWeight="400" />
+                                        android:textFontWeight="400"
+                                        android:textSize="10sp" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
@@ -307,6 +327,7 @@
                                         android:text="Ukopia Indonesia"
                                         android:textFontWeight="500" />
                                 </LinearLayout>
+
                                 <ImageView
                                     android:layout_width="24dp"
                                     android:layout_height="24dp"
@@ -317,26 +338,26 @@
                         </LinearLayout>
                     </FrameLayout>
                 </LinearLayout>
-            <Button
-                android:id="@+id/btnLogout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Keluar"
-                android:backgroundTint="@color/black"
-                />
+
+                <Button
+                    android:id="@+id/btnLogout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/black"
+                    android:text="Keluar" />
+
                 <TextView
                     android:id="@+id/copyright"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Copyright"
-                    android:textSize="12sp"
                     android:layout_marginHorizontal="6dp"
-                    />
+                    android:text="Copyright"
+                    android:textSize="12sp" />
+
                 <ImageView
                     android:layout_width="120dp"
                     android:layout_height="60dp"
-                    android:src="@drawable/logo_ukopia"
-                    />
+                    android:src="@drawable/logo_ukopia" />
             </LinearLayout>
         </LinearLayout>
     </FrameLayout>

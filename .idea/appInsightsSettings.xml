@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.ukopia" />
+                  <option name="mobileSdkAppId" value="1:760096256516:android:8b55940f32802ae8abfb51" />
+                  <option name="projectId" value="ukopia" />
+                  <option name="projectNumber" value="760096256516" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

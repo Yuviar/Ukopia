@@ -13,23 +13,41 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.observe
+import com.example.ukopia.databinding.ActivityLoginBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class LoginActivity : AppCompatActivity() {
     private var isPasswordVisible = false
     private lateinit var btnMasuk: Button
+    private lateinit var auth: FirebaseAuth
+    private lateinit var progressBar: ProgressBar
+    private lateinit var binding: ActivityLoginBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
 
+        setContentView(binding.root)
+        auth = FirebaseAuth.getInstance()
+
+        val editEmail = findViewById<EditText>(R.id.editEmail)
         val editPassword = findViewById<EditText>(R.id.editPassword)
         val togglePassword = findViewById<ImageView>(R.id.btnTogglePassword)
+        progressBar = findViewById(R.id.loginProgressBar)
         btnMasuk = findViewById(R.id.btnMasuk)
         val btnLupaPassword = findViewById<Button>(R.id.btnLupaPassword)
         val txtBuatAkun = findViewById<TextView>(R.id.txtBuatAkun)
+
+
 
         togglePassword.setOnClickListener {
             if (isPasswordVisible) {
@@ -43,17 +61,65 @@ class LoginActivity : AppCompatActivity() {
             }
             editPassword.setSelection(editPassword.text.length)
         }
+        if (SessionManager.SessionManager.isLoggedIn(this)) {
+            goToMainActivity()
+            return
+        }
 
-        btnMasuk.setOnClickListener {
-            btnMasuk.animate().scaleX(1.2f).scaleY(1.2f).setDuration(100).withEndAction {
-                SessionManager.SessionManager.setLoggedIn(this, true)
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-//                overridePendingTransition(R.anim.scale_in, R.anim.scale_out)
-                btnMasuk.scaleX = 1f
-                btnMasuk.scaleY = 1f
-            }.start()
-            finish()
+        binding.btnMasuk.setOnClickListener {
+            val email = editEmail.text.toString().trim()
+            val password = editPassword.text.toString().trim()
+
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Email dan password tidak boleh kosong!", Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            }
+            showLoading(true)
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this) { task ->
+                    showLoading(false)
+                    if (task.isSuccessful) {
+                        val firebaseUser = auth.currentUser
+                        firebaseUser?.let { user ->
+                            FirebaseFirestore.getInstance().collection("users")
+                                .document(user.uid).get()
+                                .addOnSuccessListener { document ->
+                                    if (document != null && document.exists()) {
+                                        val name = document.getString("nama") ?: ""
+                                        val emailResult = document.getString("email") ?: ""
+
+                                        // Simpan data ke SessionManager
+                                        SessionManager.SessionManager.setLoggedIn(this, true)
+                                        SessionManager.SessionManager.saveUserData(this, name, emailResult)
+
+                                        Toast.makeText(this, "Login berhasil!", Toast.LENGTH_SHORT).show()
+                                        goToMainActivity()
+                                    } else {
+                                        // Kasus jika user ada di Auth tapi tidak ada di Firestore
+                                        Toast.makeText(this, "Data pengguna tidak ditemukan.", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                                .addOnFailureListener { e ->
+                                    Toast.makeText(this, "Gagal mengambil data: ${e.message}", Toast.LENGTH_SHORT).show()
+                                }
+                        }
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "Login gagal: ${task.exception?.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+//            btnMasuk.animate().scaleX(1.2f).scaleY(1.2f).setDuration(100).withEndAction {
+//                val intent = Intent(this, MainActivity::class.java)
+//                startActivity(intent)
+////                overridePendingTransition(R.anim.scale_in, R.anim.scale_out)
+//                btnMasuk.scaleX = 1f
+//                btnMasuk.scaleY = 1f
+//            }.start()
         }
 
         btnLupaPassword.setOnClickListener {
@@ -62,10 +128,10 @@ class LoginActivity : AppCompatActivity() {
 //            overridePendingTransition(R.anim.scale_in, R.anim.scale_out)
         }
 
-        val text = "Belum punya akun? Buat akun di sini"
+        val text = "Belum Punya Akun? Buat Akun Disini"
         val spannableString = SpannableString(text)
-        val start = text.indexOf("Buat akun di sini")
-        val end = start + "Buat akun di sini".length
+        val start = text.indexOf("Buat Akun Disini")
+        val end = start + "Buat Akun Disini".length
 
         val clickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
@@ -93,4 +159,20 @@ class LoginActivity : AppCompatActivity() {
         btnMasuk.scaleX = 1f
         btnMasuk.scaleY = 1f
     }
+    private fun showLoading(isLoading: Boolean) {
+        if (isLoading) {
+            progressBar.visibility = View.VISIBLE
+            btnMasuk.isEnabled = false
+        } else {
+            progressBar.visibility = View.GONE
+            btnMasuk.isEnabled = true
+        }
+    }
+    private fun goToMainActivity() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
+    }
+
 }

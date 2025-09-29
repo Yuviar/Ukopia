@@ -39,6 +39,14 @@
         android:orientation="vertical"
         android:gravity="bottom">
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,7 +74,7 @@
             android:layout_marginRight="30dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/edit_text_border"
-            android:hint="Masukkan Nama Anda"
+            android:hint="Masukkan nama anda"
             android:textColorHint="@color/black"
             android:inputType="textPersonName"
             android:textColor="@color/black"
@@ -89,7 +97,7 @@
             android:layout_marginRight="30dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/edit_text_border"
-            android:hint="Masukkan Email Anda"
+            android:hint="Masukkan email anda"
             android:textColorHint="@color/black"
             android:inputType="textEmailAddress"
             android:textColor="@color/black"
@@ -118,7 +126,7 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:inputType="textPassword"
-                android:hint="Masukkan Password Anda"
+                android:hint="Masukkan password anda"
                 android:textColorHint="@color/black"
                 android:padding="10dp"
                 android:textColor="@color/black"
@@ -151,5 +159,6 @@
             android:layout_marginBottom="30dp"
             android:layout_marginTop="5dp"
             app:cornerRadius="8dp"/>
+
     </LinearLayout>
 </LinearLayout>

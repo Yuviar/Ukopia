@@ -39,6 +39,14 @@
         android:orientation="vertical"
         android:gravity="bottom">
 
+        <ProgressBar
+            android:id="@+id/loginProgressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cream"
+    android:background="@color/secondary"
     tools:context=".ui.home.DetailMenuActivity">
 
     <!-- Gambar Besar di Bagian Atas -->
@@ -16,7 +16,8 @@
         android:src="@drawable/sample_coffee"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:elevation="0dp"/>
 
     <ImageButton
         android:id="@+id/btn_back"
@@ -49,7 +50,7 @@
         android:layout_marginTop="-24dp"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="16dp"
-        app:cardElevation="8dp"
+        app:cardElevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/detail_menu_image">
@@ -63,7 +64,8 @@
             android:text="Coffee Latte"
             android:textColor="@color/black"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:elevation="0dp"/>
     </com.google.android.material.card.MaterialCardView>
 
     <!-- ScrollView untuk Konten Bawah (Deskripsi dan Rating) -->
@@ -90,13 +92,14 @@
                 android:layout_marginBottom="16dp"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="8dp"
-                app:cardElevation="4dp">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="16dp"
+                    android:elevation="0dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -119,62 +122,108 @@
 
             <!-- CardView untuk Rating Bintang -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_rating_stars"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="8dp"
-                app:cardElevation="4dp">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:elevation="0dp">
 
-                    <!-- Bintang akan diisi secara dinamis di Kotlin -->
-                    <ImageView
-                        android:id="@+id/star_1"
-                        android:layout_width="32dp"
-                        android:layout_weight="1"
-                        android:layout_height="32dp"
-                        android:layout_marginHorizontal="4dp"
-                        android:src="@drawable/ic_star" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp">
 
-                    <ImageView
-                        android:id="@+id/star_2"
-                        android:layout_weight="1"
+                        <!-- Bintang Rata-rata (Tetap ada) -->
+                        <ImageView
+                            android:id="@+id/star_1"
+                            android:layout_width="32dp"
+                            android:layout_weight="1"
+                            android:layout_height="32dp"
+                            android:layout_marginHorizontal="4dp"
+                            android:src="@drawable/ic_star" />
 
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_marginHorizontal="4dp"
-                        android:src="@drawable/ic_star" />
+                        <ImageView
+                            android:id="@+id/star_2"
+                            android:layout_weight="1"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginHorizontal="4dp"
+                            android:src="@drawable/ic_star" />
 
-                    <ImageView
-                        android:id="@+id/star_3"
-                        android:layout_width="32dp"
-                        android:layout_weight="1"
+                        <ImageView
+                            android:id="@+id/star_3"
+                            android:layout_width="32dp"
+                            android:layout_weight="1"
+                            android:layout_height="32dp"
+                            android:layout_marginHorizontal="4dp"
+                            android:src="@drawable/ic_star" />
 
-                        android:layout_height="32dp"
-                        android:layout_marginHorizontal="4dp"
-                        android:src="@drawable/ic_star" />
+                        <ImageView
+                            android:id="@+id/star_4"
+                            android:layout_weight="1"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginHorizontal="4dp"
+                            android:src="@drawable/ic_star" />
 
-                    <ImageView
-                        android:id="@+id/star_4"
-                        android:layout_weight="1"
+                        <ImageView
+                            android:id="@+id/star_5"
+                            android:layout_width="32dp"
+                            android:layout_weight="1"
+                            android:layout_height="32dp"
+                            android:layout_marginHorizontal="4dp"
+                            android:src="@drawable/ic_star" />
+                    </LinearLayout>
 
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_marginHorizontal="4dp"
-                        android:src="@drawable/ic_star" />
+                    <!-- Wadah Bintang yang Dikirim Pengguna -->
+                    <LinearLayout
+                        android:id="@+id/user_rating_stars_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:visibility="gone"
+                        android:layout_marginBottom="4dp">
 
-                    <ImageView
-                        android:id="@+id/star_5"
-                        android:layout_width="32dp"
-                        android:layout_weight="1"
-                        android:layout_height="32dp"
-                        android:layout_marginHorizontal="4dp"
-                        android:src="@drawable/ic_star" />
+                        <!-- Bintang untuk rating pengguna (ID dinamis: user_star_1 s/d user_star_5) -->
+                        <ImageView android:id="@+id/user_star_1" style="@style/RatingStar" />
+                        <ImageView android:id="@+id/user_star_2" style="@style/RatingStar" />
+                        <ImageView android:id="@+id/user_star_3" style="@style/RatingStar" />
+                        <ImageView android:id="@+id/user_star_4" style="@style/RatingStar" />
+                        <ImageView android:id="@+id/user_star_5" style="@style/RatingStar" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_user_submitted_rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        tools:text="Rating Anda: 4 Bintang"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/tv_user_comment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:visibility="gone"
+                        tools:text="Komentar: Kopi ini sangat mantap!" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

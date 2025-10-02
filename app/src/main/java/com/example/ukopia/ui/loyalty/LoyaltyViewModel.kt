@@ -23,7 +23,7 @@ class LoyaltyViewModel : ViewModel() {
     fun addLoyaltyItemV2(item: LoyaltyItemV2) {
         // Mengambil daftar saat ini, menambahkan item baru, dan memperbarui LiveData
         val currentList = _loyaltyItems.value?.toMutableList() ?: mutableListOf()
-        currentList.add(item)
+        currentList.add(0,item)
         _loyaltyItems.value = currentList
     }
 }

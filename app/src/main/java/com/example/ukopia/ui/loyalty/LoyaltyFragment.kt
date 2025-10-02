@@ -11,6 +11,8 @@ import com.example.ukopia.R
 import com.example.ukopia.adapter.LoyaltyAdapter
 import com.example.ukopia.data.LoyaltyItemV2
 import com.example.ukopia.databinding.FragmentLoyaltyBinding
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.example.ukopia.MainActivity // <<-- TAMBAHKAN INI
 
 class LoyaltyFragment : Fragment() {
 
@@ -28,38 +30,32 @@ class LoyaltyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Siapkan adapter dengan click listener untuk navigasi
-        val adapter = LoyaltyAdapter { item ->
-            // Buat instance LoyaltyDetailFragment dan kirim data
-            val detailFragment = LoyaltyDetailFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable("loyaltyItem", item)
-                }
-            }
+        // ▼▼▼ Pastikan nav bar terlihat di LoyaltyFragment ▼▼▼
+        (requireActivity() as MainActivity).setBottomNavVisibility(View.VISIBLE)
 
-            // Ganti fragment saat ini dengan halaman detail
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.container, detailFragment)
-                .addToBackStack(null)
-                .commit()
+        val adapter = LoyaltyAdapter { item ->
+            LoyaltyDetailDialogFragment.newInstance(item).show(parentFragmentManager, "LoyaltyDetailPopup")
         }
 
         binding.recyclerViewLoyalty.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewLoyalty.adapter = adapter
 
-        // Gunakan observer untuk mengamati perubahan data dari ViewModel
+        val fabAddData: FloatingActionButton = view.findViewById(R.id.fab_add_recipe_to_loyalty)
+        fabAddData.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.container, AddLoyaltyFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
         loyaltyViewModel.loyaltyItems.observe(viewLifecycleOwner) { items ->
-            // Perbarui data di adapter
             adapter.submitList(items)
 
-            // Tampilkan atau sembunyikan pesan jika daftar kosong
             if (items.isEmpty()) {
-                binding.imageViewPlaceholder.visibility = View.VISIBLE
-                binding.textViewPlaceholder.visibility = View.VISIBLE
+                binding.placeholderContainer.visibility = View.VISIBLE
                 binding.recyclerViewLoyalty.visibility = View.GONE
             } else {
-                binding.imageViewPlaceholder.visibility = View.GONE
-                binding.textViewPlaceholder.visibility = View.GONE
+                binding.placeholderContainer.visibility = View.GONE
                 binding.recyclerViewLoyalty.visibility = View.VISIBLE
             }
         }

@@ -15,13 +15,14 @@ import com.example.ukopia.ui.home.HomeFragment
 import com.example.ukopia.ui.recipe.RecipeFragment
 import com.example.ukopia.ui.loyalty.LoyaltyFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.example.ukopia.ui.loyalty.AddLoyaltyFragment
 
 import com.example.ukopia.SessionManager
+import android.view.View // <<--- TAMBAHKAN INI
 
 class MainActivity : AppCompatActivity(), AkunFragment.OnAkunFragmentInteractionListener {
-    private lateinit var fabAddData: FloatingActionButton
+
+    private lateinit var bottomNavigationView: BottomNavigationView // <<-- Ubah ini menjadi lateinit var
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,33 +35,12 @@ class MainActivity : AppCompatActivity(), AkunFragment.OnAkunFragmentInteraction
             insets
         }
 
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation_view)
+        bottomNavigationView = findViewById(R.id.bottom_navigation_view) // <<-- Inisialisasi di sini
         bottomNavigationView.setOnNavigationItemSelectedListener(menuItemSelected)
-        fabAddData = findViewById(R.id.fab_add_data)
-
-        fabAddData.setOnClickListener {
-            if (SessionManager.SessionManager.isLoggedIn(this)) {
-                addFragment(AddLoyaltyFragment(), true)
-            } else {
-                Toast.makeText(this, "Anda Belum Login", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, LoginActivity::class.java)
-                startActivity(intent)
-            }
-        }
-
-        supportFragmentManager.addOnBackStackChangedListener {
-            val currentFragment = supportFragmentManager.findFragmentById(R.id.container)
-            if (currentFragment is LoyaltyFragment) {
-                fabAddData.show()
-            } else {
-                fabAddData.hide()
-            }
-        }
 
         if (savedInstanceState == null) {
             addFragment(HomeFragment(), false)
             bottomNavigationView.selectedItemId = R.id.itemHome
-            fabAddData.hide()
         }
     }
 
@@ -72,42 +52,44 @@ class MainActivity : AppCompatActivity(), AkunFragment.OnAkunFragmentInteraction
         if (addToBackStack) {
             transaction.addToBackStack(null)
         } else {
+            // Ini akan menghapus semua fragment dari back stack saat beralih ke tab utama
             supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
         transaction
             .replace(R.id.container, fragment, fragment.javaClass.simpleName)
-            .addToBackStack(null)
+            .addToBackStack(null) // Tambahkan fragment ini ke back stack juga
             .commit()
     }
 
     private val menuItemSelected = BottomNavigationView.OnNavigationItemSelectedListener { it ->
         when (it.itemId) {
             R.id.itemHome -> {
-
-                fabAddData.hide()
-
                 addFragment(HomeFragment(), false)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.itemRoyalti -> {
-                fabAddData.show()
                 addFragment(LoyaltyFragment(), false)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.itemResep -> {
-                fabAddData.hide()
                 addFragment(RecipeFragment(), false)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.itemAkun -> {
-                fabAddData.hide()
                 addFragment(AkunFragment(), false)
                 return@OnNavigationItemSelectedListener true
             }
         }
         false
     }
+
     override fun OnPeralatanClicked() {
         addFragment(PeralatanFragment(),true)
     }
+
+    // ▼▼▼ FUNGSI BARU UNTUK MENGONTROL VISIBILITAS NAV BAR ▼▼▼
+    fun setBottomNavVisibility(visibility: Int) {
+        bottomNavigationView.visibility = visibility
+    }
+    // ▲▲▲ AKHIR FUNGSI BARU ▲▲▲
 }

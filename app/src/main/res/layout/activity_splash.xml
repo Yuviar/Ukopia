@@ -23,6 +23,5 @@
         android:textColor="@color/black"
         android:textSize="15sp"
         android:textFontWeight="800"
-        android:fontFamily="@font/montserrat_extrabold"
-        android:layout_marginTop="16dp"/>
+        android:fontFamily="@font/montserrat_extrabold"/>
 </LinearLayout>

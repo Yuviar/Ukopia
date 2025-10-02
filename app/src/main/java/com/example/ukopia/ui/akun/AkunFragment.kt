@@ -1,26 +1,27 @@
 package com.example.ukopia.ui.akun
 
-
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.fragment.app.viewModels
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.Toast
 import com.example.ukopia.LoginActivity
-import com.example.ukopia.MainActivity
+import com.example.ukopia.LupaPasswordActivity
+import com.example.ukopia.MainActivity // <<-- TAMBAHKAN INI
 import com.example.ukopia.R
 import com.example.ukopia.RegisterActivity
 import com.example.ukopia.SessionManager
 import com.example.ukopia.databinding.FragmentAkunBinding
 
-class AkunFragment : Fragment() {
+import android.app.AlertDialog
+import androidx.fragment.app.viewModels
+
+class AkunFragment : Fragment(), LogoutConfirmationDialogFragment.LogoutListener {
     private var _binding: FragmentAkunBinding? = null
     private val binding get() = _binding!!
 
@@ -47,7 +48,6 @@ class AkunFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -60,6 +60,9 @@ class AkunFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // ▼▼▼ Pastikan nav bar terlihat di AkunFragment ▼▼▼
+        (requireActivity() as MainActivity).setBottomNavVisibility(View.VISIBLE)
 
         setupUserInterface()
         setupClickListeners()
@@ -84,16 +87,11 @@ class AkunFragment : Fragment() {
     }
 
     private fun setupUserInterface() {
-        // Gunakan SessionManager yang sudah diperbaiki (tanpa object ganda)
         if (SessionManager.SessionManager.isLoggedIn(requireContext())) {
-            // --- JIKA SUDAH LOGIN ---
-            // Sembunyikan tombol Masuk/Daftar
             binding.displayBtn.visibility = View.GONE
-            // Tampilkan layout nama/email dan tombol logout
             binding.displayName.visibility = View.VISIBLE
-            binding.btnLogout.visibility = View.VISIBLE
+            binding.opsiAkun.visibility = View.VISIBLE
 
-            // Ambil data dari SessionManager dan tampilkan
             val userName = SessionManager.SessionManager.getUserName(requireContext())
             val userEmail = SessionManager.SessionManager.getUserEmail(requireContext())
 
@@ -101,16 +99,13 @@ class AkunFragment : Fragment() {
             binding.tvEmail.text = userEmail ?: "Email Tidak Ditemukan"
 
         } else {
-            // --- JIKA BELUM LOGIN ---
-            // Tampilkan tombol Masuk/Daftar
             binding.displayBtn.visibility = View.VISIBLE
-            // Sembunyikan layout nama/email dan tombol logout
             binding.displayName.visibility = View.GONE
-            binding.btnLogout.visibility = View.GONE
+            binding.opsiAkun.visibility = View.GONE
         }
     }
+
     private fun setupClickListeners() {
-        // Gunakan binding untuk semua view
         binding.btnMasuk.setOnClickListener {
             val intent = Intent(requireContext(), LoginActivity::class.java)
             startActivity(intent)
@@ -121,19 +116,19 @@ class AkunFragment : Fragment() {
             startActivity(intent)
         }
 
-        binding.btnLogout.setOnClickListener {
-            // Panggil fungsi logout dari SessionManager
-            SessionManager.SessionManager.logout(requireContext())
-
-            // Beri tahu pengguna bahwa mereka telah logout
-            Toast.makeText(requireContext(), "Anda telah keluar", Toast.LENGTH_SHORT).show()
-
-            // Muat ulang activity utama untuk merefresh semua state
-            val intent = Intent(requireContext(), MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        binding.btnForgotPassword.setOnClickListener {
+            val intent = Intent(requireContext(), LupaPasswordActivity::class.java).apply {
+                putExtra(LupaPasswordActivity.EXTRA_SOURCE, LupaPasswordActivity.SOURCE_AKUN)
+            }
             startActivity(intent)
         }
-        // Listener lain tidak berubah
+
+        binding.btnLogout.setOnClickListener {
+            val dialog = LogoutConfirmationDialogFragment.newInstance()
+            dialog.setLogoutListener(this)
+            dialog.show(parentFragmentManager, "LogoutConfirmationDialog")
+        }
+
         val instagramUrl1 = "https://www.instagram.com/ukopiaindonesia"
         val instagramUrl2 = "https://www.instagram.com/ruangseduhukopia"
         val youtubeUrl = "https://www.youtube.com/@Ukopia_Indonesia"
@@ -141,11 +136,16 @@ class AkunFragment : Fragment() {
         binding.btnInstagram1.setOnClickListener { openUrl(instagramUrl1) }
         binding.btnInstagram2.setOnClickListener { openUrl(instagramUrl2) }
         binding.btnYoutube.setOnClickListener { openUrl(youtubeUrl) }
-        binding.btnPeralatan.setOnClickListener { listener?.OnPeralatanClicked() }
+
+        binding.btnPeralatan.setOnClickListener { listener!!.OnPeralatanClicked() }
     }
+
+    override fun onLogoutConfirmed() {
+        setupUserInterface()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 }

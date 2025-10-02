@@ -19,11 +19,16 @@ import com.example.ukopia.databinding.FragmentAddLoyaltyBinding
 import com.example.ukopia.databinding.FragmentAddLoyaltyKopiBinding
 import com.example.ukopia.databinding.FragmentAddLoyaltyBukanKopiBinding
 import java.util.Calendar
+import java.text.SimpleDateFormat
+import java.util.Locale
+import com.example.ukopia.MainActivity // <<-- TAMBAHKAN INI
 
 class AddLoyaltyFragment : Fragment() {
 
     private lateinit var binding: FragmentAddLoyaltyBinding
     private val loyaltyViewModel: LoyaltyViewModel by activityViewModels()
+
+    private var isCoffeeSelected = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +40,9 @@ class AddLoyaltyFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // ▼▼▼ Sembunyikan nav bar ▼▼▼
+        (requireActivity() as MainActivity).setBottomNavVisibility(View.GONE)
 
         binding.editTextDate.setOnClickListener {
             showDatePickerDialog()
@@ -54,27 +62,25 @@ class AddLoyaltyFragment : Fragment() {
             saveData()
         }
 
-        // Tampilkan form kopi sebagai default saat pertama kali dibuka
         updateButtonState(isCoffee = true)
         loadForm(true)
     }
 
     private fun updateButtonState(isCoffee: Boolean) {
-        val activeBackgroundColor = ContextCompat.getColor(requireContext(), R.color.black)
-        val inactiveBackgroundColor = ContextCompat.getColor(requireContext(), R.color.white)
-        val activeTextColor = ContextCompat.getColor(requireContext(), R.color.white)
-        val inactiveTextColor = ContextCompat.getColor(requireContext(), R.color.black)
+        val context = requireContext()
+        val activeColor = ContextCompat.getColor(context, R.color.white)
+        val inactiveColor = ContextCompat.getColor(context, R.color.black)
 
         if (isCoffee) {
-            binding.buttonKopi.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.black)
-            binding.buttonKopi.setTextColor(activeTextColor)
-            binding.buttonBukanKopi.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.white)
-            binding.buttonBukanKopi.setTextColor(inactiveTextColor)
+            binding.buttonKopi.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.black))
+            binding.buttonKopi.setTextColor(activeColor)
+            binding.buttonBukanKopi.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.white))
+            binding.buttonBukanKopi.setTextColor(inactiveColor)
         } else {
-            binding.buttonKopi.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.white)
-            binding.buttonKopi.setTextColor(inactiveTextColor)
-            binding.buttonBukanKopi.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.black)
-            binding.buttonBukanKopi.setTextColor(activeTextColor)
+            binding.buttonKopi.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.white))
+            binding.buttonKopi.setTextColor(inactiveColor)
+            binding.buttonBukanKopi.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.black))
+            binding.buttonBukanKopi.setTextColor(activeColor)
         }
     }
 
@@ -84,6 +90,8 @@ class AddLoyaltyFragment : Fragment() {
         } else {
             AddLoyaltyNonKopiFragment()
         }
+
+        isCoffeeSelected = isCoffee
 
         childFragmentManager.commit {
             replace(R.id.container_loyalty_form, fragment)
@@ -95,67 +103,91 @@ class AddLoyaltyFragment : Fragment() {
         val tanggal = binding.editTextDate.text.toString()
         val catatan = binding.editTextCatatan.text.toString()
 
+        var isValid = true
+        var firstErrorView: View? = null
+
+        binding.editTextDate.error = null
         if (tanggal.isEmpty()) {
-            Toast.makeText(requireContext(), "Semua kolom wajib diisi!", Toast.LENGTH_SHORT).show()
-            return
+            binding.editTextDate.error = "Tanggal wajib diisi!"
+            firstErrorView = binding.editTextDate
+            isValid = false
         }
+
+        var item: LoyaltyItemV2? = null // Pindahkan inisialisasi ke sini
 
         if (selectedFragment is AddLoyaltyKopiFragment) {
             val namaMenu = selectedFragment.getNamaMenu()
             val namaBeans = selectedFragment.getNamaBeans()
-            val aroma = selectedFragment.getAroma()
-            val sweetness = selectedFragment.getSweetness()
-            val acidity = selectedFragment.getAcidity()
-            val bitterness = selectedFragment.getBitterness()
-            val body = selectedFragment.getBody()
 
             if (namaMenu.isEmpty()) {
-                Toast.makeText(requireContext(), "Semua kolom wajib diisi!", Toast.LENGTH_SHORT).show()
-                return
+                selectedFragment.setNamaMenuError("Nama Menu wajib diisi!")
+                if (firstErrorView == null) firstErrorView = selectedFragment.getNamaMenuEditText()
+                isValid = false
+            }
+            if (namaBeans.isEmpty()) {
+                selectedFragment.setNamaBeansError("Nama Biji Kopi wajib diisi!")
+                if (firstErrorView == null) firstErrorView = selectedFragment.getNamaBeansEditText()
+                isValid = false
             }
 
-            val item = LoyaltyItemV2(
-                isCoffee = true,
-                namaMenu = namaMenu,
-                namaBeans = namaBeans,
-                tanggal = tanggal,
-                catatan = catatan,
-                aroma = aroma,
-                sweetness = sweetness,
-                acidity = acidity,
-                bitterness = bitterness,
-                body = body,
-                namaNonKopi = null
-            )
-            loyaltyViewModel.addLoyaltyItemV2(item)
-            Toast.makeText(requireContext(), "Data berhasil ditambahkan", Toast.LENGTH_SHORT).show()
+            if (isValid) {
+                item = LoyaltyItemV2(
+                    isCoffee = true,
+                    namaMenu = namaMenu,
+                    namaBeans = namaBeans,
+                    tanggal = tanggal,
+                    catatan = catatan,
+                    aroma = selectedFragment.getAroma(),
+                    sweetness = selectedFragment.getSweetness(),
+                    acidity = selectedFragment.getAcidity(),
+                    bitterness = selectedFragment.getBitterness(),
+                    body = selectedFragment.getBody(),
+                    namaNonKopi = null,
+                )
+            }
         } else if (selectedFragment is AddLoyaltyNonKopiFragment) {
             val namaMenu = selectedFragment.getNamaMenu()
             val namaNonKopi = selectedFragment.getNamaNonKopi()
 
-            if (namaMenu.isEmpty() || namaNonKopi.isEmpty()) {
-                Toast.makeText(requireContext(), "Semua kolom wajib diisi!", Toast.LENGTH_SHORT).show()
-                return
+            if (namaMenu.isEmpty()) {
+                selectedFragment.setNamaMenuError("Menu wajib diisi!")
+                if (firstErrorView == null) firstErrorView = selectedFragment.getNamaMenuEditText()
+                isValid = false
+            }
+            if (namaNonKopi.isEmpty()) {
+                selectedFragment.setNamaNonKopiError("Nama wajib diisi!")
+                if (firstErrorView == null) firstErrorView = selectedFragment.getNamaNonKopiEditText()
+                isValid = false
             }
 
-            val item = LoyaltyItemV2(
-                isCoffee = false,
-                namaMenu = namaMenu,
-                namaNonKopi = namaNonKopi,
-                tanggal = tanggal,
-                catatan = catatan,
-                namaBeans = null,
-                aroma = null,
-                sweetness = null,
-                acidity = null,
-                bitterness = null,
-                body = null
-            )
-            loyaltyViewModel.addLoyaltyItemV2(item)
-            Toast.makeText(requireContext(), "Data berhasil ditambahkan", Toast.LENGTH_SHORT).show()
+            if (isValid) {
+                item = LoyaltyItemV2(
+                    isCoffee = false,
+                    namaMenu = namaMenu,
+                    namaNonKopi = namaNonKopi,
+                    tanggal = tanggal,
+                    catatan = catatan,
+                    namaBeans = null,
+                    aroma = null,
+                    sweetness = null,
+                    acidity = null,
+                    bitterness = null,
+                    body = null
+                )
+            }
         }
 
-        parentFragmentManager.popBackStack()
+        if (!isValid) {
+            firstErrorView?.requestFocus()
+            val scrollView = binding.root as? android.widget.ScrollView
+            scrollView?.smoothScrollTo(0, firstErrorView!!.top)
+        } else if (item != null) {
+            loyaltyViewModel.addLoyaltyItemV2(item)
+            Toast.makeText(requireContext(), "Data berhasil ditambahkan", Toast.LENGTH_SHORT).show()
+            parentFragmentManager.popBackStack()
+            // ▼▼▼ Tampilkan kembali nav bar saat kembali ke fragment LoyaltyFragment ▼▼▼
+            (requireActivity() as MainActivity).setBottomNavVisibility(View.VISIBLE)
+        }
     }
 
     private fun showDatePickerDialog() {
@@ -177,6 +209,10 @@ class AddLoyaltyFragment : Fragment() {
         datePickerDialog.show()
     }
 }
+
+// =====================================================================
+// FRAGMENT ANAK (Tambahan: Tambahkan setter error)
+// =====================================================================
 
 class AddLoyaltyKopiFragment : Fragment() {
     private var _binding: FragmentAddLoyaltyKopiBinding? = null
@@ -201,50 +237,25 @@ class AddLoyaltyKopiFragment : Fragment() {
     }
 
     private fun initializeSeekBars() {
-        binding.seekBarAroma.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        val listener = object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                // Nilai slider (progress) akan mengikuti range 0-5 yang sudah ditentukan di file XML
-                binding.textViewAromaValue.text = progress.toString()
+                when (seekBar?.id) {
+                    R.id.seekBarAroma -> binding.textViewAromaValue.text = progress.toString()
+                    R.id.seekBarSweetness -> binding.textViewSweetnessValue.text = progress.toString()
+                    R.id.seekBarAcidity -> binding.textViewAcidityValue.text = progress.toString()
+                    R.id.seekBarBitterness -> binding.textViewBitternessValue.text = progress.toString()
+                    R.id.seekBarBody -> binding.textViewBodyValue.text = progress.toString()
+                }
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-        })
+        }
 
-        binding.seekBarSweetness.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                // Nilai slider (progress) akan mengikuti range 0-5 yang sudah ditentukan di file XML
-                binding.textViewSweetnessValue.text = progress.toString()
-            }
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-        })
-
-        binding.seekBarAcidity.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                // Nilai slider (progress) akan mengikuti range 0-5 yang sudah ditentukan di file XML
-                binding.textViewAcidityValue.text = progress.toString()
-            }
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-        })
-
-        binding.seekBarBitterness.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                // Nilai slider (progress) akan mengikuti range 0-5 yang sudah ditentukan di file XML
-                binding.textViewBitternessValue.text = progress.toString()
-            }
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-        })
-
-        binding.seekBarBody.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                // Nilai slider (progress) akan mengikuti range 0-5 yang sudah ditentukan di file XML
-                binding.textViewBodyValue.text = progress.toString()
-            }
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-        })
+        binding.seekBarAroma.setOnSeekBarChangeListener(listener)
+        binding.seekBarSweetness.setOnSeekBarChangeListener(listener)
+        binding.seekBarAcidity.setOnSeekBarChangeListener(listener)
+        binding.seekBarBitterness.setOnSeekBarChangeListener(listener)
+        binding.seekBarBody.setOnSeekBarChangeListener(listener)
     }
 
     fun getNamaMenu(): String = _binding?.editNamaKopi?.text.toString() ?: ""
@@ -254,6 +265,12 @@ class AddLoyaltyKopiFragment : Fragment() {
     fun getAcidity(): Int = _binding?.seekBarAcidity?.progress ?: 0
     fun getBitterness(): Int = _binding?.seekBarBitterness?.progress ?: 0
     fun getBody(): Int = _binding?.seekBarBody?.progress ?: 0
+
+    fun getNamaMenuEditText(): EditText? = _binding?.editNamaKopi
+    fun getNamaBeansEditText(): EditText? = _binding?.editTextBeans
+
+    fun setNamaMenuError(error: String?) { binding.editNamaKopi.error = error }
+    fun setNamaBeansError(error: String?) { binding.editTextBeans.error = error }
 }
 
 class AddLoyaltyNonKopiFragment : Fragment() {
@@ -275,4 +292,10 @@ class AddLoyaltyNonKopiFragment : Fragment() {
 
     fun getNamaMenu(): String = _binding?.editTextMenuNonKopi?.text.toString() ?: ""
     fun getNamaNonKopi(): String = _binding?.editTextNamaNonKopi?.text.toString() ?: ""
+
+    fun getNamaMenuEditText(): EditText? = _binding?.editTextMenuNonKopi
+    fun getNamaNonKopiEditText(): EditText? = _binding?.editTextNamaNonKopi
+
+    fun setNamaMenuError(error: String?) { binding.editTextMenuNonKopi.error = error }
+    fun setNamaNonKopiError(error: String?) { binding.editTextNamaNonKopi.error = error }
 }

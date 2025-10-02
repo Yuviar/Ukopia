@@ -1,5 +1,17 @@
 <resources>
     <string name="app_name">Ukopia</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <style name="FullScreenDialogTheme" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+    </style>
+
+    <string name="list_resep">LIST \nRESEP</string>
+    <string name="tidak_ada_resep">Tidak ada resep</string>
+    <string name="silakan_tambahkan_resep_baru">Silakan tambahkan resep baru.</string>
+    <string name="password_change_success">Password berhasil diganti!</string>
 </resources>

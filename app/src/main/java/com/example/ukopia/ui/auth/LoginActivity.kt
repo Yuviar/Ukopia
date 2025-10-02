@@ -123,9 +123,11 @@ class LoginActivity : AppCompatActivity() {
         }
 
         btnLupaPassword.setOnClickListener {
-            val intent = Intent(this, LupaPasswordActivity::class.java)
+            val intent = Intent(this, LupaPasswordActivity::class.java).apply {
+                // Kirim tanda bahwa panggilan berasal dari LoginActivity
+                putExtra(LupaPasswordActivity.EXTRA_SOURCE, LupaPasswordActivity.SOURCE_LOGIN)
+            }
             startActivity(intent)
-//            overridePendingTransition(R.anim.scale_in, R.anim.scale_out)
         }
 
         val text = "Belum Punya Akun? Buat Akun Disini"

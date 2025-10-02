@@ -17,25 +17,13 @@
         app:layout_constraintTop_toTopOf="parent">
 
     </FrameLayout>
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add_data"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_add"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation_view"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:contentDescription="Tambah Data"
-        android:backgroundTint="@color/black"
-        app:tint="@color/cream"
-        />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_view"
         android:layout_width="match_parent"
         style="@style/Widget.App.BottomNavigationView"
         android:layout_height="68dp"
-        android:background="@color/white"
+        android:background="@color/secondary"
         app:itemIconSize="30dp"
         app:itemIconTint="@color/bottom_nav_icon_tint"
         app:labelVisibilityMode="unlabeled"

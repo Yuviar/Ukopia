@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/rounded_bg_white"
+    android:padding="20dp"
+    >
+
+    <TextView
+        android:id="@+id/textViewDialogNamaMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginBottom="16dp"
+        tools:text="DETAIL COFFEE LATTE" />
+
+    <!-- Bagian Kopi -->
+    <LinearLayout
+        android:id="@+id/linearLayoutDialogKopi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Data Biji Kopi:"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/textViewDialogNamaBeans"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            tools:text="Nama Beans: Arabica Gayo"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Profil Rasa (0-5):"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginTop="16dp"/>
+
+        <TextView android:id="@+id/textViewDetailAroma" style="@style/DetailDialogRating" tools:text="Aroma: 5"/>
+        <TextView android:id="@+id/textViewDetailSweetness" style="@style/DetailDialogRating" tools:text="Sweetness: 4"/>
+        <TextView android:id="@+id/textViewDetailAcidity" style="@style/DetailDialogRating" tools:text="Acidity: 3"/>
+        <TextView android:id="@+id/textViewDetailBitterness" style="@style/DetailDialogRating" tools:text="Bitterness: 2"/>
+        <TextView android:id="@+id/textViewDetailBody" style="@style/DetailDialogRating" tools:text="Body: 5"/>
+    </LinearLayout>
+
+    <!-- Bagian Non-Kopi -->
+    <LinearLayout
+        android:id="@+id/linearLayoutDialogNonKopi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Data Menu:"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/textViewDialogNamaNonKopi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/black"
+            tools:text="Nama: Vanilla Milkshake"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/white"
+        android:layout_marginVertical="16dp"/>
+
+    <!-- Data Umum -->
+    <TextView
+        android:id="@+id/textViewDialogTanggal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        tools:text="Tanggal: 25/09/2025"/>
+
+    <TextView
+        android:id="@+id/textViewDialogCatatan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        tools:text="Catatan: Kopi ini sangat enak!"/>
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_dialog_close"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/black"
+        android:text="Tutup"
+        android:textColor="@color/white"
+        app:cornerRadius="8dp"
+        android:layout_marginTop="16dp"/>
+
+</LinearLayout>

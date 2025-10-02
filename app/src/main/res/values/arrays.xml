@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="grind_sizes">
+        <item>Fine</item>
+        <item>Medium to Fine</item>
+        <item>Medium</item>
+        <item>Medium to Coarse</item>
+        <item>Coarse</item>
+    </string-array>
+</resources>

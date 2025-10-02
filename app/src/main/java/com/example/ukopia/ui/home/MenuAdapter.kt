@@ -10,7 +10,7 @@ import com.example.ukopia.R
 import com.example.ukopia.data.MenuItem
 import com.google.android.material.imageview.ShapeableImageView
 
-class MenuAdapter(private val menuItems: List<MenuItem>) :
+class MenuAdapter(private var menuItems: List<MenuItem>) : // Diubah menjadi 'var' agar bisa diupdate
     RecyclerView.Adapter<MenuAdapter.MenuItemViewHolder>() {
 
     // Inner class untuk menampung referensi View dari layout_menu_item.xml
@@ -18,7 +18,6 @@ class MenuAdapter(private val menuItems: List<MenuItem>) :
         val menuImage: ShapeableImageView = itemView.findViewById(R.id.iv_menu_image)
         val menuTitle: TextView = itemView.findViewById(R.id.tv_menu_title)
         val menuRating: TextView = itemView.findViewById(R.id.tv_menu_rating)
-        // Ikon bintang tidak perlu di-referensi jika tidak berubah per item
     }
 
     // Dipanggil saat RecyclerView membutuhkan ViewHolder baru
@@ -36,8 +35,6 @@ class MenuAdapter(private val menuItems: List<MenuItem>) :
         holder.menuRating.text = item.rating // Set rating
 
         holder.itemView.setOnClickListener {
-            // Lakukan sesuatu saat item diklik
-            // Toast.makeText(holder.itemView.context, "Klik ${item.name}", Toast.LENGTH_SHORT).show()
             val context = holder.itemView.context
             val intent = Intent(context, DetailMenuActivity::class.java)
             intent.putExtra(DetailMenuActivity.EXTRA_MENU_ITEM, item)
@@ -47,4 +44,13 @@ class MenuAdapter(private val menuItems: List<MenuItem>) :
 
     // Mengembalikan jumlah total item dalam daftar
     override fun getItemCount(): Int = menuItems.size
+
+    /**
+     * Fungsi baru untuk memperbarui data di RecyclerView saat filter berubah.
+     * @param newItems Daftar MenuItem yang baru (sudah difilter).
+     */
+    fun updateData(newItems: List<MenuItem>) {
+        menuItems = newItems // Ganti daftar lama dengan daftar yang baru
+        notifyDataSetChanged() // Beri tahu RecyclerView untuk refresh
+    }
 }

@@ -1,51 +1,49 @@
-package com.example.ukopia.adapter
+package com.example.ukopia.adapter // Sesuaikan dengan package Anda
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.ukopia.R
 import com.example.ukopia.data.RecipeItem
+import com.example.ukopia.databinding.ItemRecipeCardBinding
 
-/**
- * Adapter untuk RecyclerView yang menampilkan daftar resep.
- *
- * @param items Daftar RecipeItem yang akan ditampilkan.
- */
-class RecipeAdapter(private val items: List<RecipeItem>) :
-    RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>() {
+class RecipeAdapter(
+    private val onItemClick: (RecipeItem) -> Unit
+) : ListAdapter<RecipeItem, RecipeAdapter.RecipeViewHolder>(RecipeItemDiffCallback()) {
 
-    /**
-     * ViewHolder yang memegang referensi ke setiap elemen UI di dalam item_recipe_card.xml.
-     */
-
-    /**
-     * Dipanggil saat RecyclerView membutuhkan ViewHolder baru.
-     * Mengembang (inflate) layout item_recipe_card.xml.
-     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_recipe_card, parent, false)
-        return RecipeViewHolder(view)
+        val binding = ItemRecipeCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return RecipeViewHolder(binding, onItemClick)
     }
 
-    class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val title: TextView = itemView.findViewById(R.id.textViewRecipeName)
-    }
-    /**
-     * Mengikat data ke elemen UI di dalam ViewHolder.
-     */
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
-        val item = items[position]
-        holder.title.text = item.nama
-        // Ganti baris ini dengan kode untuk memuat gambar
-        // holder.image.setImageResource(...) atau menggunakan library seperti Glide/Picasso
+        val item = getItem(position)
+        holder.bind(item)
     }
 
-    /**
-     * Mengembalikan jumlah total item dalam daftar.
-     */
-    override fun getItemCount(): Int = items.size
+    class RecipeViewHolder(
+        private val binding: ItemRecipeCardBinding,
+        private val onItemClick: (RecipeItem) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(item: RecipeItem) {
+            binding.textViewRecipeName.text = item.name
+
+            binding.btnSelengkapnya.setOnClickListener {
+                onItemClick(item)
+            }
+        }
+    }
+
+    class RecipeItemDiffCallback : DiffUtil.ItemCallback<RecipeItem>() {
+        override fun areItemsTheSame(oldItem: RecipeItem, newItem: RecipeItem): Boolean {
+            // Asumsi nama adalah ID unik sementara, atau tambahkan ID unik ke RecipeItem
+            return oldItem.name == newItem.name && oldItem.description == newItem.description
+        }
+
+        override fun areContentsTheSame(oldItem: RecipeItem, newItem: RecipeItem): Boolean {
+            return oldItem == newItem
+        }
+    }
 }

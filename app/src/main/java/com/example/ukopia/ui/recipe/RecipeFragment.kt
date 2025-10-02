@@ -5,42 +5,63 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.ukopia.R
-import com.example.ukopia.adapter.RecipeAdapter
-import com.example.ukopia.data.RecipeItem
+import com.example.ukopia.adapter.BrewMethodAdapter
+import com.example.ukopia.databinding.FragmentRecipeBinding
+import com.example.ukopia.MainActivity // <<-- TAMBAHKAN INI
 
 class RecipeFragment : Fragment() {
+
+    private var _binding: FragmentRecipeBinding? = null
+    private val binding get() = _binding!!
+
+    private val recipeViewModel: RecipeViewModel by activityViewModels()
+    private lateinit var brewMethodAdapter: BrewMethodAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Menggunakan R.layout.fragment_recipe untuk mengembang layout
-        return inflater.inflate(R.layout.fragment_resep, container, false)
+    ): View {
+        _binding = FragmentRecipeBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Contoh data resep
-        val recipeItems = listOf(
-            RecipeItem("AEROPRESS", "url_gambar_aeropress"),
-            RecipeItem("DELTER PRESS", "url_gambar_delter_press"),
-            RecipeItem("FRENCH PRESS", "url_gambar_french_press"),
-            RecipeItem("CHERMEX", "url_gambar_chermax")
-        )
+        // ▼▼▼ Pastikan nav bar terlihat di RecipeFragment ▼▼▼
+        (requireActivity() as MainActivity).setBottomNavVisibility(View.VISIBLE)
 
-        // Menggunakan findViewById untuk mendapatkan referensi RecyclerView
-        val recyclerViewRecipe = view.findViewById<RecyclerView>(R.id.recyclerViewRecipe)
-
-        // Memastikan recyclerViewRecipe tidak null sebelum digunakan
-        recyclerViewRecipe?.let {
-            // Mengatur adapter dan layout manager
-            val adapter = RecipeAdapter(recipeItems)
-            it.layoutManager = LinearLayoutManager(requireContext())
-            it.adapter = adapter
+        brewMethodAdapter = BrewMethodAdapter { selectedMethod ->
+            navigateToRecipeList(selectedMethod.name)
         }
+
+        binding.recyclerViewRecipe.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = brewMethodAdapter
+        }
+
+        recipeViewModel.brewMethods.observe(viewLifecycleOwner) { methods ->
+            brewMethodAdapter.submitList(methods)
+        }
+    }
+
+    private fun navigateToRecipeList(methodName: String) {
+        val recipeListFragment = RecipeListFragment().apply {
+            arguments = Bundle().apply {
+                putString("SELECTED_METHOD_NAME", methodName)
+            }
+        }
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.container, recipeListFragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

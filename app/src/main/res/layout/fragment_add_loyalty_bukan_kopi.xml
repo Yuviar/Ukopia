@@ -20,7 +20,7 @@
         android:inputType="text"
         android:padding="10dp"
         android:textColor="@color/black"
-        android:textColorHint="@color/black"
+        android:textColorHint="@color/light_grey"
         android:textSize="16sp"
         android:layout_marginBottom="15dp"/>
 
@@ -40,6 +40,6 @@
         android:inputType="text"
         android:padding="10dp"
         android:textColor="@color/black"
-        android:textColorHint="@color/black"
+        android:textColorHint="@color/light_grey"
         android:textSize="16sp" />
 </LinearLayout>

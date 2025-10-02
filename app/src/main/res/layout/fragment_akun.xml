@@ -339,12 +339,93 @@
                     </FrameLayout>
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/btnLogout"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/opsiAkun"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/black"
-                    android:text="Keluar" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="20dp"
+                        android:text="Akun"
+                        android:textFontWeight="600" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginBottom="12dp"
+                        android:background="@drawable/rounded_container"
+                        android:clipToOutline="true">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:id="@+id/btnForgotPassword"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginVertical="8dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:layout_marginEnd="8dp"
+                                    android:src="@drawable/ic_key"
+                                    android:tint="@color/black" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Ganti Password"
+                                    android:textFontWeight="500" />
+
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:layout_marginEnd="8dp"
+                                    android:src="@drawable/ic_arrow_forward"
+                                    android:tint="@color/secondary" />
+                            </LinearLayout>
+                            <LinearLayout
+                                android:id="@+id/btnLogout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginVertical="8dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:layout_marginEnd="8dp"
+                                    android:src="@drawable/ic_log_out"
+                                    android:tint="@color/black" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Keluar"
+                                    android:textFontWeight="500" />
+
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:layout_marginEnd="8dp"
+                                    android:src="@drawable/ic_arrow_forward"
+                                    android:tint="@color/secondary" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </FrameLayout>
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/copyright"
@@ -352,7 +433,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="6dp"
                     android:text="Copyright"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:layout_marginTop="20dp"/>
 
                 <ImageView
                     android:layout_width="120dp"

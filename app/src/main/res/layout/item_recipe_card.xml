@@ -13,45 +13,64 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp">
+        android:background="@color/white">
 
-        <ImageView
-            android:id="@+id/imageViewRecipe"
-            android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_aeropress"
-        android:contentDescription="Gambar Resep"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        <LinearLayout
+            android:id="@+id/iconBackgroundContainer"
+            android:layout_width="110dp"
+            android:layout_height="120dp"
+            android:background="@color/black"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-        <TextView
-            android:id="@+id/textViewRecipeName"
+            <ImageView
+                android:id="@+id/imageViewRecipe"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_aeropress"
+                android:contentDescription="@string/recipe_image_desc"
+                app:tint="@color/white" />
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        tools:text="AEROPRESS"
-        android:textColor="@android:color/black"
-        app:layout_constraintStart_toEndOf="@+id/imageViewRecipe"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="16dp"
-            android:textAlignment="viewEnd"/>
-
-        <Button
-            android:id="@+id/btnSelengkapnya"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/black"
-            android:text="Selengkapnya"
-            android:textAllCaps="false"
-            android:textSize="14sp"
-            android:paddingHorizontal="16dp"
-            android:textColor="@android:color/white"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            app:layout_constraintStart_toEndOf="@+id/iconBackgroundContainer"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                android:id="@+id/textViewRecipeName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                tools:text="@string/brew_method_name_placeholder"
+                android:textColor="@android:color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textAlignment="viewEnd"/>
+
+            <Button
+                android:id="@+id/btnSelengkapnya"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/black"
+                android:text="@string/more_button_text"
+                android:textAllCaps="false"
+                android:textSize="14sp"
+                android:paddingHorizontal="16dp"
+                android:textColor="@android:color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

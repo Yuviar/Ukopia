@@ -18,10 +18,10 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tempat Kopi, Cerita, dan\nInspirasi Bertemu"
+        android:text="@string/slogan_text"
         android:gravity="center"
         android:textColor="@color/black"
-        android:textSize="15sp"
+        android:textSize="18sp"
         android:textFontWeight="800"
         android:fontFamily="@font/montserrat_extrabold"/>
 </LinearLayout>

@@ -55,7 +55,8 @@ class RegisterActivity : AppCompatActivity() {
             val password = editPassword.text.toString().trim()
 
             if (nama.isEmpty() || email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Semua field harus diisi", Toast.LENGTH_SHORT).show()
+                // Menggunakan string resource untuk pesan Toast
+                Toast.makeText(this, getString(R.string.all_fields_required_error), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             showLoading(true)
@@ -63,19 +64,23 @@ class RegisterActivity : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         val firebaseUser = auth.currentUser
+                        // PERINGATAN: Nama bidang Firestore sebaiknya tidak dilokalisasi.
+                        // Pertimbangkan menggunakan string literal atau konstanta.
                         val userMap = hashMapOf(
-                            "nama" to nama,
-                            "email" to email
+                            getString(R.string.firestore_field_name) to nama,
+                            getString(R.string.firestore_field_email) to email
                         )
                         firebaseUser?.let { user ->
-                            db.collection("users").document(user.uid)
+                            // PERINGATAN: Nama koleksi Firestore sebaiknya tidak dilokalisasi.
+                            // Pertimbangkan menggunakan string literal atau konstanta.
+                            db.collection(getString(R.string.firestore_users_collection)).document(user.uid)
                                 .set(userMap)
                                 .addOnSuccessListener {
-                                    // Sembunyikan loading
                                     showLoading(false)
+                                    // Menggunakan string resource untuk pesan Toast
                                     Toast.makeText(
                                         this@RegisterActivity,
-                                        "Pendaftaran berhasil, silakan login",
+                                        getString(R.string.registration_success_message),
                                         Toast.LENGTH_SHORT
                                     ).show()
                                     val intent =
@@ -85,18 +90,20 @@ class RegisterActivity : AppCompatActivity() {
                                 }
                                 .addOnFailureListener { e ->
                                     showLoading(false)
+                                    // Menggunakan string resource untuk pesan Toast
                                     Toast.makeText(
                                         this@RegisterActivity,
-                                        "Gagal menyimpan data: ${e.message}",
+                                        getString(R.string.failed_save_data_error) + e.message,
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
                         }
                     } else {
                         showLoading(false)
+                        // Menggunakan string resource untuk pesan Toast
                         Toast.makeText(
                             this,
-                            "Pendaftaran gagal: ${task.exception?.message}",
+                            getString(R.string.registration_failed_error) + task.exception?.message,
                             Toast.LENGTH_SHORT
                         ).show()
                     }

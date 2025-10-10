@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.ukopia.R // Pastikan import R
 import com.example.ukopia.data.LoyaltyItemV2
 import com.example.ukopia.databinding.ItemLoyaltyCardBinding
 
@@ -31,16 +32,20 @@ class LoyaltyAdapter(
 
             if (item.isCoffee) {
                 // Tampilkan info beans untuk item kopi
-                binding.textViewBeans.text = "Biji Kopi: ${item.namaBeans}"
+                // Menggunakan string resource untuk prefix
+                binding.textViewBeans.text = binding.root.context.getString(R.string.coffee_bean_name_prefix) + (item.namaBeans ?: binding.root.context.getString(R.string.not_available_text))
                 binding.textViewBeans.visibility = View.VISIBLE
 
             } else {
                 // Sembunyikan dan sesuaikan teks untuk item non-kopi
-                binding.textViewBeans.text = "Nama: ${item.namaNonKopi}"
+                // Menggunakan string resource untuk prefix
+                binding.textViewBeans.text = binding.root.context.getString(R.string.non_coffee_name_prefix) + (item.namaNonKopi ?: binding.root.context.getString(R.string.not_available_text))
                 binding.textViewBeans.visibility = View.VISIBLE
             }
 
-            // --- Bagian ini adalah inti perbaikan: Listener untuk tombol "Selengkapnya" ---
+            // Teks tombol "More" sudah di XML, tapi jika perlu diset dari kode:
+            // binding.btnSelengkapnya.text = binding.root.context.getString(R.string.more_button_text)
+
             binding.btnSelengkapnya.setOnClickListener {
                 onItemClick(item)
             }

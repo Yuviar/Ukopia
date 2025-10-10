@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
@@ -14,7 +15,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="AKUN \nSAYA"
+            android:text="@string/my_account_title"
             android:textColor="@color/white"
             android:textSize="30sp"
             android:textStyle="bold" />
@@ -41,10 +42,10 @@
                 android:padding="16dp">
 
                 <ImageView
-                    android:layout_width="96dp"
-                    android:layout_height="96dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     android:layout_marginEnd="16dp"
-                    android:contentDescription="Foto Profil"
+                    android:contentDescription="Profile Photo"
                     android:src="@drawable/ic_person"
                     android:tint="@color/black" />
 
@@ -59,8 +60,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:visibility="visible"
-                        >
+                        android:visibility="visible">
 
                         <Button
                             android:id="@+id/btnMasuk"
@@ -70,7 +70,7 @@
                             android:layout_weight="1"
                             android:backgroundTint="@color/black"
                             android:elevation="5dp"
-                            android:text="Masuk" />
+                            android:text="@string/login_button_text" />
 
                         <Button
                             android:id="@+id/btnDaftar"
@@ -80,7 +80,7 @@
                             android:layout_weight="1"
                             android:backgroundTint="@color/black"
                             android:elevation="5dp"
-                            android:text="Daftar" />
+                            android:text="@string/signup_button_text" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -88,8 +88,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:visibility="gone"
-                        >
+                        android:visibility="gone">
 
                         <TextView
                             android:id="@+id/tvNama"
@@ -127,7 +126,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="20dp"
-                        android:text="Setelan"
+                        android:text="@string/settings_title"
                         android:textFontWeight="600" />
 
                     <FrameLayout
@@ -156,13 +155,14 @@
                                     android:layout_height="32dp"
                                     android:layout_marginEnd="8dp"
                                     android:src="@drawable/ic_coffee_maker"
-                                    android:tint="@color/black" />
+                                    android:tint="@color/black"
+                                    android:contentDescription="Equipment Icon"/>
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="Peralatan"
+                                    android:text="@string/equipment_option"
                                     android:textFontWeight="500" />
 
                                 <ImageView
@@ -170,8 +170,46 @@
                                     android:layout_height="24dp"
                                     android:layout_marginEnd="8dp"
                                     android:src="@drawable/ic_arrow_forward"
-                                    android:tint="@color/secondary" />
+                                    android:tint="@color/secondary"
+                                    android:contentDescription="Arrow Forward"/>
                             </LinearLayout>
+
+                            <!-- ▼▼▼ BAGIAN YANG DITAMBAHKAN KEMBALI UNTUK FITUR GANTI BAHASA ▼▼▼ -->
+                            <LinearLayout
+                                android:id="@+id/btnChangeLanguage"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginVertical="8dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:foreground="?attr/selectableItemBackground">
+
+                                <ImageView
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:layout_marginEnd="8dp"
+                                    android:src="@drawable/ic_language"
+                                    android:tint="@color/black"
+                                    android:contentDescription="Language Icon"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/language_option"
+                                    android:textFontWeight="500" />
+
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:layout_marginEnd="8dp"
+                                    android:src="@drawable/ic_arrow_forward"
+                                    android:tint="@color/secondary"
+                                    android:contentDescription="Arrow Forward"/>
+                            </LinearLayout>
+                            <!-- ▲▲▲ AKHIR BAGIAN FITUR GANTI BAHASA ▲▲▲ -->
                         </LinearLayout>
                     </FrameLayout>
                 </LinearLayout>
@@ -185,7 +223,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="20dp"
-                        android:text="Dukung kami"
+                        android:text="@string/support_us_title"
                         android:textFontWeight="600" />
 
                     <FrameLayout
@@ -214,7 +252,8 @@
                                     android:layout_height="32dp"
                                     android:layout_marginEnd="8dp"
                                     android:src="@drawable/ic_instagram"
-                                    android:tint="@color/black" />
+                                    android:tint="@color/black"
+                                    android:contentDescription="Instagram Icon"/>
 
                                 <LinearLayout
                                     android:layout_width="wrap_content"
@@ -243,7 +282,8 @@
                                     android:layout_height="24dp"
                                     android:layout_marginEnd="8dp"
                                     android:src="@drawable/ic_arrow_forward"
-                                    android:tint="@color/secondary" />
+                                    android:tint="@color/secondary"
+                                    android:contentDescription="Arrow Forward"/>
                             </LinearLayout>
 
                             <LinearLayout
@@ -259,7 +299,8 @@
                                     android:layout_height="32dp"
                                     android:layout_marginEnd="8dp"
                                     android:src="@drawable/ic_instagram"
-                                    android:tint="@color/black" />
+                                    android:tint="@color/black"
+                                    android:contentDescription="Instagram Icon"/>
 
                                 <LinearLayout
                                     android:layout_width="wrap_content"
@@ -288,7 +329,8 @@
                                     android:layout_height="24dp"
                                     android:layout_marginEnd="8dp"
                                     android:src="@drawable/ic_arrow_forward"
-                                    android:tint="@color/secondary" />
+                                    android:tint="@color/secondary"
+                                    android:contentDescription="Arrow Forward"/>
                             </LinearLayout>
 
                             <LinearLayout
@@ -304,7 +346,8 @@
                                     android:layout_height="32dp"
                                     android:layout_marginEnd="8dp"
                                     android:src="@drawable/ic_youtube"
-                                    android:tint="@color/black" />
+                                    android:tint="@color/black"
+                                    android:contentDescription="Youtube Icon"/>
 
                                 <LinearLayout
                                     android:layout_width="wrap_content"
@@ -333,7 +376,8 @@
                                     android:layout_height="24dp"
                                     android:layout_marginEnd="8dp"
                                     android:src="@drawable/ic_arrow_forward"
-                                    android:tint="@color/secondary" />
+                                    android:tint="@color/secondary"
+                                    android:contentDescription="Arrow Forward"/>
                             </LinearLayout>
                         </LinearLayout>
                     </FrameLayout>
@@ -349,7 +393,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="20dp"
-                        android:text="Akun"
+                        android:text="@string/account_options_title"
                         android:textFontWeight="600" />
 
                     <FrameLayout
@@ -378,13 +422,14 @@
                                     android:layout_height="32dp"
                                     android:layout_marginEnd="8dp"
                                     android:src="@drawable/ic_key"
-                                    android:tint="@color/black" />
+                                    android:tint="@color/black"
+                                    android:contentDescription="Key Icon"/>
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="Ganti Password"
+                                    android:text="@string/change_password_option"
                                     android:textFontWeight="500" />
 
                                 <ImageView
@@ -392,7 +437,8 @@
                                     android:layout_height="24dp"
                                     android:layout_marginEnd="8dp"
                                     android:src="@drawable/ic_arrow_forward"
-                                    android:tint="@color/secondary" />
+                                    android:tint="@color/secondary"
+                                    android:contentDescription="Arrow Forward"/>
                             </LinearLayout>
                             <LinearLayout
                                 android:id="@+id/btnLogout"
@@ -407,13 +453,14 @@
                                     android:layout_height="32dp"
                                     android:layout_marginEnd="8dp"
                                     android:src="@drawable/ic_log_out"
-                                    android:tint="@color/black" />
+                                    android:tint="@color/black"
+                                    android:contentDescription="Logout Icon"/>
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="Keluar"
+                                    android:text="@string/logout_option"
                                     android:textFontWeight="500" />
 
                                 <ImageView
@@ -421,7 +468,8 @@
                                     android:layout_height="24dp"
                                     android:layout_marginEnd="8dp"
                                     android:src="@drawable/ic_arrow_forward"
-                                    android:tint="@color/secondary" />
+                                    android:tint="@color/secondary"
+                                    android:contentDescription="Arrow Forward"/>
                             </LinearLayout>
                         </LinearLayout>
                     </FrameLayout>
@@ -439,7 +487,8 @@
                 <ImageView
                     android:layout_width="120dp"
                     android:layout_height="60dp"
-                    android:src="@drawable/logo_ukopia" />
+                    android:src="@drawable/logo_ukopia"
+                    android:contentDescription="Ukopia Logo"/>
             </LinearLayout>
         </LinearLayout>
     </FrameLayout>

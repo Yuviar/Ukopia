@@ -12,7 +12,7 @@
 <TextView
 android:layout_width="match_parent"
 android:layout_height="wrap_content"
-android:text="Pilih Kategori Menu"
+android:text="@string/choose_category_title"
 android:textColor="@color/black"
 android:textSize="20sp"
 android:textStyle="bold"
@@ -30,7 +30,7 @@ tools:listitem="@layout/item_filter_category"/>
 android:id="@+id/buttonCancel"
 android:layout_width="match_parent"
 android:layout_height="wrap_content"
-android:text="Batal"
+android:text="@string/cancel_button_text"
 android:textColor="@color/white"
 android:backgroundTint="@color/black"
 app:cornerRadius="8dp"/>

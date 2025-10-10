@@ -1,4 +1,4 @@
-package com.example.ukopia.adapter // Sesuaikan dengan package Anda
+package com.example.ukopia.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ukopia.data.RecipeItem
 import com.example.ukopia.databinding.ItemRecipeCardBinding
+import com.example.ukopia.R
 
 class RecipeAdapter(
     private val onItemClick: (RecipeItem) -> Unit
@@ -29,6 +30,8 @@ class RecipeAdapter(
 
         fun bind(item: RecipeItem) {
             binding.textViewRecipeName.text = item.name
+            // Teks tombol "Selengkapnya" sudah ada di XML, jadi tidak perlu diset di sini
+            // binding.btnSelengkapnya.text = itemView.context.getString(R.string.more_button_text)
 
             binding.btnSelengkapnya.setOnClickListener {
                 onItemClick(item)
@@ -38,7 +41,6 @@ class RecipeAdapter(
 
     class RecipeItemDiffCallback : DiffUtil.ItemCallback<RecipeItem>() {
         override fun areItemsTheSame(oldItem: RecipeItem, newItem: RecipeItem): Boolean {
-            // Asumsi nama adalah ID unik sementara, atau tambahkan ID unik ke RecipeItem
             return oldItem.name == newItem.name && oldItem.description == newItem.description
         }
 

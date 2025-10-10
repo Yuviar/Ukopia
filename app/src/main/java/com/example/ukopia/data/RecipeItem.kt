@@ -5,6 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class RecipeItem(
+    val id: String,
     val method: String,
     val name: String,
     val description: String,
@@ -13,5 +14,6 @@ data class RecipeItem(
     val grindSize: String,
     val heat: String,
     val time: String,
-    val isMine: Boolean = false
+    val isMine: Boolean,
+    val steps: List<String>
 ) : Parcelable

@@ -22,7 +22,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="KARTU \nLOYALITAS"
+            android:text="@string/loyalty_card_title"
             android:textColor="@color/white"
             android:textStyle="bold"
             android:textSize="30sp" />
@@ -65,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Belum ada data yang ditambahkan"
+                android:text="@string/no_loyalty_data_placeholder"
                 android:textColor="@color/light_grey"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -74,7 +74,7 @@
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add_recipe_to_loyalty"
+        android:id="@+id/fab_add_recipe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"

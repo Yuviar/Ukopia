@@ -10,7 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.ukopia.R
+import com.example.ukopia.R // Pastikan import R
 import com.example.ukopia.data.MenuItem
 
 class RatingActivity : AppCompatActivity() {
@@ -18,9 +18,8 @@ class RatingActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_MENU_ITEM = "extra_menu_item"
         const val EXTRA_INITIAL_RATING = "extra_initial_rating"
-        // Constants untuk mengirim hasil kembali
         const val EXTRA_SUBMITTED_RATING = "extra_submitted_rating"
-        const val EXTRA_SUBMITTED_COMMENT = "extra_submitted_comment" // Konstan baru untuk komentar
+        const val EXTRA_SUBMITTED_COMMENT = "extra_submitted_comment"
     }
 
     private var selectedRating = 0
@@ -35,21 +34,21 @@ class RatingActivity : AppCompatActivity() {
 
         val tvTitle: TextView = findViewById(R.id.tv_rating_menu_title)
         val btnSubmit: Button = findViewById(R.id.btn_submit_rating)
-        val etKomentar: EditText = findViewById(R.id.editTextKomentar) // Inisialisasi EditText komentar
+        val etKomentar: EditText = findViewById(R.id.editTextKomentar)
 
-        tvTitle.text = "Beri Rating untuk: ${menuItem?.name ?: "Menu"}"
+        // Menggunakan string resource untuk judul
+        tvTitle.text = getString(R.string.rate_for_prefix) + (menuItem?.name ?: getString(R.string.menu_placeholder))
+        // Hint untuk EditText komentar sudah di XML
 
         starImageViews = listOf(
             findViewById(R.id.star_1), findViewById(R.id.star_2), findViewById(R.id.star_3),
             findViewById(R.id.star_4), findViewById(R.id.star_5)
         )
 
-        // Set initial rating based on the star clicked in DetailMenuActivity
         if (initialRating > 0) {
             updateStarRating(initialRating)
         }
 
-        // Setup click listeners for each star
         starImageViews.forEachIndexed { index, star ->
             star.setOnClickListener {
                 updateStarRating(index + 1)
@@ -58,17 +57,16 @@ class RatingActivity : AppCompatActivity() {
 
         btnSubmit.setOnClickListener {
             if (selectedRating == 0) {
-                Toast.makeText(this, "Silakan pilih bintang rating Anda!", Toast.LENGTH_SHORT).show()
+                // Menggunakan string resource untuk error
+                Toast.makeText(this, getString(R.string.error_no_rating_selected), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // Ambil teks komentar
             val commentText = etKomentar.text.toString()
 
-            // Buat Intent untuk mengirim hasil
             val resultIntent = Intent().apply {
                 putExtra(EXTRA_SUBMITTED_RATING, selectedRating)
-                putExtra(EXTRA_SUBMITTED_COMMENT, commentText) // Kirim komentar
+                putExtra(EXTRA_SUBMITTED_COMMENT, commentText)
             }
             setResult(Activity.RESULT_OK, resultIntent)
             finish()

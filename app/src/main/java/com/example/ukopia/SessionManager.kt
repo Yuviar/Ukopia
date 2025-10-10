@@ -40,5 +40,16 @@ class SessionManager {
             editor.clear()
             editor.apply()
         }
+        fun clearUserData(context: Context) {
+            val editor = getSharedPreferences(context).edit()
+            editor.remove(KEY_IS_LOGGED_IN) // Set status login ke false (atau hapus)
+            editor.remove(KEY_USER_NAME)
+            editor.remove(KEY_USER_EMAIL)
+            // Atau, jika Anda ingin menghapus semua data dari preferensi ini:
+            // editor.clear()
+            editor.apply()
+            // Anda juga bisa secara eksplisit set isLoggedIn ke false jika Anda menghapus semua data.
+            // setLoggedIn(context, false) // Jika Anda menggunakan editor.clear(), ini tidak perlu.
+        }
     }
 }

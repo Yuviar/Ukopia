@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="MENU \nKOPI"
+        android:text="@string/menu_review_title"
         android:textColor="@color/white"
         android:textStyle="bold"
         android:textSize="30sp"
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginBottom="16dp"
-                android:text="Filter"
+                android:text="@string/filter_button_text"
                 app:cornerRadius="8dp"
                 android:backgroundTint="@color/black"
                 android:textColor="@color/white" />

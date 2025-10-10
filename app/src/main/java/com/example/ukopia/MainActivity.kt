@@ -1,5 +1,6 @@
 package com.example.ukopia
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -15,14 +16,20 @@ import com.example.ukopia.ui.home.HomeFragment
 import com.example.ukopia.ui.recipe.RecipeFragment
 import com.example.ukopia.ui.loyalty.LoyaltyFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.example.ukopia.ui.loyalty.AddLoyaltyFragment
 
 import com.example.ukopia.SessionManager
-import android.view.View // <<--- TAMBAHKAN INI
+import android.view.View
+import androidx.activity.OnBackPressedCallback // Tambahkan ini lagi
+import com.google.android.material.dialog.MaterialAlertDialogBuilder // Ini tidak digunakan, bisa dihapus jika tidak ada toast khusus
 
 class MainActivity : AppCompatActivity(), AkunFragment.OnAkunFragmentInteractionListener {
 
-    private lateinit var bottomNavigationView: BottomNavigationView // <<-- Ubah ini menjadi lateinit var
+    private lateinit var bottomNavigationView: BottomNavigationView
+    private var backPressedTime: Long = 0 // Untuk double tap back to exit dari HomeFragment
+
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(newBase?.let { LocaleHelper.onAttach(it) } ?: newBase)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,48 +42,80 @@ class MainActivity : AppCompatActivity(), AkunFragment.OnAkunFragmentInteraction
             insets
         }
 
-        bottomNavigationView = findViewById(R.id.bottom_navigation_view) // <<-- Inisialisasi di sini
+        bottomNavigationView = findViewById(R.id.bottom_navigation_view)
         bottomNavigationView.setOnNavigationItemSelectedListener(menuItemSelected)
 
         if (savedInstanceState == null) {
-            addFragment(HomeFragment(), false)
-            bottomNavigationView.selectedItemId = R.id.itemHome
+           loadRootFragment(HomeFragment(), R.id.itemHome)
         }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val currentFragment = supportFragmentManager.findFragmentById(R.id.container)
+
+                if (supportFragmentManager.backStackEntryCount > 1 && currentFragment !is HomeFragment && currentFragment !is LoyaltyFragment && currentFragment !is RecipeFragment && currentFragment !is AkunFragment) {
+                    supportFragmentManager.popBackStack()
+                } else if (currentFragment !is HomeFragment) {
+                    supportFragmentManager.popBackStack(HomeFragment::class.java.simpleName, 0) // popInclusive = 0 artinya tidak menghapus HomeFragment
+                    bottomNavigationView.selectedItemId = R.id.itemHome // Update BottomNav UI
+                } else {
+                    finishAffinity()
+                }
+            }
+        })
+        // ▲▲▲ Akhir onBackPressedCallback ▲▲▲
     }
 
-    private fun addFragment(fragment: Fragment, addToBackStack: Boolean) {
-        val transaction = supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.container, fragment)
+    // Metode baru untuk memuat fragment utama (tab root)
+    private fun loadRootFragment(fragment: Fragment, itemId: Int) {
+        val fragmentTag = fragment.javaClass.simpleName
 
-        if (addToBackStack) {
-            transaction.addToBackStack(null)
-        } else {
-            // Ini akan menghapus semua fragment dari back stack saat beralih ke tab utama
-            supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-        }
-        transaction
-            .replace(R.id.container, fragment, fragment.javaClass.simpleName)
-            .addToBackStack(null) // Tambahkan fragment ini ke back stack juga
+        // Hapus semua fragment dari back stack saat beralih ke tab utama
+        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+        // Ganti fragment dan tambahkan ke back stack.
+        // Ini membuatnya menjadi entri dasar untuk tab tersebut.
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container, fragment, fragmentTag)
+            .addToBackStack(fragmentTag) // Tambahkan ke back stack sebagai root untuk tab ini
             .commit()
     }
 
-    private val menuItemSelected = BottomNavigationView.OnNavigationItemSelectedListener { it ->
-        when (it.itemId) {
+    // Metode untuk memuat fragment "detail" atau fragment non-tab root
+    fun navigateToFragment(fragment: Fragment, addToBackStack: Boolean = true) {
+        val fragmentTag = fragment.javaClass.simpleName
+        val transaction = supportFragmentManager.beginTransaction()
+
+        transaction.replace(R.id.container, fragment, fragmentTag)
+
+        if (addToBackStack) {
+            transaction.addToBackStack(fragmentTag) // Tambahkan ke back stack
+        } else {
+            // Jika tidak ingin ditambahkan ke back stack (jarang untuk non-root tab),
+            // pastikan fragment yang ada di-pop jika namanya sama
+            // Ini akan menggantikan fragment yang ada tanpa menambahkan ke stack.
+            // Lebih aman menggunakan loadRootFragment untuk root tab.
+            supportFragmentManager.popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        }
+        transaction.commit()
+    }
+
+    private val menuItemSelected = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        when (item.itemId) {
             R.id.itemHome -> {
-                addFragment(HomeFragment(), false)
+                loadRootFragment(HomeFragment(), R.id.itemHome)
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.itemRoyalti -> {
-                addFragment(LoyaltyFragment(), false)
+            R.id.itemLoyalty -> {
+                loadRootFragment(LoyaltyFragment(), R.id.itemLoyalty)
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.itemResep -> {
-                addFragment(RecipeFragment(), false)
+            R.id.itemRecipe -> {
+                loadRootFragment(RecipeFragment(), R.id.itemRecipe)
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.itemAkun -> {
-                addFragment(AkunFragment(), false)
+            R.id.itemAccount -> {
+                loadRootFragment(AkunFragment(), R.id.itemAccount)
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -84,12 +123,11 @@ class MainActivity : AppCompatActivity(), AkunFragment.OnAkunFragmentInteraction
     }
 
     override fun OnPeralatanClicked() {
-        addFragment(PeralatanFragment(),true)
+        navigateToFragment(PeralatanFragment(), true) // Gunakan navigateToFragment
     }
 
-    // ▼▼▼ FUNGSI BARU UNTUK MENGONTROL VISIBILITAS NAV BAR ▼▼▼
+    // FUNGSI UNTUK MENGONTROL VISIBILITAS NAV BAR
     fun setBottomNavVisibility(visibility: Int) {
         bottomNavigationView.visibility = visibility
     }
-    // ▲▲▲ AKHIR FUNGSI BARU ▲▲▲
 }

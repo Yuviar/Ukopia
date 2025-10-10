@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginBottom="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text_border">
+
+        <ImageView
+            android:id="@+id/imageViewStepIcon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_stir"
+            android:contentDescription="@string/add_step_icon_desc"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/textViewStepTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="Stir"
+            app:layout_constraintStart_toEndOf="@id/imageViewStepIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/buttonRemoveStep"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonRemoveStep"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="0dp"
+            app:icon="@drawable/ic_delete"
+            app:iconTint="@color/black"
+            app:iconGravity="textStart"
+            android:minWidth="0dp"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:contentDescription="@string/close_button_text"
+            android:layout_marginEnd="-8dp"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- NEW: Water Amount Input (Conditional) -->
+    <LinearLayout
+        android:id="@+id/linearLayoutWaterAmountInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end|center_vertical"
+        android:background="@color/white"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/water_amount_label"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginEnd="8dp"/>
+
+        <EditText
+            android:id="@+id/editTextStepWaterAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edit_text_border"
+            android:hint="@string/water_amount_hint_placeholder"
+            android:inputType="numberDecimal"
+            android:textColor="@color/black"
+            android:textColorHint="@color/light_grey"
+            android:textSize="14sp"
+            android:minWidth="80dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutDurationInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end|center_vertical"
+        android:background="@color/white"
+        android:paddingBottom="8dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/duration_label"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginEnd="8dp"
+           />
+
+        <EditText
+            android:id="@+id/editTextStepDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edit_text_border"
+            android:hint="@string/duration_hint_seconds"
+            android:inputType="number"
+            android:maxLength="5"
+            android:textColor="@color/black"
+            android:textColorHint="@color/light_grey"
+            android:textSize="14sp"
+            android:minWidth="80dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

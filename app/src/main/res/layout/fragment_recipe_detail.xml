@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:text="DETAIL \nRESEP"
+        tools:text="@string/recipe_details_title"
         android:textColor="@color/white"
         android:textSize="30sp"
         android:textStyle="bold"
@@ -65,7 +65,7 @@
                             android:textColor="@color/black"
                             android:textSize="18sp"
                             android:textStyle="bold"
-                            tools:text="2018 Winner - Inverted"
+                            tools:text="@string/recipe_title_placeholder"
                             android:layout_marginBottom="8dp"/>
 
                         <TextView
@@ -73,14 +73,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@color/black"
-                            tools:text="Prepare 40 grams of water at room temperature. Use paper filter. Rinse with hot water."/>
+                            tools:text="@string/recipe_description_placeholder"/>
                         <!-- Parameter Grid dengan Struktur Baru -->
                         <GridLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:columnCount="2"
                             android:rowCount="2"
-                            android:useDefaultMargins="true"
                             android:layout_marginTop="16dp">
 
                             <!-- STRUKTUR BARU: Jumlah Kopi -->
@@ -90,7 +89,9 @@
                                 android:layout_columnWeight="1"
                                 android:background="@drawable/bg_card_parameter_coffee"
                                 android:orientation="vertical"
-                                android:padding="12dp">
+                                android:padding="12dp"
+                                android:layout_marginRight="4dp"
+                                android:layout_marginBottom="8dp">
 
                                 <!-- Baris Atas: Ikon + Judul -->
                                 <LinearLayout
@@ -101,14 +102,14 @@
                                     <ImageView
                                         android:layout_width="24dp"
                                         android:layout_height="24dp"
-                                        android:contentDescription="Coffee Icon"
+                                        android:contentDescription="@string/coffee_icon_desc"
                                         android:src="@drawable/ic_bean_coffee"
                                         app:tint="@color/black"/>
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="8dp"
-                                        android:text="Jumlah Kopi"
+                                        android:text="@string/coffee_amount_label"
                                         android:textColor="@color/black"
                                         android:textSize="12sp"
                                         android:textStyle="bold" />
@@ -123,7 +124,7 @@
                                     android:textColor="@color/black"
                                     android:textSize="18sp"
                                     android:textStyle="bold"
-                                    tools:text="16.0 g"/>
+                                    tools:text="@string/coffee_amount_placeholder"/>
                             </LinearLayout>
 
                             <!-- STRUKTUR BARU: Jumlah Air -->
@@ -133,7 +134,8 @@
                                 android:layout_columnWeight="1"
                                 android:background="@drawable/bg_card_parameter_water"
                                 android:orientation="vertical"
-                                android:padding="12dp">
+                                android:padding="12dp"
+                                android:layout_marginLeft="4dp">
 
                                 <!-- Baris Atas: Ikon + Judul -->
                                 <LinearLayout
@@ -144,13 +146,13 @@
                                     <ImageView
                                         android:layout_width="24dp"
                                         android:layout_height="24dp"
-                                        android:contentDescription="Water Icon"
+                                        android:contentDescription="@string/water_icon_desc"
                                         android:src="@drawable/ic_water"/>
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="8dp"
-                                        android:text="Jumlah Air"
+                                        android:text="@string/water_amount_label"
                                         android:textColor="@color/black"
                                         android:textSize="12sp"
                                         android:textStyle="bold" />
@@ -165,7 +167,7 @@
                                     android:textColor="@color/black"
                                     android:textSize="18sp"
                                     android:textStyle="bold"
-                                    tools:text="200.0 ml"/>
+                                    tools:text="@string/water_amount_placeholder"/>
                             </LinearLayout>
 
                             <!-- STRUKTUR BARU: Gilingan -->
@@ -175,7 +177,8 @@
                                 android:layout_columnWeight="1"
                                 android:background="@drawable/bg_card_parameter_grinder"
                                 android:orientation="vertical"
-                                android:padding="12dp">
+                                android:padding="12dp"
+                                android:layout_marginRight="4dp">
 
                                 <!-- Baris Atas: Ikon + Judul -->
                                 <LinearLayout
@@ -186,14 +189,14 @@
                                     <ImageView
                                         android:layout_width="24dp"
                                         android:layout_height="24dp"
-                                        android:contentDescription="Grind Size Icon"
+                                        android:contentDescription="@string/grind_size_icon_desc"
                                         android:src="@drawable/ic_grinder"
                                         app:tint="@color/black"/>
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="8dp"
-                                        android:text="Gilingan"
+                                        android:text="@string/grind_size_label"
                                         android:textColor="@color/black"
                                         android:textSize="12sp"
                                         android:textStyle="bold" />
@@ -208,7 +211,7 @@
                                     android:textColor="@color/black"
                                     android:textSize="18sp"
                                     android:textStyle="bold"
-                                    tools:text="Medium"/>
+                                    tools:text="@string/grind_size_placeholder"/>
                             </LinearLayout>
 
                             <!-- STRUKTUR BARU: Suhu -->
@@ -218,7 +221,8 @@
                                 android:layout_columnWeight="1"
                                 android:background="@drawable/bg_card_parameter_heat"
                                 android:orientation="vertical"
-                                android:padding="12dp">
+                                android:padding="12dp"
+                                android:layout_marginLeft="4dp">
 
                                 <!-- Baris Atas: Ikon + Judul -->
                                 <LinearLayout
@@ -229,14 +233,14 @@
                                     <ImageView
                                         android:layout_width="24dp"
                                         android:layout_height="24dp"
-                                        android:contentDescription="Heat Icon"
+                                        android:contentDescription="@string/heat_icon_desc"
                                         android:src="@drawable/ic_flame"
                                         app:tint="@color/black"/>
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="8dp"
-                                        android:text="Suhu"
+                                        android:text="@string/heat_label"
                                         android:textColor="@color/black"
                                         android:textSize="12sp"
                                         android:textStyle="bold" />
@@ -251,7 +255,7 @@
                                     android:textColor="@color/black"
                                     android:textSize="18sp"
                                     android:textStyle="bold"
-                                    tools:text="92°C"/>
+                                    tools:text="@string/heat_placeholder"/>
                             </LinearLayout>
 
                         </GridLayout>
@@ -267,12 +271,12 @@
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:src="@drawable/ic_timer"
-                                android:contentDescription="Timer Icon"/>
+                                android:contentDescription="@string/timer_icon_desc"/>
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="12dp"
-                                android:text="Waktu Proses"
+                                android:text="@string/processing_time_label"
                                 android:textColor="@color/white"
                                 android:textSize="12sp"
                                 android:textStyle="bold"/>
@@ -285,8 +289,31 @@
                                 android:textColor="@color/white"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
-                                tools:text="01:45"/>
+                                tools:text="@string/time_placeholder"/>
                         </LinearLayout>
+
+                        <!-- Judul Langkah-langkah -->
+                        <TextView
+                            android:id="@+id/tv_steps_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/process_label"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="16dp"
+                            android:visibility="gone"
+                            tools:visibility="visible"/>
+
+                        <!-- Container untuk menampilkan daftar langkah -->
+                        <LinearLayout
+                            android:id="@+id/containerRecipeDetailSteps"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginTop="8dp"
+                            android:visibility="gone"
+                            tools:visibility="visible"/>
 
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>

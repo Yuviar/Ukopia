@@ -17,7 +17,7 @@
         android:textStyle="bold"
         android:textColor="@color/black"
         android:layout_marginBottom="16dp"
-        tools:text="DETAIL COFFEE LATTE" />
+        tools:text="@string/loyalty_detail_menu_title_placeholder" />
 
     <!-- Bagian Kopi -->
     <LinearLayout
@@ -28,9 +28,10 @@
         android:visibility="gone">
 
         <TextView
+            android:id="@+id/textViewBeanData"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Data Biji Kopi:"
+            android:text="@string/coffee_bean_data_title"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/black"/>
@@ -42,12 +43,13 @@
             android:layout_marginTop="4dp"
             android:textSize="16sp"
             android:textColor="@color/black"
-            tools:text="Nama Beans: Arabica Gayo"/>
+            tools:text="@string/coffee_bean_name_label"/>
 
         <TextView
+            android:id="@+id/textViewTasteProfil"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Profil Rasa (0-5):"
+            android:text="@string/taste_profile_title"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -69,9 +71,10 @@
         android:visibility="gone">
 
         <TextView
+            android:id="@+id/textViewMenuData"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Data Menu:"
+            android:text="@string/menu_data_title"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/black"/>
@@ -82,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:textColor="@color/black"
-            tools:text="Nama: Vanilla Milkshake"/>
+            tools:text="@string/menu_name_label"/>
     </LinearLayout>
 
     <View
@@ -98,7 +101,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/black"
         android:textSize="16sp"
-        tools:text="Tanggal: 25/09/2025"/>
+        tools:text="@string/loyalty_date_placeholder"/>
 
     <TextView
         android:id="@+id/textViewDialogCatatan"
@@ -107,7 +110,7 @@
         android:layout_marginTop="8dp"
         android:textColor="@color/black"
         android:textSize="16sp"
-        tools:text="Catatan: Kopi ini sangat enak!"/>
+        tools:text="@string/notes_placeholder"/>
 
 
     <com.google.android.material.button.MaterialButton
@@ -115,7 +118,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/black"
-        android:text="Tutup"
+        android:text="@string/close_button_text"
         android:textColor="@color/white"
         app:cornerRadius="8dp"
         android:layout_marginTop="16dp"/>

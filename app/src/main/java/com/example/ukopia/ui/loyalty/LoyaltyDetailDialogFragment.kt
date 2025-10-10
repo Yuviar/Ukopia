@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import com.example.ukopia.R // Pastikan import R
 import com.example.ukopia.data.LoyaltyItemV2
 import com.example.ukopia.databinding.FragmentLoyaltyDetailDialogBinding
 
@@ -17,7 +18,6 @@ class LoyaltyDetailDialogFragment : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Menggunakan View Binding untuk mengembang layout dialog
         _binding = FragmentLoyaltyDetailDialogBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -32,13 +32,15 @@ class LoyaltyDetailDialogFragment : DialogFragment() {
             binding.textViewDialogNamaMenu.text = it.namaMenu.uppercase()
 
             // Mengatur data umum
-            binding.textViewDialogTanggal.text = "Tanggal: ${it.tanggal}"
+            // Menggunakan string resource untuk prefix
+            binding.textViewDialogTanggal.text = getString(R.string.date_prefix ) + it.tanggal
 
             // Mengatur komentar
             if (it.catatan.isNullOrBlank()) {
                 binding.textViewDialogCatatan.visibility = View.GONE
             } else {
-                binding.textViewDialogCatatan.text = "Catatan: ${it.catatan}"
+                // Menggunakan string resource untuk prefix
+                binding.textViewDialogCatatan.text = getString(R.string.notes_prefix) + it.catatan
                 binding.textViewDialogCatatan.visibility = View.VISIBLE
             }
 
@@ -48,24 +50,31 @@ class LoyaltyDetailDialogFragment : DialogFragment() {
                 binding.linearLayoutDialogNonKopi.visibility = View.GONE
 
                 // Data Biji Kopi
-                binding.textViewDialogNamaBeans.text = "Biji Kopi: ${it.namaBeans ?: "-"}"
+                // Menggunakan string resource untuk judul dan prefix
+                binding.textViewBeanData.text = getString(R.string.coffee_bean_data_title) // TextView baru jika perlu
+                binding.textViewDialogNamaBeans.text = getString(R.string.coffee_bean_name_prefix ) + (it.namaBeans ?: getString(R.string.not_available_text))
 
                 // Data Profil Rasa
-                binding.textViewDetailAroma.text = "Aroma: ${it.aroma ?: 0}"
-                binding.textViewDetailSweetness.text = "Sweetness: ${it.sweetness ?: 0}"
-                binding.textViewDetailAcidity.text = "Acidity: ${it.acidity ?: 0}"
-                binding.textViewDetailBitterness.text = "Bitterness: ${it.bitterness ?: 0}"
-                binding.textViewDetailBody.text = "Body: ${it.body ?: 0}"
+                // Menggunakan string resource untuk judul dan prefix
+                binding.textViewTasteProfil.text = getString(R.string.taste_profile_title) // TextView baru jika perlu
+                binding.textViewDetailAroma.text = getString(R.string.aroma_prefix ) + (it.aroma ?: 0)
+                binding.textViewDetailSweetness.text = getString(R.string.sweetness_prefix ) + (it.sweetness ?: 0)
+                binding.textViewDetailAcidity.text = getString(R.string.acidity_prefix ) + (it.acidity ?: 0)
+                binding.textViewDetailBitterness.text = getString(R.string.bitterness_prefix ) + (it.bitterness ?: 0)
+                binding.textViewDetailBody.text = getString(R.string.body_prefix ) + (it.body ?: 0)
             } else {
                 binding.linearLayoutDialogKopi.visibility = View.GONE
                 binding.linearLayoutDialogNonKopi.visibility = View.VISIBLE
 
                 // Data Non-Kopi
-                binding.textViewDialogNamaNonKopi.text = "Nama: ${it.namaNonKopi ?: "Tidak ada"}"
+                // Menggunakan string resource untuk judul dan prefix
+                binding.textViewMenuData.text = getString(R.string.menu_data_title) // TextView baru jika perlu
+                binding.textViewDialogNamaNonKopi.text = getString(R.string.non_coffee_name_prefix ) + (it.namaNonKopi ?: getString(R.string.not_available_text))
             }
         }
 
         // Tutup dialog saat tombol diklik
+        // Teks tombol "Close" sudah di XML
         binding.buttonDialogClose.setOnClickListener {
             dismiss()
         }
@@ -78,7 +87,6 @@ class LoyaltyDetailDialogFragment : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        // Mengatur lebar dialog agar mengisi sebagian besar layar
         dialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT

@@ -1,17 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="firestore_users_collection">users</string>
+    <string name="firestore_field_name">name</string>
+    <string name="firestore_field_email">email</string>
+    <!-- General App -->
     <string name="app_name">Ukopia</string>
-
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="cancel_button_text">Cancel</string>
+    <string name="more_button_text">More</string>
+    <string name="close_button_text">Close</string>
+    <string name="yes_button_text">Yes</string>
+    <string name="no_button_text">No</string>
+    <string name="copyright_text">Copyright</string>
+    <string name="ukopia_logo_desc">Ukopia Logo</string>
 
-    <style name="FullScreenDialogTheme" parent="Theme.MaterialComponents.Light.Dialog">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowMinWidthMajor">90%</item>
-        <item name="android:windowMinWidthMinor">90%</item>
-    </style>
+    <!-- Account & Authentication -->
+    <string name="slogan_text">A Place for Coffee, Stories,\nand Inspiration to Meet</string>
+    <string name="login_screen_title">LOGIN</string>
+    <string name="register_screen_title">REGISTER</string>
+    <string name="change_password_title">CHANGE\nPASSWORD</string>
+    <string name="email_label">Email</string>
+    <string name="name_label">Name</string>
+    <string name="password_label">Password</string>
+    <string name="new_password_label">New Password</string>
+    <string name="enter_email_hint">Enter Your Email</string>
+    <string name="enter_name_hint">Enter Your Name</string>
+    <string name="enter_password_hint">Enter Your Password</string>
+    <string name="enter_new_password_hint">Enter Your New Password</string>
+    <string name="forgot_password_button_text">Forgot Password?</string>
+    <string name="login_button_text">Login</string> <!-- For AkunFragment btnMasuk -->
+    <string name="signup_button_text">Register</string> <!-- For AkunFragment btnDaftar -->
+    <string name="login_button_text_login_activity">Login</string> <!-- For LoginActivity btnMasuk -->
+    <string name="signup_button_text_register_activity">Register</string> <!-- For RegisterActivity btnDaftar -->
+    <string name="change_button_text">Change</string> <!-- For LupaPasswordActivity btnSelesai -->
+    <string name="no_account_prefix">Don\'t Have an Account? </string>
+    <string name="create_account_clickable_part">Create an Account Here</string>
 
-    <string name="list_resep">LIST \nRESEP</string>
-    <string name="tidak_ada_resep">Tidak ada resep</string>
-    <string name="silakan_tambahkan_resep_baru">Silakan tambahkan resep baru.</string>
-    <string name="password_change_success">Password berhasil diganti!</string>
+    <!-- Account Fragment -->
+    <string name="my_account_title">MY\nACCOUNT</string>
+    <string name="profile_photo_desc">Profile Photo</string>
+    <string name="name_not_found">Name not found</string>
+    <string name="email_not_found">Email not found</string>
+    <string name="settings_title">Settings</string>
+    <string name="equipment_icon_desc">Equipment Icon</string>
+    <string name="equipment_option">Equipment</string>
+    <string name="language_icon_desc">Language Icon</string>
+    <string name="language_option">Language</string>
+    <string name="support_us_title">Support Us</string>
+    <string name="instagram_icon_desc">Instagram Icon</string>
+    <string name="instagram_text">Instagram</string>
+    <string name="ukopia_instagram_handle">#ukopiaindonesia</string>
+    <string name="ruangseduh_instagram_handle">#ruangseduhukopia</string>
+    <string name="youtube_icon_desc">Youtube Icon</string>
+    <string name="youtube_text">Youtube</string>
+    <string name="ukopia_youtube_channel">Ukopia Indonesia</string>
+    <string name="account_options_title">Account Option</string>
+    <string name="key_icon_desc">Key Icon</string>
+    <string name="change_password_option">Change Password</string>
+    <string name="logout_icon_desc">Logout Icon</string>
+    <string name="logout_option">Logout</string>
+    <string name="arrow_forward_desc">Arrow Forward</string>
+
+    <!-- Language Chooser Dialog -->
+    <string name="select_language">Select Language</string>
+    <string name="language_english">English</string>
+    <string name="language_indonesian">Indonesian</string>
+    <string name="selected_icon_desc">Selected</string>
+
+    <!-- Error/Success Messages (Toasts & Errors) -->
+    <string name="error_listener_implementation">must implement OnAkunFragmentInteractionListener</string>
+    <string name="logout_success_message">Logged out successfully!</string>
+    <string name="password_change_success">Password changed successfully!</string>
+    <string name="no_app_to_open_url">No app found to open this URL.</string>
+    <string name="empty_email_password_error">Email and password cannot be empty!</string>
+    <string name="login_success_toast">Login successful!</string>
+    <string name="user_not_found_error">User not found.</string>
+    <string name="failed_retrieve_user_data_error">Failed to retrieve user data: </string>
+    <string name="login_failed_error">Login failed: </string>
+    <string name="all_fields_required_error">All fields must be filled</string>
+    <string name="registration_success_message">Registration successful, please login</string>
+    <string name="failed_save_data_error">Failed to save data: </string>
+    <string name="registration_failed_error">Registration failed: </string>
+    <string name="logged_out_toast">You have been logged out</string>
+    <string name="error_brewing_method_unknown">Error: Brewing method unknown.</string>
+    <string name="error_recipe_name_required">Recipe Name is required!</string>
+    <string name="error_description_required">Description is required!</string>
+    <string name="error_coffee_amount_required">Coffee Amount is required!</string>
+    <string name="error_water_amount_required">Water Amount is required!</string>
+    <string name="error_temperature_required">Temperature is required!</string>
+    <string name="error_processing_time_required">Processing Time must be filled in completely!</string>
+    <string name="error_complete_all_recipe_data">Please complete all prescription data!</string>
+    <string name="recipe_saved_success_toast">Recipe \'%1$s\' saved successfully!</string>
+    <string name="function_not_implemented_toast">Function not yet implemented</string>
+    <string name="error_date_required">Date is required!</string>
+    <string name="error_menu_name_required">Menu Name is required!</string>
+    <string name="error_coffee_bean_name_required">Coffee bean name is required!</string>
+    <string name="error_menu_required">Menu is required!</string>
+    <string name="error_name_required">Name is required!</string>
+    <string name="loyalty_data_added_success">Data added successfully</string>
+    <string name="error_no_rating_selected">Please select your rating star!</string>
+
+    <!-- Home Fragment (Menu Review) -->
+    <string name="menu_review_title">MENU\nREVIEW</string>
+    <string name="filter_button_text">Filter</string>
+    <string name="category_all">All</string>
+    <string name="category_black_coffee">Black Coffee</string>
+    <string name="category_white_coffee">White Coffee</string>
+    <string name="category_non_coffee">Non Coffee</string>
+    <string name="category_artisan_tea">Artisan Tea</string>
+    <string name="category_flavoured_milk">Flavoured Milk</string>
+    <string name="menu_item_title_placeholder">Coffee Latte</string>
+    <string name="menu_item_rating_placeholder">4.8/5.0</string>
+
+    <!-- Menu Detail Activity -->
+    <string name="back_button_desc">Back button</string>
+    <string name="share_button_desc">Share button</string>
+    <string name="menu_item_coffee_latte_title_placeholder">Coffee Latte</string>
+    <string name="description_title">Description: </string>
+    <string name="menu_item_description_placeholder">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</string>
+    <string name="your_rating_prefix">Your Rating: </string>
+    <string name="star_suffix"> Star</string>
+    <string name="comment_prefix">Comment: </string>
+    <string name="comment_placeholder_text">This coffee is amazing!</string>
+    <string name="no_menu_to_share_message">No menu to share!</string>
+    <string name="rate_for_prefix">Rate for: </string>
+    <string name="menu_placeholder">Menu</string>
+    <string name="share_via_chooser_title">Share via:</string>
+    <string name="submit_rating_button_text">Submit Rating</string>
+    <string name="enter_comment_hint">Enter your comment...</string>
+    <string name="choose_category_title">Choose Category</string>
+    <string name="share_menu_item_text">Let\'s try %1$s at Ukopia!\nRating: %2$s\nDescription: %3$s\n#Ukopia #CoffeeLover</string>
+
+    <!-- Recipe Module -->
+    <string name="coffee_recipe_title">COFFEE\nRECIPE</string>
+    <string name="recipe_image_desc">Recipe Image</string>
+    <string name="brew_method_name_placeholder">AEROPRESS</string>
+
+    <string name="recipe_list_title">RECIPE\nLIST</string>
+    <string name="no_recipes_available">No recipes</string>
+    <string name="add_new_recipes_prompt">Please add new recipes.</string>
+    <string name="no_my_recipes_added_yet">No recipes have been added yet.</string>
+    <string name="all_recipes_button_text">All Recipes</string>
+    <string name="my_recipe_button_text">My Recipe</string>
+    <string name="recipe_title_placeholder">2018 Winner - Inverted</string>
+    <string name="recipe_description_placeholder">Prepare 40 grams of water at room temperature. Use paper filter. Rinse with hot water.</string>
+    <string name="water_icon_desc">Water Icon</string>
+    <string name="coffee_bean_icon_desc">Coffee Bean Icon</string>
+    <string name="timer_icon_desc">Timer Icon</string>
+    <string name="add_recipe_fab_desc">Add recipe</string>
+
+    <string name="add_recipe_title">ADD RECIPE</string>
+    <string name="recipe_name_label">Recipe Name</string>
+    <string name="recipe_name_hint">Recipe Name</string>
+    <string name="description_label">Description</string>
+    <string name="description_hint">Description</string>
+    <string name="coffee_amount_label">Coffee Amount</string>
+    <string name="water_amount_label">Water Amount</string>
+    <string name="grind_size_label">Grind Size</string>
+    <string name="heat_label">Heat</string>
+    <string name="process_label">PROCESS</string>
+    <string name="process_time_hint">00:00</string>
+    <string name="add_new_step_button_text">Add New Step</string>
+    <string name="add_step_icon_desc">Add Step</string>
+    <string name="add_recipe_button_text">Add Recipe</string>
+    <string name="coffee_amount_hint_placeholder">16.0 g</string>
+    <string name="water_amount_hint_placeholder">200.0 ml</string>
+    <string name="heat_hint_placeholder">90 °C</string>
+
+    <string-array name="grind_sizes">
+        <item>Fine</item>
+        <item>Medium-Fine</item>
+        <item>Medium</item>
+        <item>Medium-Coarse</item>
+        <item>Coarse</item>
+    </string-array>
+
+    <string name="recipe_details_title">RECIPE\nDETAILS</string>
+    <string name="coffee_icon_desc">Coffee Icon</string>
+    <string name="grind_size_icon_desc">Grind Size Icon</string>
+    <string name="heat_icon_desc">Heat Icon</string>
+    <string name="processing_time_label">Processing Time</string>
+    <string name="grind_size_placeholder">Medium</string>
+    <string name="heat_placeholder">92°C</string>
+    <string name="water_amount_placeholder">200.0 ml</string>
+    <string name="coffee_amount_placeholder">35.0 g</string>
+    <string name="time_placeholder">01:45</string>
+
+    <!-- Recipe Step specific strings -->
+    <string name="add_new_step_title">ADD NEW STEP</string>
+    <string name="custom_step_title">Custom Step</string>
+    <string name="custom_step_name_label">Step Name</string>
+    <string name="custom_step_name_hint">Enter custom step name</string>
+    <string name="has_duration_checkbox">Has Duration</string>
+    <string name="duration_label">Duration</string>
+    <string name="error_custom_step_title_required">Custom step name is required!</string>
+    <string name="error_step_duration_required">Duration is required for this step!</string>
+    <string name="error_minimum_one_step_required">Please add at least one step!</string>
+    <string name="step_added_successfully_toast">%1$s added successfully!</string>
+    <string name="duration_prefix_for_description">Duration: </string>
+    <string name="duration_hint_seconds">Duration (seconds)</string>
+
+    <!-- NEW DRAWABLE CONTENTS (Icons for steps) -->
+    <string name="ic_pour_water_desc">Pour water icon</string>
+    <string name="ic_bloom_desc">Bloom icon</string>
+    <string name="ic_wait_desc">Wait icon</string>
+    <string name="ic_swirl_desc">Swirl icon</string>
+    <string name="ic_stir_desc">Stir icon</string>
+    <string name="ic_press_desc">Press icon</string>
+    <string name="ic_invert_desc">Invert icon</string>
+    <string name="ic_place_plunger_desc">Place plunger icon</string>
+    <string name="ic_remove_plunger_desc">Remove plunger icon</string>
+    <string name="ic_put_the_lid_on_desc">Put the lid on icon</string>
+    <string name="ic_put_the_prismo_on_desc">Put the Prismo on icon</string>
+    <string name="ic_custom_step_desc">Custom step icon</string>
+    <string name="ic_pull_plunger_desc">Pull plunger icon</string>
+    <string name="ic_add_coffee_desc">Add coffee icon</string>
+    <string name="ic_brew_desc">Brew icon</string>
+
+    <string name="step_pour_water">Pour Water</string>
+    <string name="desc_pour_water">Add specified amount of water.</string>
+    <string name="step_bloom">Bloom</string>
+    <string name="desc_bloom">Wet the coffee grounds to release gases.</string>
+    <string name="step_wait">Wait</string>
+    <string name="desc_wait">Allow coffee to steep.</string>
+    <string name="step_swirl">Swirl</string>
+    <string name="desc_swirl">Gently swirl to ensure even saturation.</string>
+    <string name="step_stir">Stir</string>
+    <string name="desc_stir">Mix coffee and water evenly.</string>
+    <string name="step_press">Press</string>
+    <string name="desc_press">Apply steady pressure to extract coffee.</string>
+    <string name="step_invert">Invert</string>
+    <string name="desc_invert">Flip the brewer upside down.</string>
+    <string name="step_place_plunger">Place Plunger</string>
+    <string name="desc_place_plunger">Insert the plunger into the brewer.</string>
+    <string name="step_remove_plunger">Remove Plunger</string>
+    <string name="desc_remove_plunger">Take out the plunger after brewing.</string>
+    <string name="step_put_the_lid_on">Put the Lid On</string>
+    <string name="desc_put_the_lid_on">Cover the brewer.</string>
+    <string name="step_put_the_prismo_on">Put the Prismo On</string>
+    <string name="desc_put_the_prismo_on">Attach the Prismo attachment.</string>
+    <string name="step_custom_step">Custom Step</string>
+    <string name="desc_custom_step">Define your own specific action.</string>
+    <!-- NEW STEP STRINGS -->
+    <string name="step_pull_plunger">Pull Plunger</string>
+    <string name="desc_pull_plunger">Carefully pull the plunger up to create vacuum.</string>
+    <string name="step_add_coffee">Add Coffee</string>
+    <string name="desc_add_coffee">Add the specified amount of ground coffee.</string>
+    <string name="step_brew">Brew</string>
+    <string name="desc_brew">Allow the coffee to brew for the specified duration.</string>
+
+    <!-- Loyalty Module -->
+    <string name="loyalty_card_title">LOYALTY\nCARD</string>
+    <string name="no_loyalty_data_placeholder">No data has been added yet</string>
+    <string name="loyalty_item_name_placeholder">Kopi Ijen cm</string>
+    <string name="loyalty_date_placeholder">Date: 23/09/2025</string>
+    <string name="loyalty_bean_placeholder">Bean: Arabica</string>
+
+    <string name="loyalty_detail_menu_title_placeholder">DETAIL COFFEE LATTE</string>
+    <string name="coffee_bean_data_title">Coffee Bean Data: </string>
+    <string name="coffee_bean_name_prefix">Coffee Bean: </string>
+    <string name="taste_profile_title">Taste Profile (0-5): </string>
+    <string name="aroma_prefix">Aroma: </string>
+    <string name="sweetness_prefix">Sweetness: </string>
+    <string name="acidity_prefix">Acidity: </string>
+    <string name="bitterness_prefix">Bitterness: </string>
+    <string name="body_prefix">Body: </string>
+    <string name="menu_data_title">Menu Data: </string>
+    <string name="non_coffee_name_prefix">Name: </string>
+    <string name="date_prefix">Date: </string>
+    <string name="notes_prefix">Notes: </string>
+    <string name="notes_placeholder">This coffee is very good!</string>
+    <string name="not_available_text">Not available</string>
+
+    <string name="coffee_button_text">Coffee</string>
+    <string name="non_coffee_button_text">Non Coffee</string>
+    <string name="done_button_text">Done</string>
+    <string name="notes_hint">Notes</string>
+    <string name="date_hint">Date</string>
+    <string name="aroma_label">Aroma</string>
+    <string name="sweetness_label">Sweetness</string>
+    <string name="acidity_label">Acidity</string>
+    <string name="bitterness_label">Bitterness</string>
+    <string name="body_label">Body</string>
+    <string name="menu_name_label">Menu Name</string>
+    <string name="coffee_bean_name_label">Coffee Bean Name</string>
+    <string name="non_coffee_menu_name_label">Non-Coffee Menu Name</string>
+    <string name="non_coffee_item_name_label">Non-Coffee Item Name</string>
+
+    <!-- NEW Loyalty specific strings -->
+    <string name="add_loyalty_title">ADD \nLOYALTY</string>
+    <string name="date_prefix_title">Date</string>
+    <string name="notes_label">Notes</string>
+    <string name="notes_hint_optional">Notes (Optional)</string>
+    <string name="add_button_text">Add</string>
+    <string name="menu_hint">Menu</string>
+    <string name="bean_hint">Bean</string>
+    <string name="name_hint">Name</string>
+
+    <!-- Logout Confirmation Dialog -->
+    <string name="logout_confirmation_title">Logout Confirmation</string>
+    <string name="logout_confirmation_message">Are you sure you want to logout?</string>
+
 </resources>

@@ -26,7 +26,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="18dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Tombol Kembali"
+        android:contentDescription="@string/back_button_desc"
         android:src="@drawable/ic_arrow_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -37,7 +37,7 @@
         android:layout_marginTop="18dp"
         android:layout_marginEnd="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Tombol Share"
+        android:contentDescription="@string/share_button_desc"
         android:src="@drawable/ic_share"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="24dp"
             android:paddingVertical="12dp"
-            android:text="Coffee Latte"
+            android:text="@string/menu_item_coffee_latte_title_placeholder"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -105,7 +105,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:text="Deskripsi:"
+                        android:text="@string/description_title"
                         android:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -114,7 +114,7 @@
                         android:id="@+id/detail_menu_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+                        android:text="@string/menu_item_description_placeholder"
                         android:textColor="@color/black"
                         android:textSize="14sp" />
                 </LinearLayout>

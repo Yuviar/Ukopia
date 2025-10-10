@@ -21,6 +21,13 @@
 
         <item name="fontFamily">@font/montserrat</item>
         <item name="android:fontFamily">@font/montserrat</item>
+
+        <!-- ▼▼▼ MODIFIKASI: Hapus atribut yang menghubungkan ke DatePickerDialog standar ▼▼▼ -->
+        <!-- <item name="android:datePickerDialogTheme">@style/App.Theme.DatePickerDialog</item> -->
+        <item name="materialCalendarStyle">@style/Widget.MaterialComponents.MaterialCalendar</item>
+        <item name="materialCalendarFullscreenTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen</item>
+        <item name="materialCalendarTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar</item>
+        <!-- ▲▲▲ AKHIR MODIFIKASI ▲▲▲ -->
     </style>
     <style name="RoundedImageViewTopCorners" parent="">
         <item name="cornerFamily">rounded</item>
@@ -40,5 +47,51 @@
         <item name="itemActiveIndicatorStyle">@null</item>
     </style>
     <style name="Theme.Ukopia" parent="Base.Theme.Ukopia" />
+
+    <!-- ▼▼▼ DEFINISI FullScreenDialogTheme UNTUK DIALOG KUSTOM ANDA ▼▼▼ -->
+    <style name="FullScreenDialogTheme" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+        <!-- Atur warna dialog agar sesuai tema Anda -->
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorAccent">@color/black</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnSurface">@color/black</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorSecondary">@color/grey</item>
+    </style>
+
+    <!-- ▼▼▼ GAYA UNTUK WIDGET DatePicker DI DALAM DIALOG KUSTOM ▼▼▼ -->
+    <!-- Kita menggunakan parent standar dan hanya atribut yang diketahui berfungsi konsisten -->
+    <style name="DatePickerTheme" parent="android:Widget.Material.DatePicker">
+        <item name="android:colorAccent">@color/black</item> <!-- Warna aksen (lingkaran tanggal, dll.) -->
+        <item name="android:datePickerMode">calendar</item> <!-- Pastikan mode kalender -->
+        <!-- Atribut lain seperti headerBackground, calendarTextColor, dayOfWeekTextColor,
+             yearListSelectorColor seringkali tidak konsisten atau menyebabkan error
+             jika digunakan pada parent ini di berbagai API level.
+             Warna teks hari/bulan/tahun akan diwarisi dari textColorPrimary/Secondary
+             dari tema dialog induk (FullScreenDialogTheme). -->
+    </style>
+
+    <!-- App.Theme.DatePickerDialog ini adalah tema untuk DatePickerDialog standar -->
+    <!-- Jika Anda tidak menggunakannya lagi di bagian lain aplikasi, bisa dihapus -->
+    <style name="App.Theme.DatePickerDialog" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorAccent">@color/black</item>
+        <item name="colorOnSurface">@color/black</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorSecondary">@color/grey</item>
+        <item name="buttonBarPositiveButtonStyle">@style/App.DatePicker.Button</item>
+        <item name="buttonBarNegativeButtonStyle">@style/App.DatePicker.Button</item>
+    </style>
+
+    <!-- Gaya khusus untuk tombol OK/Tidak di DatePickerDialog standar -->
+    <style name="App.DatePicker.Button" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <!-- ▲▲▲ AKHIR DEFINISI GAYA DatePickerDialog STANDAR ▲▲▲ -->
 
 </resources>

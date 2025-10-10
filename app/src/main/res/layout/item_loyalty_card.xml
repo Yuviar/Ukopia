@@ -18,7 +18,7 @@
             android:id="@+id/textViewNamaMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Kopi Ijen cm"
+            android:text="@string/loyalty_item_name_placeholder"
             android:textSize="25sp"
             android:textStyle="bold"
             android:textColor="@android:color/black" />
@@ -29,14 +29,14 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/textViewNamaMenu"
             android:layout_marginTop="8dp"
-            tools:text="Tanggal: 23/09/2025" />
+            tools:text="@string/loyalty_date_placeholder" />
 
         <TextView
             android:id="@+id/textViewBeans"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/textViewTanggal"
-            tools:text="Biji Kopi: Arabica" />
+            tools:text="@string/loyalty_bean_placeholder" />
 
         <Button
             android:id="@+id/btnSelengkapnya"
@@ -45,7 +45,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignBaseline="@id/textViewBeans"
             android:backgroundTint="@color/black"
-            android:text="Selengkapnya"
+            android:text="@string/more_button_text"
             android:textSize="14sp"
             android:paddingHorizontal="16dp"
             android:textAllCaps="false"

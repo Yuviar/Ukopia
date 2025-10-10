@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -19,15 +20,16 @@
             android:layout_height="100dp"
             android:src="@drawable/logo_ukopia"
             android:adjustViewBounds="true"
+            android:contentDescription="@string/ukopia_logo_desc"
             android:scaleType="fitCenter"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tempat Kopi, Cerita, dan \nInspirasi Bertemu"
+            android:text="@string/slogan_text"
             android:gravity="center"
             android:textColor="@color/black"
-            android:textSize="15sp"
+            android:textSize="18sp"
             android:textFontWeight="800"
             android:fontFamily="@font/montserrat_extrabold"/>
     </LinearLayout>
@@ -50,7 +52,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="MASUK"
+            android:text="@string/login_screen_title"
             android:textSize="40sp"
             android:textFontWeight="800"
             android:fontFamily="@font/montserrat_extrabold"
@@ -61,7 +63,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Email"
+            android:text="@string/email_label"
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_marginLeft="30dp"
@@ -76,7 +78,7 @@
             android:layout_marginBottom="10dp"
             android:background="@drawable/edit_text_border"
             android:inputType="textEmailAddress"
-            android:hint="Masukkan Email Anda"
+            android:hint="@string/enter_email_hint"
             android:textColorHint="@color/light_grey"
             android:padding="10dp"
             android:textColor="@color/black"
@@ -85,7 +87,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Password"
+            android:text="@string/password_label"
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_marginLeft="30dp"
@@ -104,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:inputType="textPassword"
-                android:hint="Masukkan Password Anda"
+                android:hint="@string/enter_password_hint"
                 android:textColorHint="@color/light_grey"
                 android:padding="10dp"
                 android:textColor="@color/black"
@@ -121,6 +123,7 @@
                 android:layout_marginRight="5dp"
                 android:src="@drawable/ic_eye"
                 android:tint="@color/black"
+                android:contentDescription="@string/key_icon_desc"
                 android:padding="4dp"/>
         </RelativeLayout>
 
@@ -132,7 +135,7 @@
             android:layout_gravity="end"
             android:layout_marginRight="21dp"
             android:layout_marginTop="4dp"
-            android:text="Lupa Password?"
+            android:text="@string/forgot_password_button_text"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:textAllCaps="false"
@@ -142,7 +145,7 @@
             android:id="@+id/btnMasuk"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="Masuk"
+            android:text="@string/login_button_text_login_activity"
             android:textSize="15sp"
             android:textColor="@color/white"
             android:backgroundTint="@color/black"
@@ -156,7 +159,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Belum punya akun? Buat akun di sini"
+            tools:text="Don't Have an Account? Create an account here"
             android:textAllCaps="false"
             android:textColor="@color/black"
             android:textSize="15sp"

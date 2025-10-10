@@ -7,39 +7,39 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Menu"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:text="@string/non_coffee_menu_name_label"
+    android:textSize="18sp"
+    android:textStyle="bold" />
 
     <EditText
         android:id="@+id/editTextMenuNonKopi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/edit_text_border"
-        android:hint="Menu"
-        android:inputType="text"
-        android:padding="10dp"
-        android:textColor="@color/black"
-        android:textColorHint="@color/light_grey"
-        android:textSize="16sp"
-        android:layout_marginBottom="15dp"/>
+        android:hint="@string/menu_hint"
+    android:inputType="text"
+    android:padding="10dp"
+    android:textColor="@color/black"
+    android:textColorHint="@color/light_grey"
+    android:textSize="16sp"
+    android:layout_marginBottom="15dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nama"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:text="@string/non_coffee_item_name_label"
+    android:textSize="18sp"
+    android:textStyle="bold" />
 
     <EditText
         android:id="@+id/editTextNamaNonKopi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/edit_text_border"
-        android:hint="Nama"
-        android:inputType="text"
-        android:padding="10dp"
-        android:textColor="@color/black"
-        android:textColorHint="@color/light_grey"
-        android:textSize="16sp" />
+        android:hint="@string/name_hint"
+    android:inputType="text"
+    android:padding="10dp"
+    android:textColor="@color/black"
+    android:textColorHint="@color/light_grey"
+    android:textSize="16sp" />
 </LinearLayout>

@@ -12,14 +12,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.ukopia.LoginActivity
 import com.example.ukopia.LupaPasswordActivity
-import com.example.ukopia.MainActivity // <<-- TAMBAHKAN INI
+import com.example.ukopia.MainActivity
 import com.example.ukopia.R
 import com.example.ukopia.RegisterActivity
 import com.example.ukopia.SessionManager
 import com.example.ukopia.databinding.FragmentAkunBinding
 
-import android.app.AlertDialog
 import androidx.fragment.app.viewModels
+import com.example.ukopia.LocaleHelper
 
 class AkunFragment : Fragment(), LogoutConfirmationDialogFragment.LogoutListener {
     private var _binding: FragmentAkunBinding? = null
@@ -40,7 +40,7 @@ class AkunFragment : Fragment(), LogoutConfirmationDialogFragment.LogoutListener
         if (context is OnAkunFragmentInteractionListener) {
             listener = context
         } else {
-            throw RuntimeException(context.toString() + "must implement OnAkunFragmentInteractionListener")
+            throw RuntimeException(context.toString() + getString(R.string.error_listener_implementation))
         }
     }
 
@@ -48,6 +48,18 @@ class AkunFragment : Fragment(), LogoutConfirmationDialogFragment.LogoutListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        parentFragmentManager.setFragmentResultListener(
+            LanguageChooserDialogFragment.REQUEST_KEY,
+            this
+        ) { requestKey, bundle ->
+            if (requestKey == LanguageChooserDialogFragment.REQUEST_KEY) {
+                val selectedLanguageCode = bundle.getString(LanguageChooserDialogFragment.BUNDLE_KEY_LANGUAGE_CODE)
+                selectedLanguageCode?.let {
+                    onLanguageSelected(it)
+                }
+            }
+        }
     }
 
     override fun onCreateView(
@@ -61,7 +73,6 @@ class AkunFragment : Fragment(), LogoutConfirmationDialogFragment.LogoutListener
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // ▼▼▼ Pastikan nav bar terlihat di AkunFragment ▼▼▼
         (requireActivity() as MainActivity).setBottomNavVisibility(View.VISIBLE)
 
         setupUserInterface()
@@ -80,7 +91,7 @@ class AkunFragment : Fragment(), LogoutConfirmationDialogFragment.LogoutListener
         } catch (e: ActivityNotFoundException) {
             Toast.makeText(
                 requireContext(),
-                "Tidak ada aplikasi yang dapat membuka URL ini",
+                getString(R.string.no_app_to_open_url),
                 Toast.LENGTH_SHORT
             ).show()
         }
@@ -95,8 +106,8 @@ class AkunFragment : Fragment(), LogoutConfirmationDialogFragment.LogoutListener
             val userName = SessionManager.SessionManager.getUserName(requireContext())
             val userEmail = SessionManager.SessionManager.getUserEmail(requireContext())
 
-            binding.tvNama.text = userName ?: "Nama Tidak Ditemukan"
-            binding.tvEmail.text = userEmail ?: "Email Tidak Ditemukan"
+            binding.tvNama.text = userName ?: getString(R.string.name_not_found)
+            binding.tvEmail.text = userEmail ?: getString(R.string.email_not_found)
 
         } else {
             binding.displayBtn.visibility = View.VISIBLE
@@ -129,6 +140,10 @@ class AkunFragment : Fragment(), LogoutConfirmationDialogFragment.LogoutListener
             dialog.show(parentFragmentManager, "LogoutConfirmationDialog")
         }
 
+        binding.btnChangeLanguage.setOnClickListener {
+            showLanguageChooserDialog()
+        }
+
         val instagramUrl1 = "https://www.instagram.com/ukopiaindonesia"
         val instagramUrl2 = "https://www.instagram.com/ruangseduhukopia"
         val youtubeUrl = "https://www.youtube.com/@Ukopia_Indonesia"
@@ -140,8 +155,24 @@ class AkunFragment : Fragment(), LogoutConfirmationDialogFragment.LogoutListener
         binding.btnPeralatan.setOnClickListener { listener!!.OnPeralatanClicked() }
     }
 
+    private fun showLanguageChooserDialog() {
+        val dialog = LanguageChooserDialogFragment.newInstance()
+        dialog.show(parentFragmentManager, "LanguageChooserDialog")
+    }
+
     override fun onLogoutConfirmed() {
-        setupUserInterface()
+        SessionManager.SessionManager.setLoggedIn(requireContext(), false)
+        SessionManager.SessionManager.clearUserData(requireContext())
+        setupUserInterface() // Perbarui UI setelah logout
+        Toast.makeText(requireContext(), getString(R.string.logout_success_message), Toast.LENGTH_SHORT).show()
+    }
+
+    private fun onLanguageSelected(languageCode: String) {
+        val currentLangCode = LocaleHelper.getLanguage(requireContext()) ?: LocaleHelper.DEFAULT_LANGUAGE
+        if (languageCode != currentLangCode) {
+            LocaleHelper.setLocale(requireContext(), languageCode)
+            requireActivity().recreate() // Ini akan me-restart Activity untuk menerapkan bahasa baru
+        }
     }
 
     override fun onDestroyView() {

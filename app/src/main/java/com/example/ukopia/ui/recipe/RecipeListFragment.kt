@@ -11,7 +11,7 @@ import com.example.ukopia.R
 import com.example.ukopia.data.RecipeItem
 import com.example.ukopia.databinding.FragmentRecipeListBinding
 import com.google.android.material.button.MaterialButton
-import com.example.ukopia.MainActivity // <<-- TAMBAHKAN INI
+import com.example.ukopia.MainActivity
 
 class RecipeListFragment : Fragment() {
 
@@ -36,11 +36,11 @@ class RecipeListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // ▼▼▼ Sembunyikan nav bar ▼▼▼
         (requireActivity() as MainActivity).setBottomNavVisibility(View.GONE)
 
         selectedMethodName = arguments?.getString("SELECTED_METHOD_NAME")
-        binding.tvHeaderTitle.text = selectedMethodName?.uppercase()?.replace(" ", "\n") ?: "LIST RESEP"
+        // Menggunakan string resource untuk default title jika methodName null
+        binding.tvHeaderTitle.text = selectedMethodName?.uppercase()?.replace(" ", "\n") ?: getString(R.string.recipe_list_title)
 
         setupListeners()
 
@@ -152,10 +152,31 @@ class RecipeListFragment : Fragment() {
             binding.tvWaterAmount.text = it.waterAmount
             binding.tvCoffeeAmount.text = it.coffeeAmount
             binding.tvTime.text = it.time
+
+            binding.tvRecipeDescription.visibility = View.VISIBLE
+            binding.layoutWaterAmount.visibility = View.VISIBLE
+            binding.layoutCoffeeAmount.visibility = View.VISIBLE
+            binding.layoutTimer.visibility = View.VISIBLE
+
         } ?: run {
-            binding.tvRecipeTitle.text = getString(R.string.tidak_ada_resep)
-            binding.tvRecipeDescription.text = getString(R.string.silakan_tambahkan_resep_baru)
-            binding.tvWaterAmount.text = "-"; binding.tvCoffeeAmount.text = "-"; binding.tvTime.text = "-"
+            if (isMyRecipeActive) {
+                binding.tvRecipeTitle.text = getString(R.string.no_my_recipes_added_yet)
+                binding.tvRecipeDescription.visibility = View.GONE
+                binding.layoutWaterAmount.visibility = View.GONE
+                binding.layoutCoffeeAmount.visibility = View.GONE
+                binding.layoutTimer.visibility = View.GONE
+            } else {
+                binding.tvRecipeTitle.text = getString(R.string.no_recipes_available)
+                binding.tvRecipeDescription.text = getString(R.string.add_new_recipes_prompt)
+                binding.tvRecipeDescription.visibility = View.VISIBLE
+
+                binding.tvWaterAmount.text = "-";
+                binding.tvCoffeeAmount.text = "-";
+                binding.tvTime.text = "-";
+                binding.layoutWaterAmount.visibility = View.GONE
+                binding.layoutCoffeeAmount.visibility = View.GONE
+                binding.layoutTimer.visibility = View.GONE
+            }
         }
     }
 

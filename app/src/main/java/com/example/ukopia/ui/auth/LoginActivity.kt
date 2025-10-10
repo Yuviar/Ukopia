@@ -1,5 +1,6 @@
 package com.example.ukopia
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
@@ -18,7 +19,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.observe
 import com.example.ukopia.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -30,24 +30,24 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var binding: ActivityLoginBinding
 
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(newBase?.let { LocaleHelper.onAttach(it) } ?: newBase)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
         binding = ActivityLoginBinding.inflate(layoutInflater)
-
         setContentView(binding.root)
+
         auth = FirebaseAuth.getInstance()
 
-        val editEmail = findViewById<EditText>(R.id.editEmail)
-        val editPassword = findViewById<EditText>(R.id.editPassword)
-        val togglePassword = findViewById<ImageView>(R.id.btnTogglePassword)
-        progressBar = findViewById(R.id.loginProgressBar)
-        btnMasuk = findViewById(R.id.btnMasuk)
-        val btnLupaPassword = findViewById<Button>(R.id.btnLupaPassword)
-        val txtBuatAkun = findViewById<TextView>(R.id.txtBuatAkun)
-
-
+        val editEmail = binding.editEmail
+        val editPassword = binding.editPassword
+        val togglePassword = binding.btnTogglePassword
+        progressBar = binding.loginProgressBar
+        btnMasuk = binding.btnMasuk
+        val btnLupaPassword = binding.btnLupaPassword
+        val txtBuatAkun = binding.txtBuatAkun
 
         togglePassword.setOnClickListener {
             if (isPasswordVisible) {
@@ -71,8 +71,7 @@ class LoginActivity : AppCompatActivity() {
             val password = editPassword.text.toString().trim()
 
             if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Email dan password tidak boleh kosong!", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(this, getString(R.string.empty_email_password_error), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             showLoading(true)
@@ -82,75 +81,73 @@ class LoginActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         val firebaseUser = auth.currentUser
                         firebaseUser?.let { user ->
-                            FirebaseFirestore.getInstance().collection("users")
+                            // PERINGATAN: Nama koleksi Firestore sebaiknya tidak dilokalisasi.
+                            // Pertimbangkan menggunakan string literal atau konstanta.
+                            FirebaseFirestore.getInstance().collection(getString(R.string.firestore_users_collection))
                                 .document(user.uid).get()
                                 .addOnSuccessListener { document ->
                                     if (document != null && document.exists()) {
-                                        val name = document.getString("nama") ?: ""
-                                        val emailResult = document.getString("email") ?: ""
+                                        // PERINGATAN: Nama bidang Firestore sebaiknya tidak dilokalisasi.
+                                        // Pertimbangkan menggunakan string literal atau konstanta.
+                                        val name = document.getString(getString(R.string.firestore_field_name)) ?: ""
+                                        val emailResult = document.getString(getString(R.string.firestore_field_email)) ?: ""
 
-                                        // Simpan data ke SessionManager
                                         SessionManager.SessionManager.setLoggedIn(this, true)
                                         SessionManager.SessionManager.saveUserData(this, name, emailResult)
 
-                                        Toast.makeText(this, "Login berhasil!", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(this, getString(R.string.login_success_toast), Toast.LENGTH_SHORT).show()
                                         goToMainActivity()
                                     } else {
-                                        // Kasus jika user ada di Auth tapi tidak ada di Firestore
-                                        Toast.makeText(this, "Data pengguna tidak ditemukan.", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(this, getString(R.string.user_not_found_error), Toast.LENGTH_SHORT).show()
                                     }
                                 }
                                 .addOnFailureListener { e ->
-                                    Toast.makeText(this, "Gagal mengambil data: ${e.message}", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(this, getString(R.string.failed_retrieve_user_data_error) + e.message, Toast.LENGTH_SHORT).show()
                                 }
                         }
                     } else {
                         Toast.makeText(
                             this,
-                            "Login gagal: ${task.exception?.message}",
+                            getString(R.string.login_failed_error) + task.exception?.message,
                             Toast.LENGTH_SHORT
                         ).show()
                     }
                 }
-
-//            btnMasuk.animate().scaleX(1.2f).scaleY(1.2f).setDuration(100).withEndAction {
-//                val intent = Intent(this, MainActivity::class.java)
-//                startActivity(intent)
-////                overridePendingTransition(R.anim.scale_in, R.anim.scale_out)
-//                btnMasuk.scaleX = 1f
-//                btnMasuk.scaleY = 1f
-//            }.start()
         }
 
         btnLupaPassword.setOnClickListener {
             val intent = Intent(this, LupaPasswordActivity::class.java).apply {
-                // Kirim tanda bahwa panggilan berasal dari LoginActivity
                 putExtra(LupaPasswordActivity.EXTRA_SOURCE, LupaPasswordActivity.SOURCE_LOGIN)
             }
             startActivity(intent)
         }
 
-        val text = "Belum Punya Akun? Buat Akun Disini"
-        val spannableString = SpannableString(text)
-        val start = text.indexOf("Buat Akun Disini")
-        val end = start + "Buat Akun Disini".length
+        // Sudah menggunakan string resources
+        val prefixText = getString(R.string.no_account_prefix)
+        val clickablePartText = getString(R.string.create_account_clickable_part)
+        val fullText = prefixText + clickablePartText
 
-        val clickableSpan = object : ClickableSpan() {
-            override fun onClick(widget: View) {
-                val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
-                startActivity(intent)
-//                overridePendingTransition(R.anim.scale_in, R.anim.scale_out)
-            }
+        val spannableString = SpannableString(fullText)
+        val start = fullText.indexOf(clickablePartText)
+        val end = start + clickablePartText.length
 
-            override fun updateDrawState(ds: android.text.TextPaint) {
-                super.updateDrawState(ds)
-                ds.isUnderlineText = false
-                ds.color = ContextCompat.getColor(this@LoginActivity, R.color.blue)
-                ds.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        if (start != -1) {
+            val clickableSpan = object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
+                    startActivity(intent)
+                }
+
+                override fun updateDrawState(ds: android.text.TextPaint) {
+                    super.updateDrawState(ds)
+                    ds.isUnderlineText = false
+                    ds.color = ContextCompat.getColor(this@LoginActivity, R.color.blue)
+                    ds.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+                }
             }
+            spannableString.setSpan(clickableSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
 
-        spannableString.setSpan(clickableSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         txtBuatAkun.text = spannableString
         txtBuatAkun.movementMethod = LinkMovementMethod.getInstance()
         txtBuatAkun.highlightColor = android.graphics.Color.TRANSPARENT
@@ -176,5 +173,4 @@ class LoginActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
-
 }

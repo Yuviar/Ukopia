@@ -4,18 +4,18 @@
 
     <item
         android:id="@+id/itemHome"
-        android:icon="@drawable/ic_coffee"
+        android:icon="@drawable/selector_home_icon"
         android:title="Home" />
     <item
-        android:id="@+id/itemRoyalti"
-        android:icon="@drawable/ic_book"
+        android:id="@+id/itemLoyalty"
+        android:icon="@drawable/selector_loyalty_icon"
         android:title="Royalti" />
     <item
-        android:id="@+id/itemResep"
-        android:icon="@drawable/ic_receipt"
+        android:id="@+id/itemRecipe"
+        android:icon="@drawable/selector_recipe_icon"
         android:title="Resep" />
     <item
-        android:id="@+id/itemAkun"
-        android:icon="@drawable/ic_person"
+        android:id="@+id/itemAccount"
+        android:icon="@drawable/selector_account_icon"
         android:title="Akun" />
 </menu>

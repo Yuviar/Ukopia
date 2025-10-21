@@ -3,7 +3,6 @@
     <string name="firestore_users_collection">users</string>
     <string name="firestore_field_name">name</string>
     <string name="firestore_field_email">email</string>
-    <!-- General App -->
     <string name="app_name">Ukopia</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="cancel_button_text">Cancel</string>
@@ -14,7 +13,6 @@
     <string name="copyright_text">Copyright</string>
     <string name="ukopia_logo_desc">Ukopia Logo</string>
 
-    <!-- Account & Authentication -->
     <string name="slogan_text">A Place for Coffee, Stories,\nand Inspiration to Meet</string>
     <string name="login_screen_title">LOGIN</string>
     <string name="register_screen_title">REGISTER</string>
@@ -28,29 +26,27 @@
     <string name="enter_password_hint">Enter Your Password</string>
     <string name="enter_new_password_hint">Enter Your New Password</string>
     <string name="forgot_password_button_text">Forgot Password?</string>
-    <string name="login_button_text">Login</string> <!-- For AkunFragment btnMasuk -->
-    <string name="signup_button_text">Register</string> <!-- For AkunFragment btnDaftar -->
-    <string name="login_button_text_login_activity">Login</string> <!-- For LoginActivity btnMasuk -->
-    <string name="signup_button_text_register_activity">Register</string> <!-- For RegisterActivity btnDaftar -->
-    <string name="change_button_text">Change</string> <!-- For LupaPasswordActivity btnSelesai -->
+    <string name="login_button_text">Login</string>
+    <string name="signup_button_text">Register</string>
+    <string name="login_button_text_login_activity">Login</string>
+    <string name="signup_button_text_register_activity">Register</string>
+    <string name="change_button_text">Change</string>
     <string name="no_account_prefix">Don\'t Have an Account? </string>
     <string name="create_account_clickable_part">Create an Account Here</string>
 
-    <!-- Account Fragment -->
     <string name="my_account_title">MY\nACCOUNT</string>
     <string name="profile_photo_desc">Profile Photo</string>
     <string name="name_not_found">Name not found</string>
     <string name="email_not_found">Email not found</string>
     <string name="settings_title">Settings</string>
     <string name="equipment_icon_desc">Equipment Icon</string>
-    <string name="equipment_option">Equipment</string>
     <string name="language_icon_desc">Language Icon</string>
     <string name="language_option">Language</string>
     <string name="support_us_title">Support Us</string>
     <string name="instagram_icon_desc">Instagram Icon</string>
     <string name="instagram_text">Instagram</string>
     <string name="ukopia_instagram_handle">#ukopiaindonesia</string>
-    <string name="ruangseduh_instagram_handle">#ruangseduhukopia</string>
+    <string name="ruangseduhukopia">#ruangseduhukopia</string>
     <string name="youtube_icon_desc">Youtube Icon</string>
     <string name="youtube_text">Youtube</string>
     <string name="ukopia_youtube_channel">Ukopia Indonesia</string>
@@ -61,13 +57,11 @@
     <string name="logout_option">Logout</string>
     <string name="arrow_forward_desc">Arrow Forward</string>
 
-    <!-- Language Chooser Dialog -->
     <string name="select_language">Select Language</string>
     <string name="language_english">English</string>
     <string name="language_indonesian">Indonesian</string>
     <string name="selected_icon_desc">Selected</string>
 
-    <!-- Error/Success Messages (Toasts & Errors) -->
     <string name="error_listener_implementation">must implement OnAkunFragmentInteractionListener</string>
     <string name="logout_success_message">Logged out successfully!</string>
     <string name="password_change_success">Password changed successfully!</string>
@@ -100,7 +94,6 @@
     <string name="loyalty_data_added_success">Data added successfully</string>
     <string name="error_no_rating_selected">Please select your rating star!</string>
 
-    <!-- Home Fragment (Menu Review) -->
     <string name="menu_review_title">MENU\nREVIEW</string>
     <string name="filter_button_text">Filter</string>
     <string name="category_all">All</string>
@@ -112,7 +105,6 @@
     <string name="menu_item_title_placeholder">Coffee Latte</string>
     <string name="menu_item_rating_placeholder">4.8/5.0</string>
 
-    <!-- Menu Detail Activity -->
     <string name="back_button_desc">Back button</string>
     <string name="share_button_desc">Share button</string>
     <string name="menu_item_coffee_latte_title_placeholder">Coffee Latte</string>
@@ -131,8 +123,7 @@
     <string name="choose_category_title">Choose Category</string>
     <string name="share_menu_item_text">Let\'s try %1$s at Ukopia!\nRating: %2$s\nDescription: %3$s\n#Ukopia #CoffeeLover</string>
 
-    <!-- Recipe Module -->
-    <string name="coffee_recipe_title">COFFEE\nRECIPE</string>
+    <string name="coffee_recipe_title">COFFEE RECIPE</string>
     <string name="recipe_image_desc">Recipe Image</string>
     <string name="brew_method_name_placeholder">AEROPRESS</string>
 
@@ -186,7 +177,6 @@
     <string name="coffee_amount_placeholder">35.0 g</string>
     <string name="time_placeholder">01:45</string>
 
-    <!-- Recipe Step specific strings -->
     <string name="add_new_step_title">ADD NEW STEP</string>
     <string name="custom_step_title">Custom Step</string>
     <string name="custom_step_name_label">Step Name</string>
@@ -200,7 +190,6 @@
     <string name="duration_prefix_for_description">Duration: </string>
     <string name="duration_hint_seconds">Duration (seconds)</string>
 
-    <!-- NEW DRAWABLE CONTENTS (Icons for steps) -->
     <string name="ic_pour_water_desc">Pour water icon</string>
     <string name="ic_bloom_desc">Bloom icon</string>
     <string name="ic_wait_desc">Wait icon</string>
@@ -241,7 +230,6 @@
     <string name="desc_put_the_prismo_on">Attach the Prismo attachment.</string>
     <string name="step_custom_step">Custom Step</string>
     <string name="desc_custom_step">Define your own specific action.</string>
-    <!-- NEW STEP STRINGS -->
     <string name="step_pull_plunger">Pull Plunger</string>
     <string name="desc_pull_plunger">Carefully pull the plunger up to create vacuum.</string>
     <string name="step_add_coffee">Add Coffee</string>
@@ -249,9 +237,8 @@
     <string name="step_brew">Brew</string>
     <string name="desc_brew">Allow the coffee to brew for the specified duration.</string>
 
-    <!-- Loyalty Module -->
-    <string name="loyalty_card_title">LOYALTY\nCARD</string>
-    <string name="no_loyalty_data_placeholder">No data has been added yet</string>
+    <string name="loyalty_card_title">Virtual Loyalty Card</string>
+    <string name="no_loyalty_data_placeholder">No loyalty data has been added yet.</string>
     <string name="loyalty_item_name_placeholder">Kopi Ijen cm</string>
     <string name="loyalty_date_placeholder">Date: 23/09/2025</string>
     <string name="loyalty_bean_placeholder">Bean: Arabica</string>
@@ -287,7 +274,6 @@
     <string name="non_coffee_menu_name_label">Non-Coffee Menu Name</string>
     <string name="non_coffee_item_name_label">Non-Coffee Item Name</string>
 
-    <!-- NEW Loyalty specific strings -->
     <string name="add_loyalty_title">ADD \nLOYALTY</string>
     <string name="date_prefix_title">Date</string>
     <string name="notes_label">Notes</string>
@@ -297,8 +283,46 @@
     <string name="bean_hint">Bean</string>
     <string name="name_hint">Name</string>
 
-    <!-- Logout Confirmation Dialog -->
     <string name="logout_confirmation_title">Logout Confirmation</string>
     <string name="logout_confirmation_message">Are you sure you want to logout?</string>
+
+    <string name="app_logo">App Logo</string>
+    <string name="greeting_salutation">Hi, %1$s</string>
+    <string name="greeting_salutation_default">Hi!</string>
+    <string name="search_icon">Search Icon</string>
+    <string name="search_hint">Search menu</string>
+    <string name="promo_banner">Promo Banner</string>
+    <string name="promo_text">20% DISCOUNT - All Espresso Drinks!</string>
+
+    <string name="level_label">Level</string>
+    <string name="loyalty_points_format">Points: %1$d</string>
+    <string name="add_loyalty_data_desc">Add new loyalty data</string>
+    <string name="loyalty_history_title">Loyalty History</string>
+
+    <string name="progress_intro_format">%1$d/%2$d purchases for 10%% discount!</string>
+    <string name="reward_10_percent_discount_progress_format">You\'ve earned 10%% discount! %1$d/%2$d purchases for Free 1 Serve!</string>
+    <string name="reward_free_serve_progress_format">You\'ve earned Free 1 Serve! %1$d/%2$d purchases for Free 1 T-shirt!</string>
+    <string name="reward_free_tshirt_earned">You\'ve earned Free 1 T-shirt! Enjoy your rewards!</string>
+
+    <string name="loyalty_level_bronze">Bronze</string>
+    <string name="loyalty_level_silver">Silver</string>
+    <string name="loyalty_level_gold">Gold</string>
+    <string name="loyalty_level_platinum">Platinum</string>
+
+    <string name="search_recipe_hint">Search method</string>
+
+    <string name="login_required_title">Login Required</string>
+    <string name="login_required_message">You need to log in to proceed with this action.</string>
+
+    <string name="error_no_app_to_handle_link">No app found to handle this link.</string>
+
+    <!-- NEW STRINGS FOR RATING FEATURE -->
+    <string name="give_rating_title">GIVE RATING</string>
+    <string name="rate_for_placeholder">Rate for: Coffee Latte</string>
+    <string name="average_rating_prefix">Rating: </string>
+    <string name="rate_button_text">Rate</string>
+    <string name="your_comment_prefix">Comment: </string>
+
+    <string name="press_back_again_to_exit">Press back again to exit </string>
 
 </resources>

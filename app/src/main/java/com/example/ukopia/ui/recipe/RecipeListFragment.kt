@@ -1,9 +1,15 @@
 package com.example.ukopia.ui.recipe
 
+import android.app.Activity
+import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -12,6 +18,10 @@ import com.example.ukopia.data.RecipeItem
 import com.example.ukopia.databinding.FragmentRecipeListBinding
 import com.google.android.material.button.MaterialButton
 import com.example.ukopia.MainActivity
+import com.example.ukopia.SessionManager
+import com.example.ukopia.LoginActivity
+import com.example.ukopia.databinding.DialogLoginRequiredBinding
+import androidx.appcompat.app.AlertDialog
 
 class RecipeListFragment : Fragment() {
 
@@ -28,6 +38,31 @@ class RecipeListFragment : Fragment() {
 
     private var currentDisplayedRecipe: RecipeItem? = null
 
+    private var pendingAddRecipeAction = false
+
+    private val loginActivityResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            if (SessionManager.SessionManager.isLoggedIn(requireContext())) {
+                displayRecipesBasedOnFilter()
+
+                if (pendingAddRecipeAction) {
+                    pendingAddRecipeAction = false
+                    val addFragment = AddRecipeFragment().apply {
+                        arguments = Bundle().apply {
+                            putString("METHOD_NAME", selectedMethodName)
+                        }
+                    }
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.container, addFragment)
+                        .addToBackStack(null)
+                        .commit()
+                }
+            }
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentRecipeListBinding.inflate(inflater, container, false)
         return binding.root
@@ -39,7 +74,6 @@ class RecipeListFragment : Fragment() {
         (requireActivity() as MainActivity).setBottomNavVisibility(View.GONE)
 
         selectedMethodName = arguments?.getString("SELECTED_METHOD_NAME")
-        // Menggunakan string resource untuk default title jika methodName null
         binding.tvHeaderTitle.text = selectedMethodName?.uppercase()?.replace(" ", "\n") ?: getString(R.string.recipe_list_title)
 
         setupListeners()
@@ -92,25 +126,92 @@ class RecipeListFragment : Fragment() {
         }
 
         binding.fabAddRecipe.setOnClickListener {
-            val addFragment = AddRecipeFragment().apply {
-                arguments = Bundle().apply {
-                    putString("METHOD_NAME", selectedMethodName)
+            // --- Animasi Flash Putih ---
+            // Tangkap ColorStateList asli dari FAB
+            val originalBackgroundTint = binding.fabAddRecipe.backgroundTintList
+            val originalImageTint = binding.fabAddRecipe.imageTintList
+
+            // Definisikan warna flash (putih untuk background, hitam untuk ikon agar kontras)
+            val flashColorBackground = ContextCompat.getColor(requireContext(), R.color.white)
+            val flashColorImage = ContextCompat.getColor(requireContext(), R.color.black)
+
+            binding.fabAddRecipe.backgroundTintList = ColorStateList.valueOf(flashColorBackground)
+            binding.fabAddRecipe.imageTintList = ColorStateList.valueOf(flashColorImage)
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                // Pastikan fragment masih melekat sebelum memperbarui UI
+                if (isAdded && activity != null && _binding != null) {
+                    // Kembalikan ke tint asli yang ditangkap
+                    binding.fabAddRecipe.backgroundTintList = originalBackgroundTint
+                    binding.fabAddRecipe.imageTintList = originalImageTint
                 }
+            }, 150) // Durasi flash: 150 milidetik
+
+            // --- Logika Asli Klik ---
+            if (SessionManager.SessionManager.isLoggedIn(requireContext())) {
+                val addFragment = AddRecipeFragment().apply {
+                    arguments = Bundle().apply {
+                        putString("METHOD_NAME", selectedMethodName)
+                    }
+                }
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.container, addFragment)
+                    .addToBackStack(null)
+                    .commit()
+            } else {
+                pendingAddRecipeAction = true
+                showLoginRequiredDialog()
             }
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.container, addFragment)
-                .addToBackStack(null)
-                .commit()
         }
 
+        // --- Logika Animasi Flash untuk Card Resep saat diklik ---
         binding.recipeContentLayout.setOnClickListener {
-            currentDisplayedRecipe?.let { navigateToRecipeDetail(it) }
+            currentDisplayedRecipe?.let { recipe ->
+                // Tangkap warna latar belakang asli dari CardView yang membungkus recipeContentLayout
+                // Berdasarkan fragment_recipe_list.xml, CardView ini memiliki app:cardBackgroundColor="@color/white"
+                val originalCardBackgroundColor = ContextCompat.getColor(binding.root.context, R.color.white)
+                val flashColorCard = ContextCompat.getColor(binding.root.context, R.color.secondary) // Menggunakan secondary sebagai warna flash (abu-abu terang)
+
+                // Terapkan warna flash ke CardView yang membungkus layout konten
+                binding.cardViewRecipeInfoContainer.setCardBackgroundColor(flashColorCard)
+
+                Handler(Looper.getMainLooper()).postDelayed({
+                    // Pastikan fragment masih melekat sebelum memperbarui UI
+                    if (isAdded && activity != null && _binding != null) {
+                        // Kembalikan warna asli CardView
+                        binding.cardViewRecipeInfoContainer.setCardBackgroundColor(originalCardBackgroundColor)
+                        // Lanjutkan ke aksi klik yang sebenarnya
+                        navigateToRecipeDetail(recipe)
+                    }
+                }, 150) // Durasi flash: 150 milidetik
+            }
         }
+        // --- Akhir Logika Animasi Flash untuk Card Resep ---
+    }
+
+    private fun showLoginRequiredDialog() {
+        val dialogBinding = DialogLoginRequiredBinding.inflate(layoutInflater)
+        val customAlertDialog = AlertDialog.Builder(requireContext())
+            .setView(dialogBinding.root)
+            .create()
+
+        dialogBinding.buttonDialogLogin.setOnClickListener {
+            loginActivityResultLauncher.launch(Intent(requireContext(), LoginActivity::class.java))
+            customAlertDialog.dismiss()
+        }
+
+        dialogBinding.buttonDialogCancel.setOnClickListener {
+            customAlertDialog.dismiss()
+        }
+
+        customAlertDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        customAlertDialog.show()
     }
 
     private fun displayRecipesBasedOnFilter(specificRecipeTitle: String? = null) {
         val allRecipesForMethod = recipeViewModel.allRecipes.value
             ?.filter { it.method.equals(selectedMethodName, ignoreCase = true) }
+            ?.sortedBy { it.name } // Opsional: Tambahkan sorting agar tampilan lebih konsisten
             ?: emptyList()
 
         val recipesForCurrentFilter: List<RecipeItem> = if (isMyRecipeActive) {
@@ -125,17 +226,19 @@ class RecipeListFragment : Fragment() {
             recipeToDisplay = recipesForCurrentFilter.firstOrNull { it.name.equals(specificRecipeTitle, ignoreCase = true) }
         }
 
-        if (recipeToDisplay == null && currentDisplayedRecipe != null && recipesForCurrentFilter.contains(currentDisplayedRecipe!!)) {
-            recipeToDisplay = currentDisplayedRecipe
-        }
-
-        if (recipeToDisplay == null && selectedMethodName != null) {
+        if (recipeToDisplay == null && selectedMethodName != null) { // Tambahkan kondisi selectedMethodName != null
             recipeToDisplay = if (isMyRecipeActive) {
                 lastViewedMyRecipes[selectedMethodName]?.takeIf { recipesForCurrentFilter.contains(it) }
             } else {
                 lastViewedAllRecipes[selectedMethodName]?.takeIf { recipesForCurrentFilter.contains(it) }
             }
         }
+
+        // Pastikan currentDisplayedRecipe masih ada di daftar yang difilter saat ini
+        if (recipeToDisplay == null && currentDisplayedRecipe != null && recipesForCurrentFilter.any { it.name == currentDisplayedRecipe!!.name }) {
+            recipeToDisplay = currentDisplayedRecipe
+        }
+
 
         if (recipeToDisplay == null) {
             recipeToDisplay = recipesForCurrentFilter.firstOrNull()
@@ -144,6 +247,7 @@ class RecipeListFragment : Fragment() {
         currentDisplayedRecipe = recipeToDisplay
         updateHeaderAndRecipeDetails(currentDisplayedRecipe)
     }
+
 
     private fun updateHeaderAndRecipeDetails(recipe: RecipeItem?) {
         recipe?.let {

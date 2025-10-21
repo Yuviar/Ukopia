@@ -2,8 +2,11 @@ package com.example.ukopia
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Typeface
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.method.HideReturnsTransformationMethod
@@ -22,6 +25,7 @@ import androidx.core.content.ContextCompat
 import com.example.ukopia.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.example.ukopia.ui.auth.LupaPasswordActivity
 
 class LoginActivity : AppCompatActivity() {
     private var isPasswordVisible = false
@@ -66,53 +70,69 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        binding.btnMasuk.setOnClickListener {
-            val email = editEmail.text.toString().trim()
-            val password = editPassword.text.toString().trim()
+        btnMasuk.setOnClickListener {
+            // --- Animasi Flash Putih ---
+            // Definisikan warna yang diinginkan setelah flash: latar belakang hitam, teks putih
+            val targetBackgroundTint = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
+            val targetTextColor = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white))
 
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, getString(R.string.empty_email_password_error), Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            showLoading(true)
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this) { task ->
-                    showLoading(false)
-                    if (task.isSuccessful) {
-                        val firebaseUser = auth.currentUser
-                        firebaseUser?.let { user ->
-                            // PERINGATAN: Nama koleksi Firestore sebaiknya tidak dilokalisasi.
-                            // Pertimbangkan menggunakan string literal atau konstanta.
-                            FirebaseFirestore.getInstance().collection(getString(R.string.firestore_users_collection))
-                                .document(user.uid).get()
-                                .addOnSuccessListener { document ->
-                                    if (document != null && document.exists()) {
-                                        // PERINGATAN: Nama bidang Firestore sebaiknya tidak dilokalisasi.
-                                        // Pertimbangkan menggunakan string literal atau konstanta.
-                                        val name = document.getString(getString(R.string.firestore_field_name)) ?: ""
-                                        val emailResult = document.getString(getString(R.string.firestore_field_email)) ?: ""
+            // Definisikan warna flash sementara: latar belakang putih, teks hitam
+            val flashColorBackground = ContextCompat.getColor(this, R.color.white)
+            val flashColorText = ContextCompat.getColor(this, R.color.black)
 
-                                        SessionManager.SessionManager.setLoggedIn(this, true)
-                                        SessionManager.SessionManager.saveUserData(this, name, emailResult)
+            btnMasuk.backgroundTintList = ColorStateList.valueOf(flashColorBackground)
+            btnMasuk.setTextColor(flashColorText)
 
-                                        Toast.makeText(this, getString(R.string.login_success_toast), Toast.LENGTH_SHORT).show()
-                                        goToMainActivity()
-                                    } else {
-                                        Toast.makeText(this, getString(R.string.user_not_found_error), Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-                                .addOnFailureListener { e ->
-                                    Toast.makeText(this, getString(R.string.failed_retrieve_user_data_error) + e.message, Toast.LENGTH_SHORT).show()
-                                }
-                        }
-                    } else {
-                        Toast.makeText(
-                            this,
-                            getString(R.string.login_failed_error) + task.exception?.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+            Handler(Looper.getMainLooper()).postDelayed({
+                // Kembalikan ke warna target (hitam background, putih teks)
+                btnMasuk.backgroundTintList = targetBackgroundTint
+                btnMasuk.setTextColor(targetTextColor)
+
+                // --- Logika Asli Klik ---
+                val email = editEmail.text.toString().trim()
+                val password = editPassword.text.toString().trim()
+
+                if (email.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(this, getString(R.string.empty_email_password_error), Toast.LENGTH_SHORT).show()
+                    return@postDelayed // Gunakan return@postDelayed untuk keluar dari lambda
                 }
+                showLoading(true)
+                auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this) { task ->
+                        showLoading(false)
+                        if (task.isSuccessful) {
+                            val firebaseUser = auth.currentUser
+                            firebaseUser?.let { user ->
+                                FirebaseFirestore.getInstance().collection(getString(R.string.firestore_users_collection))
+                                    .document(user.uid).get()
+                                    .addOnSuccessListener { document ->
+                                        if (document != null && document.exists()) {
+                                            val name = document.getString(getString(R.string.firestore_field_name)) ?: ""
+                                            val emailResult = document.getString(getString(R.string.firestore_field_email)) ?: ""
+
+                                            SessionManager.SessionManager.setLoggedIn(this, true)
+                                            SessionManager.SessionManager.saveUserData(this, name, emailResult)
+
+                                            Toast.makeText(this, getString(R.string.login_success_toast), Toast.LENGTH_SHORT).show()
+                                            goToMainActivity()
+                                        } else {
+                                            Toast.makeText(this, getString(R.string.user_not_found_error), Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Toast.makeText(this, getString(R.string.failed_retrieve_user_data_error) + e.message, Toast.LENGTH_SHORT).show()
+                                    }
+                            }
+                        } else {
+                            Toast.makeText(
+                                this,
+                                getString(R.string.login_failed_error) + task.exception?.message,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                // --- Akhir Logika Asli Klik ---
+            }, 150) // Durasi flash: 150 milidetik
         }
 
         btnLupaPassword.setOnClickListener {
@@ -122,7 +142,6 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Sudah menggunakan string resources
         val prefixText = getString(R.string.no_account_prefix)
         val clickablePartText = getString(R.string.create_account_clickable_part)
         val fullText = prefixText + clickablePartText
@@ -155,8 +174,6 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        btnMasuk.scaleX = 1f
-        btnMasuk.scaleY = 1f
     }
     private fun showLoading(isLoading: Boolean) {
         if (isLoading) {

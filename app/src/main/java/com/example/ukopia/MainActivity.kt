@@ -3,7 +3,9 @@ package com.example.ukopia
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
+import android.util.Log
+import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -11,23 +13,23 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.ukopia.ui.akun.AkunFragment
-import com.example.ukopia.ui.peralatan.PeralatanFragment
 import com.example.ukopia.ui.home.HomeFragment
 import com.example.ukopia.ui.recipe.RecipeFragment
 import com.example.ukopia.ui.loyalty.LoyaltyFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-import com.example.ukopia.SessionManager
-import android.view.View
-import androidx.activity.OnBackPressedCallback // Tambahkan ini lagi
-import com.google.android.material.dialog.MaterialAlertDialogBuilder // Ini tidak digunakan, bisa dihapus jika tidak ada toast khusus
-
-class MainActivity : AppCompatActivity(), AkunFragment.OnAkunFragmentInteractionListener {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomNavigationView: BottomNavigationView
-    private var backPressedTime: Long = 0 // Untuk double tap back to exit dari HomeFragment
+    // --- Hapus atau abaikan variabel ini jika tidak digunakan lagi untuk logika keluar ---
+    // private var backPressedTime: Long = 0
+    // private val BACK_PRESS_INTERVAL = 2000L
+
+    // --- Variabel baru untuk melacak apakah aplikasi siap untuk keluar ---
+    private var isReadyToExit = false
 
     override fun attachBaseContext(newBase: Context?) {
+        Log.d("LocaleHelperDebug", "MainActivity attachBaseContext called. NewBase: $newBase")
         super.attachBaseContext(newBase?.let { LocaleHelper.onAttach(it) } ?: newBase)
     }
 
@@ -46,7 +48,8 @@ class MainActivity : AppCompatActivity(), AkunFragment.OnAkunFragmentInteraction
         bottomNavigationView.setOnNavigationItemSelectedListener(menuItemSelected)
 
         if (savedInstanceState == null) {
-           loadRootFragment(HomeFragment(), R.id.itemHome)
+            loadRootFragment(HomeFragment(), R.id.itemHome)
+            isReadyToExit = false // Pastikan flag direset saat aplikasi dimulai
         }
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -54,34 +57,45 @@ class MainActivity : AppCompatActivity(), AkunFragment.OnAkunFragmentInteraction
                 val currentFragment = supportFragmentManager.findFragmentById(R.id.container)
 
                 if (supportFragmentManager.backStackEntryCount > 1 && currentFragment !is HomeFragment && currentFragment !is LoyaltyFragment && currentFragment !is RecipeFragment && currentFragment !is AkunFragment) {
+                    // Kasus 1: Pop fragmen biasa dari back stack
                     supportFragmentManager.popBackStack()
+                    isReadyToExit = false // Reset flag jika navigasi kembali dari sub-fragmen
                 } else if (currentFragment !is HomeFragment) {
-                    supportFragmentManager.popBackStack(HomeFragment::class.java.simpleName, 0) // popInclusive = 0 artinya tidak menghapus HomeFragment
-                    bottomNavigationView.selectedItemId = R.id.itemHome // Update BottomNav UI
+                    // Kasus 2: Pop kembali ke HomeFragment (dari root fragment bottom nav lainnya)
+                    supportFragmentManager.popBackStack(HomeFragment::class.java.simpleName, 0)
+                    bottomNavigationView.selectedItemId = R.id.itemHome
+                    isReadyToExit = false // Reset flag jika beralih kembali ke HomeFragment dari tab lain
                 } else {
-                    finishAffinity()
+                    // Kasus 3: Pengguna berada di HomeFragment (atau salah satu root fragment bottom nav lain yang aktif),
+                    // dan tidak ada fragmen di atasnya yang bisa di-pop secara normal.
+                    // Di sini kita menerapkan logika "dua kali tekan tombol kembali untuk keluar"
+                    // TANPA BATAS WAKTU antar klik.
+                    if (isReadyToExit) {
+                        // Ini adalah penekanan tombol kembali ke-2. Keluar dari aplikasi.
+                        finishAffinity()
+                    } else {
+                        // Ini adalah penekanan tombol kembali ke-1.
+                        // Atur flag menjadi true, menunggu penekanan kedua.
+                        isReadyToExit = true
+                        // Tidak ada Toast atau notifikasi.
+                    }
                 }
             }
         })
-        // ▲▲▲ Akhir onBackPressedCallback ▲▲▲
     }
 
-    // Metode baru untuk memuat fragment utama (tab root)
     private fun loadRootFragment(fragment: Fragment, itemId: Int) {
         val fragmentTag = fragment.javaClass.simpleName
 
-        // Hapus semua fragment dari back stack saat beralih ke tab utama
         supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
-        // Ganti fragment dan tambahkan ke back stack.
-        // Ini membuatnya menjadi entri dasar untuk tab tersebut.
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, fragment, fragmentTag)
-            .addToBackStack(fragmentTag) // Tambahkan ke back stack sebagai root untuk tab ini
+            .addToBackStack(fragmentTag) // Menambahkan root fragment ke back stack
             .commit()
+        isReadyToExit = false // Reset flag setiap kali memuat fragmen root baru (dari bottom nav)
     }
 
-    // Metode untuk memuat fragment "detail" atau fragment non-tab root
     fun navigateToFragment(fragment: Fragment, addToBackStack: Boolean = true) {
         val fragmentTag = fragment.javaClass.simpleName
         val transaction = supportFragmentManager.beginTransaction()
@@ -89,15 +103,14 @@ class MainActivity : AppCompatActivity(), AkunFragment.OnAkunFragmentInteraction
         transaction.replace(R.id.container, fragment, fragmentTag)
 
         if (addToBackStack) {
-            transaction.addToBackStack(fragmentTag) // Tambahkan ke back stack
+            transaction.addToBackStack(fragmentTag)
         } else {
-            // Jika tidak ingin ditambahkan ke back stack (jarang untuk non-root tab),
-            // pastikan fragment yang ada di-pop jika namanya sama
-            // Ini akan menggantikan fragment yang ada tanpa menambahkan ke stack.
-            // Lebih aman menggunakan loadRootFragment untuk root tab.
+            // Logika ini akan menghapus semua instance fragmen dengan tag yang sama dari back stack
+            // hingga fragmen terakhir dengan tag tersebut (inklusif).
             supportFragmentManager.popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
         transaction.commit()
+        isReadyToExit = false // Reset flag setiap kali menavigasi ke fragmen lain
     }
 
     private val menuItemSelected = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -122,11 +135,6 @@ class MainActivity : AppCompatActivity(), AkunFragment.OnAkunFragmentInteraction
         false
     }
 
-    override fun OnPeralatanClicked() {
-        navigateToFragment(PeralatanFragment(), true) // Gunakan navigateToFragment
-    }
-
-    // FUNGSI UNTUK MENGONTROL VISIBILITAS NAV BAR
     fun setBottomNavVisibility(visibility: Int) {
         bottomNavigationView.visibility = visibility
     }

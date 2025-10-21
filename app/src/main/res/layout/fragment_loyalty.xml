@@ -4,74 +4,153 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/secondary">
 
-<LinearLayout
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/black">
-
-    <!-- HEADER -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/black"
-        android:padding="16dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/loyalty_card_title"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textSize="30sp" />
-    </LinearLayout>
-
-    <FrameLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@drawable/rounded_top_bg"
-        android:clipToOutline="true">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewLoyalty"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/loyaltyCard"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_loyalty_card" />
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/black"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
 
-        <!-- Placeholder for empty state -->
-        <LinearLayout
-            android:id="@+id/placeholderContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:visibility="gone">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:background="@drawable/loyalty_card_gradient"
+                    android:elevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/textViewLoyaltyLevel"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            tools:text="BRONZE"
+                            android:textColor="@color/white"
+                            android:textSize="32sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/imageViewLevelStar"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_marginStart="8dp"
+                            android:src="@drawable/ic_badge_bronze"
+                            android:contentDescription="Loyalty Level Badge" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/textViewLoyaltyPoints"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="Poin: 450"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="16dp" />
+
+                    <LinearLayout
+                        android:id="@+id/progressContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="24dp"
+                        android:gravity="center_vertical">
+
+                        <com.google.android.material.progressindicator.CircularProgressIndicator
+                            android:id="@+id/progressBarStampProgress"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_marginEnd="12dp"
+                            app:trackCornerRadius="18dp"
+                            app:indicatorColor="@color/white"
+                            app:trackColor="@color/white_alpha_50"
+                            app:trackThickness="4dp"
+                            android:max="20"
+                            android:progress="0"
+                            tools:progress="16"
+                            android:contentDescription="Stamp progress circle" />
+
+                        <TextView
+                            android:id="@+id/textViewStampProgress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="8/10 Stempel terkumpul menu Gratis Kopi!"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <TextView
-                android:id="@+id/textViewPlaceholder"
-                android:layout_width="wrap_content"
+                android:id="@+id/textViewLoyaltyHistoryHeader"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/no_loyalty_data_placeholder"
-                android:textColor="@color/light_grey"
-                android:textSize="18sp" />
-        </LinearLayout>
-    </FrameLayout>
-</LinearLayout>
+                android:text="@string/loyalty_history_title"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp" />
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewLoyaltyItems"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_loyalty_card"
+                android:elevation="0dp"/>
+
+            <LinearLayout
+                android:id="@+id/placeholderContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingVertical="32dp"
+                android:visibility="gone"
+                android:elevation="0dp">
+
+                <TextView
+                    android:id="@+id/textViewPlaceholder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no_loyalty_data_placeholder"
+                    android:textColor="@color/secondary"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_recipe"
@@ -82,5 +161,7 @@
         app:backgroundTint="@color/black"
         app:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/add_loyalty_data_desc" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,5 @@
 package com.example.ukopia.ui.loyalty
 
-// Hapus import android.app.DatePickerDialog // Hapus import ini karena tidak lagi menggunakan DatePickerDialog standar
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,8 +12,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
-import androidx.fragment.app.setFragmentResultListener // TAMBAHKAN import ini untuk menerima hasil
-import com.example.ukopia.R // Pastikan import R
+import androidx.fragment.app.setFragmentResultListener
+import com.example.ukopia.R
 import com.example.ukopia.data.LoyaltyItemV2
 import com.example.ukopia.databinding.FragmentAddLoyaltyBinding
 import com.example.ukopia.databinding.FragmentAddLoyaltyKopiBinding
@@ -44,21 +43,18 @@ class AddLoyaltyFragment : Fragment() {
 
         (requireActivity() as MainActivity).setBottomNavVisibility(View.GONE)
 
-        // ▼▼▼ PENTING: DAFTARKAN LISTENER UNTUK MENERIMA HASIL DARI DIALOG KUSTOM ▼▼▼
-        // Pastikan listener ini diatur untuk childFragmentManager yang sama yang digunakan untuk menampilkan dialog.
         childFragmentManager.setFragmentResultListener(
             CustomDatePickerDialogFragment.REQUEST_KEY_DATE_PICKER,
-            viewLifecycleOwner // Gunakan viewLifecycleOwner untuk siklus hidup yang tepat
+            viewLifecycleOwner
         ) { _, bundle ->
             val selectedDate = bundle.getString(CustomDatePickerDialogFragment.BUNDLE_KEY_SELECTED_DATE)
             selectedDate?.let {
                 binding.editTextDate.setText(it)
             }
         }
-        // ▲▲▲ AKHIR PENTING ▲▲▲
 
         binding.editTextDate.setOnClickListener {
-            showCustomDatePickerDialog() // Panggil fungsi dialog kustom baru
+            showCustomDatePickerDialog()
         }
 
         binding.buttonKopi.setOnClickListener {
@@ -75,7 +71,6 @@ class AddLoyaltyFragment : Fragment() {
             saveData()
         }
 
-        // Setel teks tombol menggunakan string resource
         binding.buttonKopi.text = getString(R.string.coffee_button_text)
         binding.buttonBukanKopi.text = getString(R.string.non_coffee_button_text)
         binding.btnSelesai.text = getString(R.string.add_button_text)
@@ -224,14 +219,13 @@ class AddLoyaltyFragment : Fragment() {
 
         if (!isValid) {
             firstErrorView?.requestFocus()
-            // Scroll ke view yang memiliki error
             binding.layoutAddLoyalty.post {
                 if (firstErrorView != null) {
                     binding.layoutAddLoyalty.smoothScrollTo(0, firstErrorView.top)
                 }
             }
         } else if (item != null) {
-            loyaltyViewModel.addLoyaltyItemV2(item)
+            loyaltyViewModel.addPurchase(item)
             Toast.makeText(
                 requireContext(),
                 getString(R.string.loyalty_data_added_success),
@@ -242,41 +236,11 @@ class AddLoyaltyFragment : Fragment() {
         }
     }
 
-    // ▼▼▼ PENTING: FUNGSI BARU UNTUK MENAMPILKAN DIALOG KUSTOM ▼▼▼
     private fun showCustomDatePickerDialog() {
-        // Teruskan tanggal yang sudah ada di EditText sebagai tanggal awal jika tidak kosong
         val initialDate = binding.editTextDate.text.toString().ifEmpty { null }
         val customDatePickerDialog = CustomDatePickerDialogFragment.newInstance(initialDate)
-        // Pastikan ini menampilkan dialog menggunakan childFragmentManager dari AddLoyaltyFragment
         customDatePickerDialog.show(childFragmentManager, "CUSTOM_DATE_PICKER")
     }
-    // ▲▲▲ AKHIR PENTING ▲▲▲
-
-    // Hapus atau komentari fungsi showDatePickerDialog() yang lama jika tidak digunakan lagi
-    /*
-    private fun showDatePickerDialog() {
-        val calendar = Calendar.getInstance()
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-        val datePickerDialog = DatePickerDialog(
-            requireContext(),
-            { _, selectedYear, selectedMonth, selectedDay ->
-                val selectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
-                binding.editTextDate.setText(selectedDate)
-            },
-            year,
-            month,
-            day
-        )
-        datePickerDialog.show()
-    }
-    */
-
-// =====================================================================
-// FRAGMENT ANAK (Ini tidak berubah dan sudah ada di konteks Anda)
-// =====================================================================
 
     class AddLoyaltyKopiFragment : Fragment() {
         private var _binding: FragmentAddLoyaltyKopiBinding? = null
@@ -295,7 +259,6 @@ class AddLoyaltyFragment : Fragment() {
             initializeSeekBars()
             binding.editNamaKopi.hint = getString(R.string.menu_hint)
             binding.editTextBeans.hint = getString(R.string.bean_hint)
-            // Menggunakan string resource untuk label seekbar (jika ada)
             binding.textViewAromaMin.text = "0"
             binding.textViewAromaMax.text = "5"
             binding.textViewSweetnessMin.text = "0"

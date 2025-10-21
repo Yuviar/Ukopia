@@ -5,55 +5,143 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/black"
+    android:background="@color/secondary"
     tools:context=".ui.home.HomeFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/menu_review_title"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:textSize="30sp"
-        android:padding="16dp"/>
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingTop="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp"
+        >
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_bean_coffee"
+            android:contentDescription="@string/app_logo"
+            android:layout_marginEnd="8dp"/>
+        <TextView
+            android:id="@+id/tv_greeting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/greeting_salutation"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            />
+    </LinearLayout>
 
-    <FrameLayout
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        app:cardBackgroundColor="@color/black"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="12dp"
+            android:background="@drawable/rounded_bg_black"
+            android:elevation="0dp">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_search"
+                app:tint="@color/white"
+                android:contentDescription="@string/search_icon"/>
+            <EditText
+                android:id="@+id/et_search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:background="@android:color/transparent"
+                android:hint="@string/search_hint"
+                android:textColorHint="@color/white"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:inputType="text"
+                android:maxLines="1"
+                android:importantForAutofill="no"/>
+
+            <ImageView
+                android:id="@+id/iv_clear_search"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_close"
+                app:tint="@color/white"
+                android:contentDescription="Clear search text"
+                android:visibility="gone" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Promo Banner yang sudah diatur rasionya 16:9 -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="16dp"
+        app:cardBackgroundColor="@color/black"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
+        >
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/sample_coffee"
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/promo_banner"
+                app:layout_constraintDimensionRatio="16:9"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:elevation="0dp"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_filter_categories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:clipToPadding="false"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:itemCount="3"
+        tools:listitem="@layout/item_horizontal_filter_category"
+        android:elevation="0dp"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_menu_items"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@drawable/rounded_top_bg"
-        android:clipToOutline="true">
+        android:clipToPadding="false"
+        android:paddingHorizontal="8dp"
+        android:paddingBottom="16dp"
+        android:scrollbars="none"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="2"
+        tools:listitem="@layout/layout_menu_item" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingTop="10dp"
-            android:background="@color/secondary">
-
-            <!-- Tombol Filter Utama (Akan menampilkan popup kustom) -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonFilter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginBottom="16dp"
-                android:text="@string/filter_button_text"
-                app:cornerRadius="8dp"
-                android:backgroundTint="@color/black"
-                android:textColor="@color/white" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_menu_items"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:paddingBottom="16dp"
-                android:paddingHorizontal="16dp"
-                android:scrollbars="none"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:spanCount="2"
-                tools:listitem="@layout/layout_menu_item" />
-        </LinearLayout>
-    </FrameLayout>
 </LinearLayout>

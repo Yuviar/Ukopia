@@ -3,7 +3,6 @@
     <string name="firestore_users_collection">users</string>
     <string name="firestore_field_name">name</string>
     <string name="firestore_field_email">email</string>
-    <!-- General App -->
     <string name="app_name">Ukopia</string>
     <string name="hello_blank_fragment">Halo fragmen kosong</string>
     <string name="cancel_button_text">Batal</string>
@@ -14,7 +13,6 @@
     <string name="copyright_text">Hak Cipta</string>
     <string name="ukopia_logo_desc">Logo Ukopia</string>
 
-    <!-- Account & Authentication -->
     <string name="slogan_text">Tempat Kopi, Cerita,\ndan Inspirasi Bertemu</string>
     <string name="login_screen_title">MASUK</string>
     <string name="register_screen_title">DAFTAR</string>
@@ -28,29 +26,27 @@
     <string name="enter_password_hint">Masukkan Kata Sandi Anda</string>
     <string name="enter_new_password_hint">Masukkan Kata Sandi Baru Anda</string>
     <string name="forgot_password_button_text">Lupa Kata Sandi?</string>
-    <string name="login_button_text">Masuk</string> <!-- For AkunFragment btnMasuk -->
-    <string name="signup_button_text">Daftar</string> <!-- For AkunFragment btnDaftar -->
-    <string name="login_button_text_login_activity">Masuk</string> <!-- For LoginActivity btnMasuk -->
-    <string name="signup_button_text_register_activity">Daftar</string> <!-- For RegisterActivity btnDaftar -->
-    <string name="change_button_text">Ganti</string> <!-- For LupaPasswordActivity btnSelesai -->
+    <string name="login_button_text">Masuk</string>
+    <string name="signup_button_text">Daftar</string>
+    <string name="login_button_text_login_activity">Masuk</string>
+    <string name="signup_button_text_register_activity">Daftar</string>
+    <string name="change_button_text">Ganti</string>
     <string name="no_account_prefix">Belum Punya Akun? </string>
     <string name="create_account_clickable_part">Buat Akun di Sini</string>
 
-    <!-- Account Fragment -->
     <string name="my_account_title">AKUN\nSAYA</string>
     <string name="profile_photo_desc">Foto Profil</string>
     <string name="name_not_found">Nama tidak ditemukan</string>
     <string name="email_not_found">Email tidak ditemukan</string>
     <string name="settings_title">Pengaturan</string>
     <string name="equipment_icon_desc">Ikon Peralatan</string>
-    <string name="equipment_option">Peralatan</string>
     <string name="language_icon_desc">Ikon Bahasa</string>
     <string name="language_option">Bahasa</string>
     <string name="support_us_title">Dukung Kami</string>
     <string name="instagram_icon_desc">Ikon Instagram</string>
     <string name="instagram_text">Instagram</string>
     <string name="ukopia_instagram_handle">#ukopiaindonesia</string>
-    <string name="ruangseduh_instagram_handle">#ruangseduhukopia</string>
+    <string name="ruangseduhukopia">#ruangseduhukopia</string>
     <string name="youtube_icon_desc">Ikon Youtube</string>
     <string name="youtube_text">Youtube</string>
     <string name="ukopia_youtube_channel">Ukopia Indonesia</string>
@@ -58,16 +54,14 @@
     <string name="key_icon_desc">Ikon Kunci</string>
     <string name="change_password_option">Ganti Kata Sandi</string>
     <string name="logout_icon_desc">Ikon Logout</string>
-    <string name="logout_option">Logout</string>
+    <string name="logout_option">Keluar</string>
     <string name="arrow_forward_desc">Panah Maju</string>
 
-    <!-- Language Chooser Dialog -->
     <string name="select_language">Pilih Bahasa</string>
     <string name="language_english">Inggris</string>
     <string name="language_indonesian">Indonesia</string>
     <string name="selected_icon_desc">Terpilih</string>
 
-    <!-- Error/Success Messages (Toasts & Errors) -->
     <string name="error_listener_implementation">harus mengimplementasikan OnAkunFragmentInteractionListener</string>
     <string name="logout_success_message">Berhasil logout!</string>
     <string name="password_change_success">Kata sandi berhasil diubah!</string>
@@ -100,7 +94,6 @@
     <string name="loyalty_data_added_success">Data berhasil ditambahkan</string>
     <string name="error_no_rating_selected">Harap pilih bintang rating Anda!</string>
 
-    <!-- Home Fragment (Menu Review) -->
     <string name="menu_review_title">ULASAN\nMENU</string>
     <string name="filter_button_text">Filter</string>
     <string name="category_all">Semua</string>
@@ -112,7 +105,6 @@
     <string name="menu_item_title_placeholder">Kopi Latte</string>
     <string name="menu_item_rating_placeholder">4,8/5,0</string>
 
-    <!-- Menu Detail Activity -->
     <string name="back_button_desc">Tombol kembali</string>
     <string name="share_button_desc">Tombol bagikan</string>
     <string name="menu_item_coffee_latte_title_placeholder">Kopi Latte</string>
@@ -131,8 +123,7 @@
     <string name="choose_category_title">Pilih Kategori</string>
     <string name="share_menu_item_text">Ayo coba %1$s di Ukopia!\nRating: %2$s\nDeskripsi: %3$s\n#Ukopia #PecintaKopi</string>
 
-    <!-- Recipe Module -->
-    <string name="coffee_recipe_title">RESEP\nKOPI</string>
+    <string name="coffee_recipe_title">RESEP KOPI</string>
     <string name="recipe_image_desc">Gambar Resep</string>
     <string name="brew_method_name_placeholder">AEROPRESS</string>
 
@@ -186,7 +177,6 @@
     <string name="coffee_amount_placeholder">35,0 g</string>
     <string name="time_placeholder">01:45</string>
 
-    <!-- Recipe Step specific strings -->
     <string name="add_new_step_title">TAMBAH LANGKAH BARU</string>
     <string name="custom_step_title">Langkah Kustom</string>
     <string name="custom_step_name_label">Nama Langkah</string>
@@ -200,7 +190,6 @@
     <string name="duration_prefix_for_description">Durasi: </string>
     <string name="duration_hint_seconds">Durasi (detik)</string>
 
-    <!-- NEW DRAWABLE CONTENTS (Icons for steps) -->
     <string name="ic_pour_water_desc">Ikon tuang air</string>
     <string name="ic_bloom_desc">Ikon mengembang</string>
     <string name="ic_wait_desc">Ikon tunggu</string>
@@ -241,7 +230,6 @@
     <string name="desc_put_the_prismo_on">Pasang attachment Prismo.</string>
     <string name="step_custom_step">Langkah Kustom</string>
     <string name="desc_custom_step">Definisikan tindakan spesifik Anda sendiri.</string>
-    <!-- NEW STEP STRINGS -->
     <string name="step_pull_plunger">Tarik Plunger</string>
     <string name="desc_pull_plunger">Tarik plunger perlahan ke atas untuk menciptakan vakum.</string>
     <string name="step_add_coffee">Tambah Kopi</string>
@@ -249,9 +237,8 @@
     <string name="step_brew">Seduh</string>
     <string name="desc_brew">Biarkan kopi diseduh selama durasi yang ditentukan.</string>
 
-    <!-- Loyalty Module -->
-    <string name="loyalty_card_title">KARTU\nLOYALITAS</string>
-    <string name="no_loyalty_data_placeholder">Belum ada data yang ditambahkan</string>
+    <string name="loyalty_card_title">Kartu Loyalitas Maya</string>
+    <string name="no_loyalty_data_placeholder">Belum ada data loyalitas yang ditambahkan.</string>
     <string name="loyalty_item_name_placeholder">Kopi Ijen cm</string>
     <string name="loyalty_date_placeholder">Tanggal: 23/09/2025</string>
     <string name="loyalty_bean_placeholder">Biji: Arabika</string>
@@ -287,18 +274,54 @@
     <string name="non_coffee_menu_name_label">Nama Menu Non-Kopi</string>
     <string name="non_coffee_item_name_label">Nama Item Non-Kopi</string>
 
-    <!-- NEW Loyalty specific strings -->
     <string name="add_loyalty_title">TAMBAH \nLOYALITAS</string>
     <string name="date_prefix_title">Tanggal</string>
     <string name="notes_label">Catatan</string>
     <string name="notes_hint_optional">Catatan (Opsional)</string>
     <string name="add_button_text">Tambah</string>
-    <string name="menu_hint">Nama Menu</string>
+    <string name="menu_hint">Menu</string>
     <string name="bean_hint">Biji Kopi</string>
     <string name="name_hint">Nama Item</string>
 
-    <!-- Logout Confirmation Dialog -->
     <string name="logout_confirmation_title">Konfirmasi Logout</string>
     <string name="logout_confirmation_message">Apakah Anda yakin ingin logout?</string>
 
+    <string name="app_logo">Logo Aplikasi</string>
+    <string name="greeting_salutation">Hai, %1$s</string>
+    <string name="greeting_salutation_default">Hai!</string>
+    <string name="search_icon">Ikon Cari</string>
+    <string name="search_hint">Cari menu</string>
+    <string name="promo_banner">Banner Promo</string>
+    <string name="promo_text">DISKON 20% - Semua Minuman Espresso!</string>
+
+    <string name="level_label">Level</string>
+    <string name="loyalty_points_format">Poin: %1$d</string>
+    <string name="add_loyalty_data_desc">Tambah data loyalitas baru</string>
+    <string name="loyalty_history_title">Riwayat Loyalitas</string>
+
+    <string name="progress_intro_format">%1$d/%2$d pembelian untuk diskon 10%%!</string>
+    <string name="reward_10_percent_discount_progress_format">Anda mendapatkan diskon 10%%! %1$d/%2$d pembelian untuk Gratis 1 Serve!</string>
+    <string name="reward_free_serve_progress_format">Anda mendapatkan Gratis 1 Serve! %1$d/%2$d pembelian untuk Gratis 1 Kaos!</string>
+    <string name="reward_free_tshirt_earned">Anda mendapatkan Gratis 1 Kaos! Nikmati reward Anda!</string>
+
+    <string name="loyalty_level_bronze">Perunggu</string>
+    <string name="loyalty_level_silver">Perak</string>
+    <string name="loyalty_level_gold">Emas</string>
+    <string name="loyalty_level_platinum">Platinum</string>
+
+    <string name="search_recipe_hint">Cari metode</string>
+
+    <string name="login_required_title">Harus Login</string>
+    <string name="login_required_message">Kamu harus login untuk melakukan ini.</string>
+
+    <string name="error_no_app_to_handle_link">Tidak ada aplikasi yang dapat membuka tautan ini.</string>
+
+    <!-- NEW STRINGS FOR RATING FEATURE -->
+    <string name="give_rating_title">BERI RATING</string>
+    <string name="rate_for_placeholder">Nilai untuk: Kopi Latte</string>
+    <string name="average_rating_prefix">Nilai: </string>
+    <string name="rate_button_text">Nilai</string>
+    <string name="your_comment_prefix">Komentar: </string>
+
+    <string name="press_back_again_to_exit">Klik kembali lagi untuk keluar </string>
 </resources>

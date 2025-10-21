@@ -8,12 +8,12 @@
     android:padding="24dp"
     android:gravity="center_horizontal"
     android:background="@color/white"
-    tools:context=".ui.home.RatingActivity">
+    tools:context=".ui.home.RatingFragment">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="BERI RATING"
+        android:text="@string/give_rating_title"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/black"
@@ -26,7 +26,7 @@
         android:textSize="18sp"
         android:textColor="@color/black"
         android:layout_marginBottom="32dp"
-        tools:text="Beri Rating untuk: Coffee Latte"/>
+        tools:text="@string/rate_for_placeholder"/>
 
     <!-- Rating Stars Container -->
     <LinearLayout
@@ -36,11 +36,11 @@
         android:gravity="center"
         android:layout_marginBottom="32dp">
 
-        <ImageView android:id="@+id/star_1" style="@style/RatingStar" tools:src="@drawable/ic_star_filled"/>
-        <ImageView android:id="@+id/star_2" style="@style/RatingStar" tools:src="@drawable/ic_star_filled"/>
-        <ImageView android:id="@+id/star_3" style="@style/RatingStar" tools:src="@drawable/ic_star_filled"/>
-        <ImageView android:id="@+id/star_4" style="@style/RatingStar" tools:src="@drawable/ic_star"/>
-        <ImageView android:id="@+id/star_5" style="@style/RatingStar" tools:src="@drawable/ic_star"/>
+        <ImageView android:id="@+id/star_1" style="@style/RatingStar" android:src="@drawable/star_rating_progress"/> <!-- PERUBAHAN -->
+        <ImageView android:id="@+id/star_2" style="@style/RatingStar" android:src="@drawable/star_rating_progress"/> <!-- PERUBAHAN -->
+        <ImageView android:id="@+id/star_3" style="@style/RatingStar" android:src="@drawable/star_rating_progress"/> <!-- PERUBAHAN -->
+        <ImageView android:id="@+id/star_4" style="@style/RatingStar" android:src="@drawable/star_rating_progress"/> <!-- PERUBAHAN -->
+        <ImageView android:id="@+id/star_5" style="@style/RatingStar" android:src="@drawable/star_rating_progress"/> <!-- PERUBAHAN -->
     </LinearLayout>
 
     <EditText

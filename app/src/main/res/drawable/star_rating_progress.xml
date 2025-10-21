@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Layer 0: Empty star as the background -->
+    <item android:drawable="@drawable/ic_star" />
+
+    <!-- Layer 1: Filled star, clipped horizontally based on level -->
+    <!-- Memberi ID pada item ini agar bisa diakses dari kode -->
+    <item android:id="@+id/clip_star_item">
+        <clip
+            android:clipOrientation="horizontal"
+            android:drawable="@drawable/ic_star_filled"
+            android:gravity="left" />
+    </item>
+</layer-list>

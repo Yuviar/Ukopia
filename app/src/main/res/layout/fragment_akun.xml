@@ -1,495 +1,469 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/secondary"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/black"
-        android:padding="16dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/my_account_title"
-            android:textColor="@color/white"
-            android:textSize="30sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@drawable/rounded_top_bg"
-        android:clipToOutline="true">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:background="@drawable/rounded_bottom_bg_black"
+            android:elevation="0dp"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:id="@+id/ivProfilePhoto"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginEnd="16dp"
+                android:contentDescription="@string/profile_photo_desc"
+                android:src="@drawable/ic_account_circle"
+                android:visibility="gone" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="16dp">
-
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_marginEnd="16dp"
-                    android:contentDescription="Profile Photo"
-                    android:src="@drawable/ic_person"
-                    android:tint="@color/black" />
+                android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/displayBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
+
+                    <Button
+                        android:id="@+id/btnMasuk"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:backgroundTint="@color/white"
+                        android:elevation="5dp"
+                        android:text="@string/login_button_text"
+                        android:textColor="@color/black"/>
+
+                    <Button
+                        android:id="@+id/btnDaftar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:backgroundTint="@color/white"
+                        android:elevation="5dp"
+                        android:text="@string/signup_button_text"
+                        android:textColor="@color/black"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/displayName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <LinearLayout
-                        android:id="@+id/displayBtn"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:visibility="visible">
-
-                        <Button
-                            android:id="@+id/btnMasuk"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="5dp"
-                            android:layout_weight="1"
-                            android:backgroundTint="@color/black"
-                            android:elevation="5dp"
-                            android:text="@string/login_button_text" />
-
-                        <Button
-                            android:id="@+id/btnDaftar"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="5dp"
-                            android:layout_weight="1"
-                            android:backgroundTint="@color/black"
-                            android:elevation="5dp"
-                            android:text="@string/signup_button_text" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/displayName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone">
+                        android:gravity="center_vertical">
 
                         <TextView
                             android:id="@+id/tvNama"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Rama Ganteng"
-                            android:textColor="@color/black"
+                            tools:text="Rama Ganteng"
+                            android:textColor="@color/white"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/tvEmail"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="ramaganteng@gmail.com"
-                            android:textColor="@color/black"
-                            android:textSize="14sp" />
+                        <ImageView
+                            android:id="@+id/ivLoyaltyBadge"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="8dp"
+                            android:contentDescription="Loyalty Badge"
+                            android:src="@drawable/ic_badge_bronze"
+                            android:visibility="gone"
+                            app:tint="@null" />
+
                     </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="ramaganteng@gmail.com"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
                 </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:text="@string/settings_title"
+                    android:textFontWeight="600" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/rounded_container"
+                    android:clipToOutline="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/btnChangeLanguage"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="8dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_marginEnd="8dp"
+                                android:src="@drawable/ic_language"
+                                app:tint="@color/black"
+                                android:contentDescription="@string/language_icon_desc"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/language_option"
+                                android:textFontWeight="500" />
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginEnd="8dp"
+                                android:src="@drawable/ic_arrow_forward"
+                                app:tint="@color/secondary"
+                                android:contentDescription="@string/arrow_forward_desc"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </FrameLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_marginHorizontal="20dp"
+                    android:text="@string/support_us_title"
+                    android:textFontWeight="600" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="20dp"
-                        android:text="@string/settings_title"
-                        android:textFontWeight="600" />
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="20dp"
-                        android:layout_marginBottom="12dp"
-                        android:background="@drawable/rounded_container"
-                        android:clipToOutline="true">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                            <LinearLayout
-                                android:id="@+id/btnPeralatan"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginVertical="8dp"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:layout_width="32dp"
-                                    android:layout_height="32dp"
-                                    android:layout_marginEnd="8dp"
-                                    android:src="@drawable/ic_coffee_maker"
-                                    android:tint="@color/black"
-                                    android:contentDescription="Equipment Icon"/>
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="@string/equipment_option"
-                                    android:textFontWeight="500" />
-
-                                <ImageView
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:layout_marginEnd="8dp"
-                                    android:src="@drawable/ic_arrow_forward"
-                                    android:tint="@color/secondary"
-                                    android:contentDescription="Arrow Forward"/>
-                            </LinearLayout>
-
-                            <!-- ▼▼▼ BAGIAN YANG DITAMBAHKAN KEMBALI UNTUK FITUR GANTI BAHASA ▼▼▼ -->
-                            <LinearLayout
-                                android:id="@+id/btnChangeLanguage"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginVertical="8dp"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:foreground="?attr/selectableItemBackground">
-
-                                <ImageView
-                                    android:layout_width="32dp"
-                                    android:layout_height="32dp"
-                                    android:layout_marginEnd="8dp"
-                                    android:src="@drawable/ic_language"
-                                    android:tint="@color/black"
-                                    android:contentDescription="Language Icon"/>
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="@string/language_option"
-                                    android:textFontWeight="500" />
-
-                                <ImageView
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:layout_marginEnd="8dp"
-                                    android:src="@drawable/ic_arrow_forward"
-                                    android:tint="@color/secondary"
-                                    android:contentDescription="Arrow Forward"/>
-                            </LinearLayout>
-                            <!-- ▲▲▲ AKHIR BAGIAN FITUR GANTI BAHASA ▲▲▲ -->
-                        </LinearLayout>
-                    </FrameLayout>
-                </LinearLayout>
-
-                <LinearLayout
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/rounded_container"
+                    android:clipToOutline="true">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="20dp"
-                        android:text="@string/support_us_title"
-                        android:textFontWeight="600" />
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="20dp"
-                        android:layout_marginBottom="12dp"
-                        android:background="@drawable/rounded_container"
-                        android:clipToOutline="true">
+                        android:orientation="vertical">
 
                         <LinearLayout
+                            android:id="@+id/btnInstagram1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:layout_marginVertical="8dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_marginEnd="8dp"
+                                android:src="@drawable/ic_instagram"
+                                app:tint="@color/black"
+                                android:contentDescription="@string/instagram_icon_desc"/>
 
                             <LinearLayout
-                                android:id="@+id/btnInstagram1"
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginVertical="8dp"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:layout_width="32dp"
-                                    android:layout_height="32dp"
-                                    android:layout_marginEnd="8dp"
-                                    android:src="@drawable/ic_instagram"
-                                    android:tint="@color/black"
-                                    android:contentDescription="Instagram Icon"/>
-
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="1"
-                                        android:text="Instagram"
-                                        android:textFontWeight="400"
-                                        android:textSize="10sp" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="1"
-                                        android:text="#ukopiaindonesia"
-                                        android:textFontWeight="500" />
-                                </LinearLayout>
-
-                                <ImageView
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:layout_marginEnd="8dp"
-                                    android:src="@drawable/ic_arrow_forward"
-                                    android:tint="@color/secondary"
-                                    android:contentDescription="Arrow Forward"/>
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:id="@+id/btnInstagram2"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginVertical="8dp"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:layout_width="32dp"
-                                    android:layout_height="32dp"
-                                    android:layout_marginEnd="8dp"
-                                    android:src="@drawable/ic_instagram"
-                                    android:tint="@color/black"
-                                    android:contentDescription="Instagram Icon"/>
-
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="1"
-                                        android:text="Instagram"
-                                        android:textFontWeight="400"
-                                        android:textSize="10sp" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="1"
-                                        android:text="#ruangseduhukopia"
-                                        android:textFontWeight="500" />
-                                </LinearLayout>
-
-                                <ImageView
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:layout_marginEnd="8dp"
-                                    android:src="@drawable/ic_arrow_forward"
-                                    android:tint="@color/secondary"
-                                    android:contentDescription="Arrow Forward"/>
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:id="@+id/btnYoutube"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginVertical="8dp"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:layout_width="32dp"
-                                    android:layout_height="32dp"
-                                    android:layout_marginEnd="8dp"
-                                    android:src="@drawable/ic_youtube"
-                                    android:tint="@color/black"
-                                    android:contentDescription="Youtube Icon"/>
-
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="1"
-                                        android:text="Youtube"
-                                        android:textFontWeight="400"
-                                        android:textSize="10sp" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="1"
-                                        android:text="Ukopia Indonesia"
-                                        android:textFontWeight="500" />
-                                </LinearLayout>
-
-                                <ImageView
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:layout_marginEnd="8dp"
-                                    android:src="@drawable/ic_arrow_forward"
-                                    android:tint="@color/secondary"
-                                    android:contentDescription="Arrow Forward"/>
-                            </LinearLayout>
-                        </LinearLayout>
-                    </FrameLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/opsiAkun"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="20dp"
-                        android:text="@string/account_options_title"
-                        android:textFontWeight="600" />
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="20dp"
-                        android:layout_marginBottom="12dp"
-                        android:background="@drawable/rounded_container"
-                        android:clipToOutline="true">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                            <LinearLayout
-                                android:id="@+id/btnForgotPassword"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginVertical="8dp"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:layout_width="32dp"
-                                    android:layout_height="32dp"
-                                    android:layout_marginEnd="8dp"
-                                    android:src="@drawable/ic_key"
-                                    android:tint="@color/black"
-                                    android:contentDescription="Key Icon"/>
+                                android:layout_weight="1"
+                                android:orientation="vertical">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="@string/change_password_option"
-                                    android:textFontWeight="500" />
-
-                                <ImageView
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:layout_marginEnd="8dp"
-                                    android:src="@drawable/ic_arrow_forward"
-                                    android:tint="@color/secondary"
-                                    android:contentDescription="Arrow Forward"/>
-                            </LinearLayout>
-                            <LinearLayout
-                                android:id="@+id/btnLogout"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginVertical="8dp"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:layout_width="32dp"
-                                    android:layout_height="32dp"
-                                    android:layout_marginEnd="8dp"
-                                    android:src="@drawable/ic_log_out"
-                                    android:tint="@color/black"
-                                    android:contentDescription="Logout Icon"/>
+                                    android:text="@string/instagram_text"
+                                    android:textFontWeight="400"
+                                    android:textSize="10sp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="@string/logout_option"
+                                    android:text="@string/ukopia_instagram_handle"
                                     android:textFontWeight="500" />
-
-                                <ImageView
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:layout_marginEnd="8dp"
-                                    android:src="@drawable/ic_arrow_forward"
-                                    android:tint="@color/secondary"
-                                    android:contentDescription="Arrow Forward"/>
                             </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginEnd="8dp"
+                                android:src="@drawable/ic_arrow_forward"
+                                app:tint="@color/secondary"
+                                android:contentDescription="@string/arrow_forward_desc"/>
                         </LinearLayout>
-                    </FrameLayout>
-                </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/btnInstagram2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="8dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_marginEnd="8dp"
+                                android:src="@drawable/ic_instagram"
+                                app:tint="@color/black"
+                                android:contentDescription="@string/instagram_icon_desc"/>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/instagram_text"
+                                    android:textFontWeight="400"
+                                    android:textSize="10sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/ruangseduhukopia"
+                                    android:textFontWeight="500" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginEnd="8dp"
+                                android:src="@drawable/ic_arrow_forward"
+                                app:tint="@color/secondary"
+                                android:contentDescription="@string/arrow_forward_desc"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/btnYoutube"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="8dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_marginEnd="8dp"
+                                android:src="@drawable/ic_youtube"
+                                app:tint="@color/black"
+                                android:contentDescription="@string/youtube_icon_desc"/>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/youtube_text"
+                                    android:textFontWeight="400"
+                                    android:textSize="10sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/ukopia_youtube_channel"
+                                    android:textFontWeight="500" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginEnd="8dp"
+                                app:tint="@color/secondary"
+                                android:src="@drawable/ic_arrow_forward"
+                                android:contentDescription="@string/arrow_forward_desc"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/opsiAkun"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
-                    android:id="@+id/copyright"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="6dp"
-                    android:text="Copyright"
-                    android:textSize="12sp"
-                    android:layout_marginTop="20dp"/>
+                    android:layout_marginHorizontal="20dp"
+                    android:text="@string/account_options_title"
+                    android:textFontWeight="600" />
 
-                <ImageView
-                    android:layout_width="120dp"
-                    android:layout_height="60dp"
-                    android:src="@drawable/logo_ukopia"
-                    android:contentDescription="Ukopia Logo"/>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/rounded_container"
+                    android:clipToOutline="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/btnForgotPassword"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="8dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_marginEnd="8dp"
+                                android:src="@drawable/ic_key"
+                                app:tint="@color/black"
+                                android:contentDescription="@string/key_icon_desc"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/change_password_option"
+                                android:textFontWeight="500" />
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginEnd="8dp"
+                                android:src="@drawable/ic_arrow_forward"
+                                app:tint="@color/secondary"
+                                android:contentDescription="@string/arrow_forward_desc"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/btnLogout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="8dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_marginEnd="8dp"
+                                android:src="@drawable/ic_log_out"
+                                app:tint="@color/black"
+                                android:contentDescription="@string/logout_icon_desc"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/logout_option"
+                                android:textFontWeight="500" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+                </FrameLayout>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/copyright"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="6dp"
+                android:text="@string/copyright_text"
+                android:textSize="12sp"
+                android:layout_marginTop="20dp"/>
+
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="60dp"
+                android:src="@drawable/logo_ukopia"
+                android:contentDescription="@string/ukopia_logo_desc"/>
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:indeterminateTint="@color/black"
+            tools:visibility="visible"/>
     </FrameLayout>
 </LinearLayout>

@@ -12,12 +12,20 @@ class SessionManager {
         private const val KEY_USER_NAME = "userName"
         private const val KEY_USER_EMAIL = "userEmail"
 
-        private const val KEY_LOYALTY_TOTAL_PURCHASES = "loyaltyTotalPurchases"
+        // Kunci untuk Loyalty
         private const val KEY_LOYALTY_TOTAL_POINTS = "loyaltyTotalPoints"
+        // PERBAIKAN: Menambahkan kunci untuk setiap status klaim hadiah
+        private const val KEY_LOYALTY_CLAIMED_DISCOUNT_10 = "loyaltyClaimedDiscount10"
+        private const val KEY_LOYALTY_CLAIMED_FREE_SERVE = "loyaltyClaimedFreeServe"
+        private const val KEY_LOYALTY_CLAIMED_DISCOUNT_15 = "loyaltyClaimedDiscount15"
+        private const val KEY_LOYALTY_CLAIMED_TSHIRT = "loyaltyClaimedTshirt"
+
 
         private fun getSharedPreferences(context: Context): SharedPreferences {
             return context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         }
+
+        // --- Fungsi Login/User (Tidak berubah) ---
         fun setLoggedIn(context: Context, loggedIn: Boolean) {
             val editor = getSharedPreferences(context).edit()
             editor.putBoolean(KEY_IS_LOGGED_IN, loggedIn)
@@ -39,33 +47,41 @@ class SessionManager {
             return getSharedPreferences(context).getString(KEY_USER_EMAIL,null)
         }
 
+        // --- Fungsi Loyalty (Diperbaiki) ---
+
+        // PERBAIKAN: Fungsi ini sekarang menyimpan SEMUA status dari objek LoyaltyUserStatus
         fun saveLoyaltyUserStatus(context: Context, status: LoyaltyUserStatus) {
             val editor = getSharedPreferences(context).edit()
-            editor.putInt(KEY_LOYALTY_TOTAL_PURCHASES, status.totalPurchases)
             editor.putInt(KEY_LOYALTY_TOTAL_POINTS, status.totalPoints)
+            editor.putBoolean(KEY_LOYALTY_CLAIMED_DISCOUNT_10, status.isDiscount10Claimed)
+            editor.putBoolean(KEY_LOYALTY_CLAIMED_FREE_SERVE, status.isFreeServeClaimed)
+            editor.putBoolean(KEY_LOYALTY_CLAIMED_DISCOUNT_15, status.isDiscount10Slot15Claimed)
+            editor.putBoolean(KEY_LOYALTY_CLAIMED_TSHIRT, status.isFreeTshirtClaimed)
             editor.apply()
         }
 
+        // PERBAIKAN: Fungsi ini sekarang mengambil SEMUA status dan membuat objek yang lengkap
         fun getLoyaltyUserStatus(context: Context): LoyaltyUserStatus {
             val prefs = getSharedPreferences(context)
-            val purchases = prefs.getInt(KEY_LOYALTY_TOTAL_PURCHASES, 0)
             val points = prefs.getInt(KEY_LOYALTY_TOTAL_POINTS, 0)
-            return LoyaltyUserStatus(purchases, points)
+            val isDiscount10Claimed = prefs.getBoolean(KEY_LOYALTY_CLAIMED_DISCOUNT_10, false)
+            val isFreeServeClaimed = prefs.getBoolean(KEY_LOYALTY_CLAIMED_FREE_SERVE, false)
+            val isDiscount15Claimed = prefs.getBoolean(KEY_LOYALTY_CLAIMED_DISCOUNT_15, false)
+            val isTshirtClaimed = prefs.getBoolean(KEY_LOYALTY_CLAIMED_TSHIRT, false)
+
+            return LoyaltyUserStatus(
+                totalPoints = points,
+                isDiscount10Claimed = isDiscount10Claimed,
+                isFreeServeClaimed = isFreeServeClaimed,
+                isDiscount10Slot15Claimed = isDiscount15Claimed,
+                isFreeTshirtClaimed = isTshirtClaimed
+            )
         }
 
-        fun logout(context: Context){
+        fun logout(context: Context) {
             FirebaseAuth.getInstance().signOut()
             val editor = getSharedPreferences(context).edit()
             editor.clear()
-            editor.apply()
-        }
-        fun clearUserData(context: Context) {
-            val editor = getSharedPreferences(context).edit()
-            editor.remove(KEY_IS_LOGGED_IN)
-            editor.remove(KEY_USER_NAME)
-            editor.remove(KEY_USER_EMAIL)
-            editor.remove(KEY_LOYALTY_TOTAL_PURCHASES)
-            editor.remove(KEY_LOYALTY_TOTAL_POINTS)
             editor.apply()
         }
     }

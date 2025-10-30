@@ -8,18 +8,22 @@ import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import android.content.res.ColorStateList
+import android.os.Handler
+import android.os.Looper
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import com.example.ukopia.R
 import com.example.ukopia.data.LoyaltyItemV2
 import com.example.ukopia.databinding.FragmentAddLoyaltyBinding
 import com.example.ukopia.databinding.FragmentAddLoyaltyKopiBinding
 import com.example.ukopia.databinding.FragmentAddLoyaltyBukanKopiBinding
-import java.util.Calendar
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 import com.example.ukopia.MainActivity
 
@@ -29,6 +33,11 @@ class AddLoyaltyFragment : Fragment() {
     private val loyaltyViewModel: LoyaltyViewModel by activityViewModels()
 
     private var isCoffeeSelected = true
+
+    companion object {
+        const val REQUEST_KEY_LOYALTY_ADDED = "request_key_loyalty_added"
+        const val BUNDLE_KEY_LOYALTY_ADDED = "bundle_key_loyalty_added"
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,6 +51,21 @@ class AddLoyaltyFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         (requireActivity() as MainActivity).setBottomNavVisibility(View.GONE)
+
+        binding.btnBack.setOnClickListener {
+            val originalTintList = binding.btnBack.imageTintList
+
+            binding.btnBack.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.black))
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                if (isAdded && activity != null) {
+                    binding.btnBack.imageTintList = originalTintList
+
+                    parentFragmentManager.popBackStack()
+                    (requireActivity() as MainActivity).setBottomNavVisibility(View.VISIBLE)
+                }
+            }, 150)
+        }
 
         childFragmentManager.setFragmentResultListener(
             CustomDatePickerDialogFragment.REQUEST_KEY_DATE_PICKER,
@@ -231,6 +255,11 @@ class AddLoyaltyFragment : Fragment() {
                 getString(R.string.loyalty_data_added_success),
                 Toast.LENGTH_SHORT
             ).show()
+
+            setFragmentResult(REQUEST_KEY_LOYALTY_ADDED, Bundle().apply {
+                putBoolean(BUNDLE_KEY_LOYALTY_ADDED, true)
+            })
+
             parentFragmentManager.popBackStack()
             (requireActivity() as MainActivity).setBottomNavVisibility(View.VISIBLE)
         }

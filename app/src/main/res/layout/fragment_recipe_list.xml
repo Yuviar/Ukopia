@@ -7,18 +7,46 @@
     android:background="@color/black"
     tools:context=".ui.recipe.RecipeListFragment">
 
-    <!-- HEADER - DETAIL RESEP -->
-    <TextView
-        android:id="@+id/tv_header_title"
-        android:layout_width="wrap_content"
+    <!-- HEADER DISAMAKAN DENGAN LOYALTY -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        tools:text="@string/recipe_list_title"
-        android:textColor="@color/white"
-        android:textSize="30sp"
-        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/back_button_desc"
+            android:src="@drawable/ic_arrow_back"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
+
+        <TextView
+            android:id="@+id/tv_header_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="left"
+            android:paddingVertical="16dp"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btn_back"
+            app:layout_constraintTop_toTopOf="@+id/btn_back"
+            tools:text="V60 RECIPE" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Wadah Konten Utama (Berlatar Belakang Secondary) -->
     <androidx.cardview.widget.CardView
@@ -29,7 +57,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_header_title">
+        app:layout_constraintTop_toBottomOf="@+id/header_layout">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -50,11 +78,11 @@
                     android:id="@+id/filter_buttons_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_marginBottom="16dp"
                     android:layout_marginTop="8dp"
-                    android:weightSum="2"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/buttonSemuaResep"
@@ -100,18 +128,18 @@
                             android:id="@+id/tv_recipe_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
                             android:textColor="@color/black"
                             android:textSize="18sp"
                             android:textStyle="bold"
-                            tools:text="@string/recipe_title_placeholder"
-                            android:layout_marginBottom="8dp"/>
+                            tools:text="@string/recipe_title_placeholder" />
 
                         <TextView
                             android:id="@+id/tv_recipe_description"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@color/black"
-                            tools:text="@string/recipe_description_placeholder"/>
+                            tools:text="@string/recipe_description_placeholder" />
 
                         <!-- Water, Coffee, and Time Containers (Tampilan 3 Kolom) -->
                         <LinearLayout
@@ -133,15 +161,15 @@
                                 <ImageView
                                     android:layout_width="16dp"
                                     android:layout_height="16dp"
-                                    android:src="@drawable/ic_water_white"
-                                    android:contentDescription="@string/water_icon_desc"/>
+                                    android:contentDescription="@string/water_icon_desc"
+                                    android:src="@drawable/ic_water_white" />
                                 <TextView
                                     android:id="@+id/tv_water_amount"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
                                     android:textColor="@color/white"
-                                    tools:text="@string/water_amount_placeholder"/>
+                                    tools:text="@string/water_amount_placeholder" />
                             </LinearLayout>
 
                             <!-- Coffee Amount -->
@@ -158,16 +186,16 @@
                                 <ImageView
                                     android:layout_width="15dp"
                                     android:layout_height="15dp"
+                                    android:contentDescription="@string/coffee_bean_icon_desc"
                                     android:src="@drawable/ic_bean_coffee"
-                                    app:tint="@color/white"
-                                    android:contentDescription="@string/coffee_bean_icon_desc"/>
+                                    app:tint="@color/white" />
                                 <TextView
                                     android:id="@+id/tv_coffee_amount"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
                                     android:textColor="@color/white"
-                                    tools:text="@string/coffee_amount_placeholder"/>
+                                    tools:text="@string/coffee_amount_placeholder" />
                             </LinearLayout>
 
                             <!-- Time -->
@@ -184,15 +212,15 @@
                                 <ImageView
                                     android:layout_width="17dp"
                                     android:layout_height="17dp"
-                                    android:src="@drawable/ic_timer"
-                                    android:contentDescription="@string/timer_icon_desc"/>
+                                    android:contentDescription="@string/timer_icon_desc"
+                                    android:src="@drawable/ic_timer" />
                                 <TextView
                                     android:id="@+id/tv_time"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
                                     android:textColor="@color/white"
-                                    tools:text="@string/time_placeholder"/>
+                                    tools:text="@string/time_placeholder" />
                             </LinearLayout>
                         </LinearLayout>
 

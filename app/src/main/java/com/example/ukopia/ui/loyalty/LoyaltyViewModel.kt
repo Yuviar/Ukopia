@@ -9,7 +9,6 @@ import com.example.ukopia.R
 import com.example.ukopia.SessionManager
 import com.example.ukopia.data.LoyaltyItemV2
 import com.example.ukopia.data.LoyaltyUserStatus
-import kotlin.math.min
 
 class LoyaltyViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -20,7 +19,8 @@ class LoyaltyViewModel(application: Application) : AndroidViewModel(application)
     val loyaltyUserStatus: LiveData<LoyaltyUserStatus> = _loyaltyUserStatus
 
     init {
-        _loyaltyItems.value = emptyList()
+        // Inisialisasi dari SessionManager saat ViewModel dibuat
+        _loyaltyItems.value = emptyList() // Atau muat dari penyimpanan jika ada
         _loyaltyUserStatus.value = SessionManager.SessionManager.getLoyaltyUserStatus(application)
     }
 
@@ -30,55 +30,55 @@ class LoyaltyViewModel(application: Application) : AndroidViewModel(application)
         _loyaltyItems.value = currentItems
 
         val currentStatus = _loyaltyUserStatus.value ?: LoyaltyUserStatus()
-        val updatedPurchases = currentStatus.totalPurchases + 1
-        val updatedPoints = currentStatus.totalPoints + 1
+        val updatedPoints = currentStatus.totalPoints + 1 // Setiap pembelian = 1 poin/stempel
 
-        val newStatus = LoyaltyUserStatus(updatedPurchases, updatedPoints)
+        val newStatus = currentStatus.copy(
+            totalPoints = updatedPoints
+        )
         _loyaltyUserStatus.value = newStatus
 
         SessionManager.SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
     }
 
-    // Sekarang menerima Context sebagai parameter
-    fun getLoyaltyLevel(context: Context): Pair<String, Int> {
-        val totalPoints = _loyaltyUserStatus.value?.totalPoints ?: 0
-
-        return when {
-            totalPoints >= 20 -> Pair(context.getString(R.string.loyalty_level_platinum), R.drawable.ic_badge_platinum)
-            totalPoints >= 10 -> Pair(context.getString(R.string.loyalty_level_gold), R.drawable.ic_badge_gold)
-            totalPoints >= 5 -> Pair(context.getString(R.string.loyalty_level_silver), R.drawable.ic_badge_silver)
-            else -> Pair(context.getString(R.string.loyalty_level_bronze), R.drawable.ic_badge_bronze)
+    // Fungsi untuk mengklaim diskon 10% di slot 5
+    fun claimDiscount10() {
+        val currentStatus = _loyaltyUserStatus.value ?: LoyaltyUserStatus()
+        if (currentStatus.totalPoints >= 5 && !currentStatus.isDiscount10Claimed) {
+            val newStatus = currentStatus.copy(isDiscount10Claimed = true)
+            _loyaltyUserStatus.value = newStatus
+            SessionManager.SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
         }
     }
 
-    fun getVisualStampProgress(): Pair<Int, Int> {
-        val totalPoints = _loyaltyUserStatus.value?.totalPoints ?: 0
-        val visualProgressMax = 20
-        val currentVisualProgress = min(totalPoints, visualProgressMax)
-        return Pair(currentVisualProgress, visualProgressMax)
-    }
-
-    // Sekarang menerima Context sebagai parameter
-    fun getRewardProgressMessage(context: Context): String {
-        val totalPoints = _loyaltyUserStatus.value?.totalPoints ?: 0
-
-        return when {
-            totalPoints < 5 -> {
-                context.getString(R.string.progress_intro_format, totalPoints, 5)
-            }
-            totalPoints < 10 -> {
-                context.getString(R.string.reward_10_percent_discount_progress_format, totalPoints, 10)
-            }
-            totalPoints < 20 -> {
-                context.getString(R.string.reward_free_serve_progress_format, totalPoints, 20)
-            }
-            else -> {
-                context.getString(R.string.reward_free_tshirt_earned)
-            }
+    // Fungsi untuk mengklaim gratis 1 serve di slot 10
+    fun claimFreeServe() {
+        val currentStatus = _loyaltyUserStatus.value ?: LoyaltyUserStatus()
+        if (currentStatus.totalPoints >= 10 && !currentStatus.isFreeServeClaimed) {
+            val newStatus = currentStatus.copy(isFreeServeClaimed = true)
+            _loyaltyUserStatus.value = newStatus
+            SessionManager.SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
         }
     }
 
-    fun getTotalPoints(): Int {
-        return loyaltyUserStatus.value?.totalPoints ?: 0
+    // PERBAIKAN: Menambahkan fungsi yang hilang untuk klaim di slot 15
+    fun claimDiscount10Slot15() {
+        val currentStatus = _loyaltyUserStatus.value ?: LoyaltyUserStatus()
+        if (currentStatus.totalPoints >= 15 && !currentStatus.isDiscount10Slot15Claimed) {
+            val newStatus = currentStatus.copy(isDiscount10Slot15Claimed = true)
+            _loyaltyUserStatus.value = newStatus
+            SessionManager.SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
+        }
     }
+
+    // Fungsi untuk mengklaim gratis kaos di slot 20
+    fun claimFreeTshirt() {
+        val currentStatus = _loyaltyUserStatus.value ?: LoyaltyUserStatus()
+        if (currentStatus.totalPoints >= 20 && !currentStatus.isFreeTshirtClaimed) {
+            val newStatus = currentStatus.copy(isFreeTshirtClaimed = true)
+            _loyaltyUserStatus.value = newStatus
+            SessionManager.SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
+        }
+    }
+
+    // Sisa fungsi lainnya bisa dibiarkan apa adanya...
 }

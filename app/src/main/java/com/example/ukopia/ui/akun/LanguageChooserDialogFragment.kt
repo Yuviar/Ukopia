@@ -2,6 +2,7 @@ package com.example.ukopia.ui.akun
 
 import android.content.Context
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -76,14 +77,16 @@ class LanguageChooserDialogFragment : DialogFragment() {
     override fun onStart() {
         super.onStart()
         dialog?.window?.let { window ->
-            val layoutParams = window.attributes
-            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
-            val marginDp = 16
-            val marginPx = (marginDp * resources.displayMetrics.density).toInt()
-            layoutParams.horizontalMargin = marginPx.toFloat()
-            window.attributes = layoutParams
-            window.setBackgroundDrawableResource(android.R.color.transparent)
+            val displayMetrics = resources.displayMetrics
+            val screenWidth = displayMetrics.widthPixels
+
+            val horizontalMarginDp = 24
+            val horizontalMarginPx = (horizontalMarginDp * displayMetrics.density).toInt() * 2
+
+            val dialogWidth = screenWidth - horizontalMarginPx
+
+            window.setLayout(dialogWidth, ViewGroup.LayoutParams.WRAP_CONTENT)
+            window.setGravity(Gravity.CENTER_HORIZONTAL)
         }
     }
 

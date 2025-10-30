@@ -1,0 +1,11 @@
+<!-- File: app/src/main/res/drawable/ic_percent.xml -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="?attr/colorControlNormal">
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M7.5,10.5A1.5,1.5 0,1 1,6 9A1.5,1.5 0,0 1,7.5 10.5M18,15A1.5,1.5 0,1 0,16.5 13.5A1.5,1.5 0,0 0,18 15M18.95,5.05L5.05,18.95L4.05,17.95L17.95,4.05L18.95,5.05Z"/>
+</vector>

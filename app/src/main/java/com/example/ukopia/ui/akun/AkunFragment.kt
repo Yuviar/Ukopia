@@ -30,6 +30,7 @@ class AkunFragment : Fragment() {
     private var _binding: FragmentAkunBinding? = null
     private val binding get() = _binding!!
 
+    // loyaltyViewModel tetap dipertahankan karena mungkin digunakan untuk hal lain (misal: mengambil total poin, dll)
     private val loyaltyViewModel: LoyaltyViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -48,10 +49,12 @@ class AkunFragment : Fragment() {
         setupClickListeners()
         updateUI()
 
-        loyaltyViewModel.loyaltyUserStatus.observe(viewLifecycleOwner) {
-            Log.d("AkunFragmentDebug", "Loyalty status observed change. Updating badge.")
-            updateLoyaltyBadge()
-        }
+        // --- HAPUS blok ini yang berkaitan dengan badge ---
+        // loyaltyViewModel.loyaltyUserStatus.observe(viewLifecycleOwner) {
+        //     Log.d("AkunFragmentDebug", "Loyalty status observed change. Updating badge.")
+        //     updateLoyaltyBadge()
+        // }
+        // --- Akhir blok yang dihapus ---
 
         // --- Tambahkan ini untuk mendengarkan hasil dari LanguageChooserDialogFragment ---
         parentFragmentManager.setFragmentResultListener(
@@ -137,7 +140,9 @@ class AkunFragment : Fragment() {
             binding.tvNama.text = userName ?: getString(R.string.name_not_found)
             binding.tvEmail.text = userEmail ?: getString(R.string.email_not_found)
 
-            updateLoyaltyBadge()
+            // --- HAPUS panggilan ini ---
+            // updateLoyaltyBadge()
+            // --- Akhir yang dihapus ---
         } else {
             Log.d("AkunFragmentDebug", "User is NOT logged in.")
             binding.displayName.visibility = View.GONE
@@ -145,10 +150,14 @@ class AkunFragment : Fragment() {
             binding.opsiAkun.visibility = View.GONE
             binding.ivProfilePhoto.visibility = View.GONE
 
-            binding.ivLoyaltyBadge.visibility = View.GONE
+            // --- HAPUS panggilan ini ---
+            // binding.ivLoyaltyBadge.visibility = View.GONE
+            // --- Akhir yang dihapus ---
         }
     }
 
+    // --- HAPUS seluruh fungsi updateLoyaltyBadge() ini ---
+    /*
     private fun updateLoyaltyBadge() {
         if (SessionManager.SessionManager.isLoggedIn(requireContext())) {
             val (_, badgeDrawableId) = loyaltyViewModel.getLoyaltyLevel(requireContext())
@@ -160,6 +169,8 @@ class AkunFragment : Fragment() {
             Log.d("AkunFragmentDebug", "User not logged in, hiding loyalty badge.")
         }
     }
+    */
+    // --- Akhir blok yang dihapus ---
 
     private fun showLogoutConfirmationDialog() {
         Log.d("AkunFragmentDebug", "Showing custom logout confirmation dialog.")

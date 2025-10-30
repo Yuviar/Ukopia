@@ -74,7 +74,8 @@ class RecipeListFragment : Fragment() {
         (requireActivity() as MainActivity).setBottomNavVisibility(View.GONE)
 
         selectedMethodName = arguments?.getString("SELECTED_METHOD_NAME")
-        binding.tvHeaderTitle.text = selectedMethodName?.uppercase()?.replace(" ", "\n") ?: getString(R.string.recipe_list_title)
+        // === Judul header sekarang selalu mendatar, tanpa .replace(" ", "\n") ===
+        binding.tvHeaderTitle.text = selectedMethodName?.uppercase() ?: getString(R.string.recipe_list_title)
 
         setupListeners()
 
@@ -97,6 +98,23 @@ class RecipeListFragment : Fragment() {
     }
 
     private fun setupListeners() {
+        // === Logika Tombol Kembali dengan Flash ===
+        binding.btnBack.setOnClickListener {
+            val originalTintList = binding.btnBack.imageTintList
+
+            binding.btnBack.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.black))
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                if (isAdded && activity != null) {
+                    binding.btnBack.imageTintList = originalTintList
+
+                    parentFragmentManager.popBackStack()
+                    (requireActivity() as MainActivity).setBottomNavVisibility(View.VISIBLE)
+                }
+            }, 150)
+        }
+        // =========================================
+
         binding.buttonSemuaResep.setOnClickListener {
             selectedMethodName?.let { method ->
                 if (isMyRecipeActive) {
@@ -165,22 +183,16 @@ class RecipeListFragment : Fragment() {
         }
 
         // --- Logika Animasi Flash untuk Card Resep saat diklik ---
-        binding.recipeContentLayout.setOnClickListener {
+        binding.cardViewRecipeInfoContainer.setOnClickListener { // Menggunakan cardViewRecipeInfoContainer sebagai clickable area utama
             currentDisplayedRecipe?.let { recipe ->
-                // Tangkap warna latar belakang asli dari CardView yang membungkus recipeContentLayout
-                // Berdasarkan fragment_recipe_list.xml, CardView ini memiliki app:cardBackgroundColor="@color/white"
                 val originalCardBackgroundColor = ContextCompat.getColor(binding.root.context, R.color.white)
                 val flashColorCard = ContextCompat.getColor(binding.root.context, R.color.secondary) // Menggunakan secondary sebagai warna flash (abu-abu terang)
 
-                // Terapkan warna flash ke CardView yang membungkus layout konten
                 binding.cardViewRecipeInfoContainer.setCardBackgroundColor(flashColorCard)
 
                 Handler(Looper.getMainLooper()).postDelayed({
-                    // Pastikan fragment masih melekat sebelum memperbarui UI
                     if (isAdded && activity != null && _binding != null) {
-                        // Kembalikan warna asli CardView
                         binding.cardViewRecipeInfoContainer.setCardBackgroundColor(originalCardBackgroundColor)
-                        // Lanjutkan ke aksi klik yang sebenarnya
                         navigateToRecipeDetail(recipe)
                     }
                 }, 150) // Durasi flash: 150 milidetik
@@ -211,7 +223,7 @@ class RecipeListFragment : Fragment() {
     private fun displayRecipesBasedOnFilter(specificRecipeTitle: String? = null) {
         val allRecipesForMethod = recipeViewModel.allRecipes.value
             ?.filter { it.method.equals(selectedMethodName, ignoreCase = true) }
-            ?.sortedBy { it.name } // Opsional: Tambahkan sorting agar tampilan lebih konsisten
+            ?.sortedBy { it.name }
             ?: emptyList()
 
         val recipesForCurrentFilter: List<RecipeItem> = if (isMyRecipeActive) {
@@ -226,7 +238,7 @@ class RecipeListFragment : Fragment() {
             recipeToDisplay = recipesForCurrentFilter.firstOrNull { it.name.equals(specificRecipeTitle, ignoreCase = true) }
         }
 
-        if (recipeToDisplay == null && selectedMethodName != null) { // Tambahkan kondisi selectedMethodName != null
+        if (recipeToDisplay == null && selectedMethodName != null) {
             recipeToDisplay = if (isMyRecipeActive) {
                 lastViewedMyRecipes[selectedMethodName]?.takeIf { recipesForCurrentFilter.contains(it) }
             } else {
@@ -234,7 +246,6 @@ class RecipeListFragment : Fragment() {
             }
         }
 
-        // Pastikan currentDisplayedRecipe masih ada di daftar yang difilter saat ini
         if (recipeToDisplay == null && currentDisplayedRecipe != null && recipesForCurrentFilter.any { it.name == currentDisplayedRecipe!!.name }) {
             recipeToDisplay = currentDisplayedRecipe
         }
@@ -255,7 +266,7 @@ class RecipeListFragment : Fragment() {
             binding.tvRecipeDescription.text = it.description
             binding.tvWaterAmount.text = it.waterAmount
             binding.tvCoffeeAmount.text = it.coffeeAmount
-            binding.tvTime.text = it.time
+            binding.tvTime.text = it.extractionTime // Mengganti it.time menjadi it.extractionTime
 
             binding.tvRecipeDescription.visibility = View.VISIBLE
             binding.layoutWaterAmount.visibility = View.VISIBLE

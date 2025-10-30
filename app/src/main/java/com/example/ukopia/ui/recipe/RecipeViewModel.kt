@@ -29,40 +29,45 @@ class RecipeViewModel : ViewModel() {
                 method = "AEROPRESS",
                 name = "2018 Winner - Inverted",
                 description = "Resep juara dunia Aeropress 2018. Menggunakan metode inverted untuk ekstraksi penuh.",
-                waterAmount = "200.0 ml", coffeeAmount = "35.0 g", grindSize = "Medium-Fine", heat = "80°C", time = "01:45", isMine = false,
-                steps = emptyList() // PASTIKAN ADA
+                waterAmount = "200.0 ml", coffeeAmount = "35.0 g", grindSize = "Medium-Fine", temperature = "80°C", extractionTime = "01:45", isMine = false,
+                steps = emptyList(),
+                brewWeight = "180.0 g", tds = "1.35 %", coffeeBrewRatio = "1:5.14", coffeeWaterRatio = "1:5.71"
             ),
             RecipeItem(
                 id = "aero_standard_upright",
                 method = "AEROPRESS",
                 name = "Standard Upright",
                 description = "Metode standar Aeropress untuk pemula. Cepat dan konsisten.",
-                waterAmount = "220.0 ml", coffeeAmount = "15.0 g", grindSize = "Fine", heat = "85°C", time = "01:10", isMine = true,
-                steps = emptyList() // PASTIKAN ADA
+                waterAmount = "220.0 ml", coffeeAmount = "15.0 g", grindSize = "Fine", temperature = "85°C", extractionTime = "01:10", isMine = true,
+                steps = emptyList(),
+                brewWeight = "200.0 g", tds = "1.20 %", coffeeBrewRatio = "1:13.33", coffeeWaterRatio = "1:14.67"
             ),
             RecipeItem(
                 id = "chemex_classic",
                 method = "CHEMEX",
                 name = "Chemex Classic Brew",
                 description = "Resep dasar untuk Chemex, menghasilkan kopi yang bersih dan jernih.",
-                waterAmount = "400.0 ml", coffeeAmount = "25.0 g", grindSize = "Medium-Coarse", heat = "90°C", time = "04:00", isMine = false,
-                steps = emptyList() // PASTIKAN ADA
+                waterAmount = "400.0 ml", coffeeAmount = "25.0 g", grindSize = "Medium-Coarse", temperature = "90°C", extractionTime = "04:00", isMine = false,
+                steps = emptyList(),
+                brewWeight = "380.0 g", tds = "1.40 %", coffeeBrewRatio = "1:15.20", coffeeWaterRatio = "1:16.00"
             ),
             RecipeItem(
                 id = "french_press_full_immersion",
                 method = "FRENCH PRESS",
                 name = "Full Immersion Standard",
                 description = "Resep French Press untuk body kopi yang tebal dan kaya rasa.",
-                waterAmount = "350.0 ml", coffeeAmount = "22.0 g", grindSize = "Coarse", heat = "95°C", time = "04:30", isMine = false,
-                steps = emptyList() // PASTIKAN ADA
+                waterAmount = "350.0 ml", coffeeAmount = "22.0 g", grindSize = "Coarse", temperature = "95°C", extractionTime = "04:30", isMine = false,
+                steps = emptyList(),
+                brewWeight = "320.0 g", tds = "1.50 %", coffeeBrewRatio = "1:14.55", coffeeWaterRatio = "1:15.91"
             ),
             RecipeItem(
                 id = "delter_basic_inverted",
                 method = "DELTER PRESS",
                 name = "Delter Basic Inverted",
                 description = "Resep awal untuk Delter Press dengan metode inverted.",
-                waterAmount = "180.0 ml", coffeeAmount = "18.0 g", grindSize = "Fine-Medium", heat = "88°C", time = "01:30", isMine = false,
-                steps = emptyList() // PASTIKAN ADA
+                waterAmount = "180.0 ml", coffeeAmount = "18.0 g", grindSize = "Fine-Medium", temperature = "88°C", extractionTime = "01:30", isMine = false,
+                steps = emptyList(),
+                brewWeight = "165.0 g", tds = "1.30 %", coffeeBrewRatio = "1:9.17", coffeeWaterRatio = "1:10.00"
             )
         )
     }

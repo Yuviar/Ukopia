@@ -8,20 +8,46 @@
     android:orientation="vertical"
     tools:context=".ui.recipe.AddRecipeFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/add_recipe_title"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:textSize="30sp"
-        android:padding="16dp"/>
+    <!-- Header disamakan dengan Loyalty -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/back_button_desc"
+            android:src="@drawable/ic_arrow_back"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
+
+        <TextView
+            android:id="@+id/tv_header_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:gravity="left"
+            android:paddingVertical="16dp"
+            android:text="@string/add_recipe_title"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btn_back"
+            app:layout_constraintTop_toTopOf="@+id/btn_back" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@drawable/rounded_top_bg"
         android:clipToOutline="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,6 +57,7 @@
             tools:context=".ui.recipe.AddRecipeFragment">
 
             <ScrollView
+                android:id="@+id/layoutAddRecipe"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:fillViewport="true"
@@ -46,6 +73,7 @@
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="16dp">
 
+                    <!-- NAMA RESEP -->
                     <TextView
                         android:id="@+id/labelRecipeName"
                         android:layout_width="wrap_content"
@@ -54,20 +82,21 @@
                         android:textColor="@color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
-
                     <EditText
                         android:id="@+id/editTextRecipeName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
                         android:background="@drawable/edit_text_border"
                         android:hint="@string/recipe_name_hint"
                         android:inputType="textCapWords"
+                        android:padding="10dp"
                         android:textColor="@color/black"
                         android:textColorHint="@color/light_grey"
-                        android:textSize="16sp"
-                        android:padding="10dp"/>
+                        android:textSize="16sp" />
 
+                    <!-- DESKRIPSI -->
                     <TextView
                         android:id="@+id/labelDescription"
                         android:layout_width="wrap_content"
@@ -76,38 +105,92 @@
                         android:textColor="@color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
-
                     <EditText
                         android:id="@+id/editTextDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="24dp"
                         android:background="@drawable/edit_text_border"
                         android:hint="@string/description_hint"
                         android:inputType="textMultiLine"
                         android:maxLines="3"
+                        android:padding="10dp"
                         android:textColor="@color/black"
                         android:textColorHint="@color/light_grey"
+                        android:textSize="16sp" />
+
+                    <!-- BAGIAN EQUIPMENT BARU SESUAI GAMBAR -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/equipment_title"
+                        android:textColor="@color/black"
                         android:textSize="16sp"
-                        android:padding="10dp"/>
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:id="@+id/equipment_selection_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="24dp">
+
+                        <!-- RecyclerView untuk menampilkan SELECTED equipment -->
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recycler_selected_equipment"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:nestedScrollingEnabled="false"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            tools:itemCount="2"
+                            tools:listitem="@layout/item_selected_equipment_recipe" />
+
+                        <!-- Floating Action Button untuk ADD/CHANGE equipment -->
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/fab_add_equipment_recipe"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="8dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:src="@drawable/ic_add"
+                            app:tint="@color/white"
+                            app:backgroundTint="@color/black"
+                            android:contentDescription="@string/add_equipment_item" />
+
+                    </LinearLayout>
+                    <!-- AKHIR BAGIAN EQUIPMENT BARU -->
+
+                    <!-- BAGIAN PROCESS -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:text="Process"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                     <GridLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:columnCount="2"
-                        android:rowCount="2">
+                        android:rowCount="5">
 
-                        <!-- STRUKTUR JUMLAH KOPI (DISEDERHANAKAN) -->
+                        <!-- Coffee Amount -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginBottom="8dp"
                             android:background="@drawable/bg_card_parameter_coffee"
                             android:orientation="vertical"
-                            android:padding="12dp"
-                            android:layout_marginRight="4dp"
-                            android:layout_marginBottom="8dp">
-
+                            android:padding="12dp">
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -116,14 +199,13 @@
                                 <ImageView
                                     android:layout_width="24dp"
                                     android:layout_height="24dp"
-                                    android:contentDescription="@string/coffee_icon_desc"
                                     android:src="@drawable/ic_bean_coffee"
                                     app:tint="@color/black"/>
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
-                                    android:text="@string/coffee_amount_label"
+                                    android:text="Coffee Amount"
                                     android:textColor="@color/black"
                                     android:textSize="12sp"
                                     android:textStyle="bold" />
@@ -134,7 +216,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
                                 android:background="@android:color/transparent"
-                                android:hint="@string/coffee_amount_hint_placeholder"
+                                android:hint="0 g"
                                 android:inputType="numberDecimal"
                                 android:padding="0dp"
                                 android:textColor="@color/black"
@@ -143,16 +225,16 @@
                                 android:textStyle="bold" />
                         </LinearLayout>
 
-                        <!-- STRUKTUR JUMLAH AIR (DISEDERHANAKAN) -->
+                        <!-- Water Amount -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginBottom="8dp"
                             android:background="@drawable/bg_card_parameter_water"
                             android:orientation="vertical"
-                            android:padding="12dp"
-                            android:layout_marginLeft="4dp">
-
+                            android:padding="12dp">
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -161,13 +243,12 @@
                                 <ImageView
                                     android:layout_width="24dp"
                                     android:layout_height="24dp"
-                                    android:contentDescription="@string/water_icon_desc"
                                     android:src="@drawable/ic_water" />
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
-                                    android:text="@string/water_amount_label"
+                                    android:text="Water Amount"
                                     android:textColor="@color/black"
                                     android:textSize="12sp"
                                     android:textStyle="bold" />
@@ -178,7 +259,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
                                 android:background="@android:color/transparent"
-                                android:hint="@string/water_amount_hint_placeholder"
+                                android:hint="0 ml"
                                 android:inputType="numberDecimal"
                                 android:padding="0dp"
                                 android:textColor="@color/black"
@@ -187,16 +268,16 @@
                                 android:textStyle="bold" />
                         </LinearLayout>
 
-                        <!-- Gilingan (Sudah Diperbaiki) -->
+                        <!-- Grind Size -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginBottom="8dp"
                             android:background="@drawable/bg_card_parameter_grinder"
                             android:orientation="vertical"
-                            android:padding="12dp"
-                            android:layout_marginRight="4dp">
-
+                            android:padding="12dp">
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -205,14 +286,13 @@
                                 <ImageView
                                     android:layout_width="24dp"
                                     android:layout_height="24dp"
-                                    android:contentDescription="@string/grind_size_icon_desc"
                                     android:src="@drawable/ic_grinder"
                                     app:tint="@color/black"/>
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
-                                    android:text="@string/grind_size_label"
+                                    android:text="Grind Size"
                                     android:textColor="@color/black"
                                     android:textSize="12sp"
                                     android:textStyle="bold" />
@@ -228,16 +308,16 @@
                                 android:spinnerMode="dropdown" />
                         </LinearLayout>
 
-                        <!-- STRUKTUR SUHU (DISEDERHANAKAN) -->
+                        <!-- Temperature -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginBottom="8dp"
                             android:background="@drawable/bg_card_parameter_heat"
                             android:orientation="vertical"
-                            android:padding="12dp"
-                            android:layout_marginLeft="4dp">
-
+                            android:padding="12dp">
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -246,14 +326,13 @@
                                 <ImageView
                                     android:layout_width="24dp"
                                     android:layout_height="24dp"
-                                    android:contentDescription="@string/heat_icon_desc"
                                     android:src="@drawable/ic_flame"
                                     app:tint="@color/black"/>
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
-                                    android:text="@string/heat_label"
+                                    android:text="Temperature"
                                     android:textColor="@color/black"
                                     android:textSize="12sp"
                                     android:textStyle="bold" />
@@ -264,7 +343,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
                                 android:background="@android:color/transparent"
-                                android:hint="@string/heat_hint_placeholder"
+                                android:hint="0°C"
                                 android:inputType="number"
                                 android:padding="0dp"
                                 android:textColor="@color/black"
@@ -272,112 +351,279 @@
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
-                    </GridLayout>
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="32dp">
-
-                        <TextView
-                            android:id="@+id/labelProcess"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/process_label"
-                            android:textColor="@color/black"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
+                        <!-- Brew Weight -->
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
-
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:contentDescription="@string/timer_icon_desc"
-                                android:src="@drawable/ic_timer"
-                                app:tint="@color/black" />
-
-                            <com.google.android.material.textfield.TextInputLayout
-                                android:layout_width="0dp"
-                                android:layout_height="0dp"
-                                app:boxBackgroundMode="none"
-                                app:hintEnabled="false"/>
-                            <TextView
-                                android:id="@+id/editTextProcessTime"
-                                android:layout_width="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_card_parameter_water"
+                            android:orientation="vertical"
+                            android:padding="12dp">
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:text="@string/process_time_hint"
-                            android:textColor="@color/black"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:paddingHorizontal="0dp"
-                            android:paddingVertical="0dp"
-                            tools:ignore="LabelFor" />
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:src="@drawable/ic_scale"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:text="Brew Weight"
+                                    android:textColor="@color/black"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editTextBrewWeight"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:background="@android:color/transparent"
+                                android:hint="0 g"
+                                android:inputType="numberDecimal"
+                                android:padding="0dp"
+                                android:textColor="@color/black"
+                                android:textColorHint="@color/light_grey"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
                         </LinearLayout>
 
+                        <!-- TDS -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_card_parameter_water"
+                            android:orientation="vertical"
+                            android:padding="12dp">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:src="@drawable/ic_percent"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:text="TDS"
+                                    android:textColor="@color/black"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editTextTds"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:background="@android:color/transparent"
+                                android:hint="0 %"
+                                android:inputType="numberDecimal"
+                                android:padding="0dp"
+                                android:textColor="@color/black"
+                                android:textColorHint="@color/light_grey"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
 
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                        <!-- Extraction Time -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_card_parameter_water"
+                            android:orientation="vertical"
+                            android:padding="12dp">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:src="@drawable/ic_timer"
+                                    app:tint="@color/black" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:text="Extraction Time"
+                                    android:textColor="@color/black"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editTextExtractionTime"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:background="@android:color/transparent"
+                                android:hint="0 s"
+                                android:inputType="number"
+                                android:padding="0dp"
+                                android:textColor="@color/black"
+                                android:textColorHint="@color/light_grey"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
 
-                    <!-- Container untuk daftar langkah resep yang ditambahkan secara dinamis -->
-                    <LinearLayout
-                        android:id="@+id/containerRecipeSteps"
-                        android:layout_width="match_parent"
+                        <!-- NEW: Coffee / Brew Ratio -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_card_parameter_water"
+                            android:orientation="vertical"
+                            android:padding="12dp">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:src="@drawable/ic_ratio"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:text="Coffee / Brew Ratio"
+                                    android:textColor="@color/black"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                            <TextView
+                                android:id="@+id/tvCoffeeBrewRatio"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            tools:text="?" />
+                        </LinearLayout>
+
+                        <!-- NEW: Coffee / Water Ratio -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_card_parameter_water"
+                            android:orientation="vertical"
+                            android:padding="12dp">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:src="@drawable/ic_ratio"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:text="Coffee / Water Ratio"
+                                    android:textColor="@color/black"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                            <TextView
+                                android:id="@+id/tvCoffeeWaterRatio"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:textColor="@color/black"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                tools:text="?" />
+                        </LinearLayout>
+
+                    </GridLayout>
+
+                    <!-- BARU: Tanggal -->
+                    <TextView
+                        android:id="@+id/textViewTanggal"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_marginTop="16dp"
-                        android:layout_marginBottom="8dp"/>
+                        android:text="@string/date_prefix"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
-                    <LinearLayout
-                        android:id="@+id/buttonAddNewStep"
+                    <EditText
+                        android:id="@+id/editTextDate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="15dp"
                         android:background="@drawable/edit_text_border"
                         android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground"
-                        android:gravity="center_horizontal"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="16dp"
-                        android:paddingVertical="12dp">
+                        android:ems="10"
+                        android:focusable="false"
+                        android:hint="@string/date_hint"
+                        android:inputType="date"
+                        android:padding="10dp"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/light_grey"
+                        android:textSize="16sp"
+                        android:drawableEnd="@drawable/ic_arrow_drop_down"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="@color/black" />
 
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_add"
-                            app:tint="@color/black"
-                            android:contentDescription="@string/add_step_icon_desc"/>
+                    <!-- BARU: Catatan -->
+                    <TextView
+                        android:id="@+id/textViewCatatan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/notes_prefix"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="@string/add_new_step_button_text"
-                            android:textColor="@color/black"
-                            android:textSize="16sp"
-                            android:paddingTop="3dp"
-                            />
-
-                    </LinearLayout>
+                    <EditText
+                        android:id="@+id/editTextCatatan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:background="@drawable/edit_text_border"
+                        android:gravity="top"
+                        android:hint="@string/notes_hint"
+                        android:inputType="textMultiLine"
+                        android:lines="4"
+                        android:padding="10dp"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/light_grey"
+                        android:textSize="16sp" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/buttonSimpanResep"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="20dp"
                         android:backgroundTint="@color/black"
                         android:text="@string/add_recipe_button_text"
-                        android:textSize="16sp"
                         android:textColor="@color/white"
+                        android:textSize="16sp"
                         app:cornerRadius="8dp" />
 
                 </LinearLayout>

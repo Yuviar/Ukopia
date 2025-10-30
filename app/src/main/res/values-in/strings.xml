@@ -81,7 +81,7 @@
     <string name="error_description_required">Deskripsi wajib diisi!</string>
     <string name="error_coffee_amount_required">Jumlah Kopi wajib diisi!</string>
     <string name="error_water_amount_required">Jumlah Air wajib diisi!</string>
-    <string name="error_temperature_required">Suhu wajib diisi!</string>
+    <string name="error_temperature_required">Suhu wajib diisi!</string> <!-- Tetap ini -->
     <string name="error_processing_time_required">Waktu Proses harus diisi lengkap!</string>
     <string name="error_complete_all_recipe_data">Harap lengkapi semua data resep!</string>
     <string name="recipe_saved_success_toast">Resep \'%1$s\' berhasil disimpan!</string>
@@ -148,7 +148,7 @@
     <string name="coffee_amount_label">Jumlah Kopi</string>
     <string name="water_amount_label">Jumlah Air</string>
     <string name="grind_size_label">Ukuran Gilingan</string>
-    <string name="heat_label">Suhu</string>
+    <string name="temperature_label">Suhu</string> <!-- Ganti 'heat_label' menjadi 'temperature_label' -->
     <string name="process_label">PROSES</string>
     <string name="process_time_hint">00:00</string>
     <string name="add_new_step_button_text">Tambah Langkah Baru</string>
@@ -156,7 +156,7 @@
     <string name="add_recipe_button_text">Tambah Resep</string>
     <string name="coffee_amount_hint_placeholder">16,0 g</string>
     <string name="water_amount_hint_placeholder">200,0 ml</string>
-    <string name="heat_hint_placeholder">90 °C</string>
+    <string name="temperature_hint_placeholder">90 °C</string> <!-- Ganti 'heat_hint_placeholder' menjadi 'temperature_hint_placeholder' -->
 
     <string-array name="grind_sizes">
         <item>Halus</item>
@@ -170,12 +170,12 @@
     <string name="coffee_icon_desc">Ikon Kopi</string>
     <string name="grind_size_icon_desc">Ikon Gilingan</string>
     <string name="heat_icon_desc">Ikon Panas</string>
-    <string name="processing_time_label">Waktu Proses</string>
+    <string name="extraction_time_label">Waktu Ekstraksi</string> <!-- Ganti 'processing_time_label' menjadi 'extraction_time_label' -->
     <string name="grind_size_placeholder">Sedang</string>
-    <string name="heat_placeholder">92°C</string>
+    <string name="temperature_placeholder">92°C</string> <!-- Ganti 'heat_placeholder' menjadi 'temperature_placeholder' -->
     <string name="water_amount_placeholder">200,0 ml</string>
     <string name="coffee_amount_placeholder">35,0 g</string>
-    <string name="time_placeholder">01:45</string>
+    <string name="extraction_time_placeholder">01:45</string> <!-- Ganti 'time_placeholder' menjadi 'extraction_time_placeholder' -->
 
     <string name="add_new_step_title">TAMBAH LANGKAH BARU</string>
     <string name="custom_step_title">Langkah Kustom</string>
@@ -299,15 +299,30 @@
     <string name="add_loyalty_data_desc">Tambah data loyalitas baru</string>
     <string name="loyalty_history_title">Riwayat Loyalitas</string>
 
-    <string name="progress_intro_format">%1$d/%2$d pembelian untuk diskon 10%%!</string>
-    <string name="reward_10_percent_discount_progress_format">Anda mendapatkan diskon 10%%! %1$d/%2$d pembelian untuk Gratis 1 Serve!</string>
-    <string name="reward_free_serve_progress_format">Anda mendapatkan Gratis 1 Serve! %1$d/%2$d pembelian untuk Gratis 1 Kaos!</string>
-    <string name="reward_free_tshirt_earned">Anda mendapatkan Gratis 1 Kaos! Nikmati reward Anda!</string>
+    <!-- String baru untuk sistem stempel -->
+    <string name="loyalty_stamp_desc">Stempel loyalitas</string>
+    <string name="loyalty_reward_10_percent_discount_title">DISKON 10%</string>
+    <string name="loyalty_reward_free_serve_title">GRATIS 1 PORSI</string>
+    <string name="loyalty_reward_free_tshirt_title">GRATIS KAOS</string>
 
-    <string name="loyalty_level_bronze">Perunggu</string>
-    <string name="loyalty_level_silver">Perak</string>
-    <string name="loyalty_level_gold">Emas</string>
-    <string name="loyalty_level_platinum">Platinum</string>
+    <string name="loyalty_reward_claim_10_percent_discount">Klaim DISKON 10%</string>
+    <string name="loyalty_reward_claim_free_serve">Klaim GRATIS 1 PORSI</string>
+    <string name="loyalty_reward_claim_free_tshirt">Klaim GRATIS KAOS</string>
+
+    <!-- String baru dan dimodifikasi untuk UI dan Toast -->
+    <string name="loyalty_reward_10_percent_discount_short">DISKON 10%</string>
+    <string name="loyalty_reward_free_serve_short">GRATIS 1 PORSI</string>
+    <string name="loyalty_reward_free_tshirt_short">GRATIS KAOS</string>
+    <string name="loyalty_reward_claim_action">KLAIM</string>
+    <string name="reward_claimed_title">DIKLAIM</string>
+    <string name="reward_claimed_toast_format">Hadiah \'%1$s\' berhasil diklaim!</string>
+
+    <string name="progress_stamps_needed_disc">Kumpulkan %1$d stempel lagi untuk %2$s!</string>
+    <string name="progress_stamps_needed_serve">Kumpulkan %1$d stempel lagi untuk %2$s!</string>
+    <string name="progress_stamps_needed_tshirt">Kumpulkan %1$d stempel lagi untuk %2$s!</string>
+    <string name="all_rewards_claimed">Semua hadiah telah diklaim!</string>
+    <string name="reward_already_claimed">Hadiah ini sudah diklaim.</string>
+    <string name="not_enough_stamps">Stempel tidak cukup untuk mengklaim hadiah ini.</string>
 
     <string name="search_recipe_hint">Cari metode</string>
 
@@ -324,4 +339,29 @@
     <string name="your_comment_prefix">Komentar: </string>
 
     <string name="press_back_again_to_exit">Klik kembali lagi untuk keluar </string>
+
+    <!-- Equipment related strings -->
+    <string name="equipment_title">Equipment</string>
+    <string name="my_equipment_title">Equipment</string>
+    <string name="add_equipment_item">Add Equipment</string>
+    <string name="equipment_selected_toast_format">Selected equipment: %1$s</string>
+    <string name="selected_equipment_label">Selected Equipment</string>
+    <string name="selected_equipment_hint">No equipment selected</string>
+    <string name="delete_button_desc">Delete equipment item</string>
+
+    <!-- Equipment Category Names -->
+    <string name="equipment_category_grinder">Grinder</string>
+    <string name="equipment_category_espresso_machine">Espresso machine</string>
+    <string name="equipment_category_portafilter_handle">Portafilter handle</string>
+    <string name="equipment_category_filter">Filter</string>
+    <string name="equipment_category_scale">Scale</string>
+    <string name="equipment_category_kettle">Kettle</string>
+
+    <!-- NEW VALIDATION STRINGS -->
+    <string name="error_extraction_time_required">Extraction Time is required!</string>
+    <string name="error_equipment_required">Please select at least one equipment!</string>
+
+    <!-- NEW DEFAULT ICON DESCRIPTION -->
+    <string name="default_equipment_icon_desc">Default equipment icon</string>
+
 </resources>

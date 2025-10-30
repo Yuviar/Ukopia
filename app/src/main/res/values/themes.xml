@@ -90,19 +90,12 @@
     </style>
 
     <!-- ▼▼▼ GAYA UNTUK WIDGET DatePicker DI DALAM DIALOG KUSTOM ▼▼▼ -->
-    <!-- Kita menggunakan parent standar dan hanya atribut yang diketahui berfungsi konsisten -->
     <style name="DatePickerTheme" parent="android:Widget.Material.DatePicker">
         <item name="android:colorAccent">@color/black</item> <!-- Warna aksen (lingkaran tanggal, dll.) -->
         <item name="android:datePickerMode">calendar</item> <!-- Pastikan mode kalender -->
-        <!-- Atribut lain seperti headerBackground, calendarTextColor, dayOfWeekTextColor,
-             yearListSelectorColor seringkali tidak konsisten atau menyebabkan error
-             jika digunakan pada parent ini di berbagai API level.
-             Warna teks hari/bulan/tahun akan diwarisi dari textColorPrimary/Secondary
-             dari tema dialog induk (FullScreenDialogTheme). -->
     </style>
 
     <!-- App.Theme.DatePickerDialog ini adalah tema untuk DatePickerDialog standar -->
-    <!-- Jika Anda tidak menggunakannya lagi di bagian lain aplikasi, bisa dihapus -->
     <style name="App.Theme.DatePickerDialog" parent="Theme.MaterialComponents.Light.Dialog">
         <item name="colorPrimary">@color/black</item>
         <item name="colorAccent">@color/black</item>
@@ -118,6 +111,27 @@
     <style name="App.DatePicker.Button" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
         <item name="android:textColor">@color/black</item>
     </style>
-    <!-- ▲▲▲ AKHIR DEFINISI GAYA DatePickerDialog STANDAR ▲▲▲ -->
+
+    <!-- NEW Loyalty Stamp ImageView Style -->
+    <style name="LoyaltyStampImageView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">56dp</item> <!-- Tinggi yang sama dengan Reward Circles -->
+        <item name="android:layout_weight">1</item>
+        <item name="android:scaleType">centerInside</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:contentDescription">@string/loyalty_stamp_desc</item>
+        <item name="android:layout_marginHorizontal">4dp</item>
+        <item name="android:layout_marginVertical">4dp</item>
+    </style>
+
+    <!-- NEW Loyalty Reward Circle FrameLayout Style (untuk container reward) -->
+    <style name="LoyaltyRewardCircleFrame">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">56dp</item> <!-- PERBAIKI INI: Tinggi sama dengan stamp images -->
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginHorizontal">4dp</item> <!-- PERBAIKI INI: Tambah margin horizontal -->
+        <item name="android:layout_marginVertical">4dp</item>   <!-- PERBAIKI INI: Tambah margin vertical -->
+    </style>
 
 </resources>

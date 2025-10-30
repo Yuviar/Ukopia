@@ -88,16 +88,6 @@
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
-                        <ImageView
-                            android:id="@+id/ivLoyaltyBadge"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginStart="8dp"
-                            android:contentDescription="Loyalty Badge"
-                            android:src="@drawable/ic_badge_bronze"
-                            android:visibility="gone"
-                            app:tint="@null" />
-
                     </LinearLayout>
 
                     <TextView

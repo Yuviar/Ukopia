@@ -36,11 +36,11 @@
         android:gravity="center"
         android:layout_marginBottom="32dp">
 
-        <ImageView android:id="@+id/star_1" style="@style/RatingStar" android:src="@drawable/star_rating_progress"/> <!-- PERUBAHAN -->
-        <ImageView android:id="@+id/star_2" style="@style/RatingStar" android:src="@drawable/star_rating_progress"/> <!-- PERUBAHAN -->
-        <ImageView android:id="@+id/star_3" style="@style/RatingStar" android:src="@drawable/star_rating_progress"/> <!-- PERUBAHAN -->
-        <ImageView android:id="@+id/star_4" style="@style/RatingStar" android:src="@drawable/star_rating_progress"/> <!-- PERUBAHAN -->
-        <ImageView android:id="@+id/star_5" style="@style/RatingStar" android:src="@drawable/star_rating_progress"/> <!-- PERUBAHAN -->
+        <ImageView android:id="@+id/star_1" style="@style/RatingStar" android:src="@drawable/star_rating_progress"/>
+        <ImageView android:id="@+id/star_2" style="@style/RatingStar" android:src="@drawable/star_rating_progress"/>
+        <ImageView android:id="@+id/star_3" style="@style/RatingStar" android:src="@drawable/star_rating_progress"/>
+        <ImageView android:id="@+id/star_4" style="@style/RatingStar" android:src="@drawable/star_rating_progress"/>
+        <ImageView android:id="@+id/star_5" style="@style/RatingStar" android:src="@drawable/star_rating_progress"/>
     </LinearLayout>
 
     <EditText

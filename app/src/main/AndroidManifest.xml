@@ -2,8 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Izin untuk mengakses internet (sudah ada dan benar) -->
     <uses-permission android:name="android.permission.INTERNET"/>
 
+    <!-- Kueri untuk membuka aplikasi lain seperti Instagram & YouTube (sudah ada dan benar) -->
     <queries>
         <intent>
             <action android:name="android.intent.action.VIEW" />
@@ -17,6 +19,11 @@
         <package android:name="com.google.android.youtube" />
     </queries>
 
+    <!--
+        PERUBAHAN PENTING:
+        1. Menambahkan android:usesCleartextTraffic="true" untuk mengizinkan koneksi ke API via http://
+        2. Memperbaiki android:name untuk LoginActivity dan RegisterActivity agar sesuai dengan lokasi file Kotlin-nya.
+    -->
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -26,37 +33,38 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Ukopia"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <!-- HAPUS KEDUA BLOK ACTIVITY INI -->
-        <!-- <activity
-            android:name=".ui.home.RatingActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.home.DetailMenuActivity"
-            android:exported="false" /> -->
 
-        <activity
-            android:name=".SplashActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".MainActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustPan"
-            android:configChanges="locale|layoutDirection|screenLayout|screenSize|orientation" />
-        <activity
-            android:name="com.example.ukopia.ui.auth.LupaPasswordActivity"
-            android:exported="false" />
-        <activity
-            android:name=".RegisterActivity"
-            android:exported="false" />
-        <activity
-            android:name=".LoginActivity"
-            android:exported="true" />
-    </application>
+    <activity
+        android:name=".SplashActivity"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+    <activity
+        android:name=".MainActivity"
+        android:exported="false"
+        android:windowSoftInputMode="adjustPan"
+        android:configChanges="locale|layoutDirection|screenLayout|screenSize|orientation" />
 
-</manifest>
+    <!--
+        PERBAIKAN: Path ke Activity Auth sekarang sudah benar semua.
+        Sebelumnya: ".LoginActivity" dan ".RegisterActivity"
+        Sekarang: "com.example.ukopia.ui.auth.LoginActivity", dll.
+    -->
+    <activity
+        android:name="com.example.ukopia.ui.auth.LoginActivity"
+        android:exported="false" />
+    <activity
+        android:name="com.example.ukopia.ui.auth.RegisterActivity"
+        android:exported="false" />
+    <activity
+        android:name="com.example.ukopia.ui.auth.LupaPasswordActivity"
+        android:exported="false" />
+
+</application>
+
+    </manifest>

@@ -1,4 +1,4 @@
-package com.example.ukopia
+package com.example.ukopia.ui.akun
 
 import android.content.Context
 import android.content.SharedPreferences

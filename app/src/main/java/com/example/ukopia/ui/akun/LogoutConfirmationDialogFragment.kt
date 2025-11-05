@@ -40,7 +40,7 @@ class LogoutConfirmationDialogFragment : DialogFragment() {
 
         binding.buttonDialogYes.setOnClickListener {
             // Panggil fungsi logout dari SessionManager
-            SessionManager.SessionManager.logout(requireContext())
+            SessionManager.logout(requireContext())
 
             // Menggunakan string resource untuk pesan Toast
             Toast.makeText(requireContext(), getString(R.string.logged_out_toast), Toast.LENGTH_SHORT).show()

@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ukopia.MainActivity
 import com.example.ukopia.R
 import com.example.ukopia.SessionManager
-import com.example.ukopia.LoginActivity
+import com.example.ukopia.ui.auth.LoginActivity
 import com.example.ukopia.adapter.LoyaltyAdapter
 import com.example.ukopia.databinding.DialogLoginRequiredBinding
 import com.example.ukopia.databinding.FragmentLoyaltyBinding
@@ -61,7 +61,7 @@ class LoyaltyFragment : Fragment() {
     private val loginActivityResultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == Activity.RESULT_OK && SessionManager.SessionManager.isLoggedIn(requireContext())) {
+        if (result.resultCode == Activity.RESULT_OK && SessionManager.isLoggedIn(requireContext())) {
             loyaltyViewModel.loyaltyUserStatus.value?.let { updateLoyaltyUI(it.totalPoints) }
             updateLoyaltyItemsVisibility()
 
@@ -301,7 +301,7 @@ class LoyaltyFragment : Fragment() {
                 binding.fabAddRecipe.backgroundTintList = ColorStateList.valueOf(originalBackgroundTint)
                 binding.fabAddRecipe.imageTintList = ColorStateList.valueOf(originalImageTint)
 
-                if (SessionManager.SessionManager.isLoggedIn(requireContext())) {
+                if (SessionManager.isLoggedIn(requireContext())) {
                     parentFragmentManager.beginTransaction()
                         .replace(R.id.container, AddLoyaltyFragment())
                         .addToBackStack(null)

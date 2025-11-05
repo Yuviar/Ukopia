@@ -338,30 +338,35 @@
     <string name="rate_button_text">Rate</string>
     <string name="your_comment_prefix">Comment: </string>
 
+    <!-- NEW STRINGS FOR DETAIL MENU & SHARE FEATURE -->
+    <string name="share_menu_via">Share menu via:</string>
+    <string name="no_app_to_share">No app found to share the menu.</string>
+    <string name="update_your_rating">Update Your Rating</string>
+
     <string name="press_back_again_to_exit">Press back again to exit </string>
 
     <!-- Equipment related strings -->
-    <string name="equipment_title">Peralatan</string>
-    <string name="my_equipment_title">Peralatan</string>
-    <string name="add_equipment_item">Tambah Peralatan</string>
-    <string name="equipment_selected_toast_format">Peralatan terpilih: %1$s</string>
-    <string name="selected_equipment_label">Peralatan Terpilih</string>
-    <string name="selected_equipment_hint">Belum ada peralatan terpilih</string>
-    <string name="delete_button_desc">Hapus item peralatan</string>
+    <string name="equipment_title">Equipment</string>
+    <string name="my_equipment_title">Equipment</string>
+    <string name="add_equipment_item">Add Equipment</string>
+    <string name="equipment_selected_toast_format">Selected equipment: %1$s</string>
+    <string name="selected_equipment_label">Selected Equipment</string>
+    <string name="selected_equipment_hint">No equipment selected</string>
+    <string name="delete_button_desc">Delete equipment item</string>
 
     <!-- Equipment Category Names -->
     <string name="equipment_category_grinder">Grinder</string>
-    <string name="equipment_category_espresso_machine">Mesin Espresso</string>
-    <string name="equipment_category_portafilter_handle">Gagang Portafilter</string>
+    <string name="equipment_category_espresso_machine">Espresso machine</string>
+    <string name="equipment_category_portafilter_handle">Portafilter handle</string>
     <string name="equipment_category_filter">Filter</string>
-    <string name="equipment_category_scale">Timbangan</string>
-    <string name="equipment_category_kettle">Ketel</string>
+    <string name="equipment_category_scale">Scale</string>
+    <string name="equipment_category_kettle">Kettle</string>
 
     <!-- NEW VALIDATION STRINGS -->
-    <string name="error_extraction_time_required">Waktu Ekstraksi wajib diisi!</string>
-    <string name="error_equipment_required">Harap pilih setidaknya satu peralatan!</string>
+    <string name="error_extraction_time_required">Extraction Time is required!</string>
+    <string name="error_equipment_required">Please select at least one equipment!</string>
 
     <!-- NEW DEFAULT ICON DESCRIPTION -->
-    <string name="default_equipment_icon_desc">Ikon peralatan default</string>
+    <string name="default_equipment_icon_desc">Default equipment icon</string>
 
 </resources>

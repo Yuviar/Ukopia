@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("com.google.gms.google-services")
     id("kotlin-parcelize")
 }
 
@@ -57,16 +56,18 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    // Firebase Bill of Materials (BoM) - Ini sudah benar
-    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
 
-    // Anda bisa menghapus analytics jika tidak diperlukan
-    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    // Gson Converter untuk parsing JSON
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    // OkHttp Logging Interceptor untuk melihat log request & response (sangat membantu saat development)
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 
-    // WAJIB: Tambahkan dependensi ini untuk Firebase Authentication (Login, Register)
-    implementation("com.google.firebase:firebase-auth-ktx")
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
-    // WAJIB: Tambahkan dependensi ini untuk Firestore Database (Menyimpan data user)
-    implementation("com.google.firebase:firebase-firestore-ktx")
-
+    // ViewModel & LiveData (Lifecycle)
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
 }

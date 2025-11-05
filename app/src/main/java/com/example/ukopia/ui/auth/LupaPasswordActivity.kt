@@ -15,7 +15,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.example.ukopia.LoginActivity
+import com.example.ukopia.ui.auth.LoginActivity
 import com.example.ukopia.MainActivity
 import com.example.ukopia.R
 

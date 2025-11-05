@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.ukopia.ui.akun.AkunFragment
+import com.example.ukopia.ui.akun.LocaleHelper
 import com.example.ukopia.ui.home.HomeFragment
 import com.example.ukopia.ui.recipe.RecipeFragment
 import com.example.ukopia.ui.loyalty.LoyaltyFragment

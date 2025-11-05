@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.ukopia.LocaleHelper
+import com.example.ukopia.ui.akun.LocaleHelper
 import com.example.ukopia.R
 import com.example.ukopia.databinding.FragmentLanguageChooserDialogBinding
 import androidx.core.content.ContextCompat

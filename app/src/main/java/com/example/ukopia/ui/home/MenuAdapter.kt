@@ -38,7 +38,6 @@ class MenuAdapter(private var menuItems: List<MenuItem>, private val onItemClick
 
         holder.itemView.setOnClickListener {
             // Ambil warna original dari latar belakang kartu, teks, dan status tint gambar
-            // Fallback ke warna putih untuk background dan hitam untuk teks jika tidak bisa didapat dari ColorStateList
             val originalCardBackgroundColor = (holder.cardBackground.background as? ColorStateList) ?: ColorStateList.valueOf(ContextCompat.getColor(holder.itemView.context, R.color.white))
             val originalTitleTextColor = holder.menuTitle.textColors
             val originalRatingTextColor = holder.menuRating.textColors
@@ -47,18 +46,21 @@ class MenuAdapter(private var menuItems: List<MenuItem>, private val onItemClick
             val originalStarDrawable = holder.menuRating.compoundDrawables[0] // drawableStart berada di index 0
             val originalStarColorFilter = originalStarDrawable?.colorFilter
 
-            // Definisikan warna flash (semua light grey/secondary color)
-            val flashColor = ContextCompat.getColor(holder.itemView.context, R.color.secondary) // Menggunakan secondary color (light grey) untuk semua
+            // Definisikan warna flash menjadi PUTIH SEMUA
+            val flashColorBackground = ContextCompat.getColor(holder.itemView.context, R.color.white) // Background flash: putih
+            val flashColorText = ContextCompat.getColor(holder.itemView.context, R.color.white)       // Teks flash: putih (akan menghilang sementara)
+            val flashColorImageTint = ContextCompat.getColor(holder.itemView.context, R.color.white)  // Tint gambar flash: putih
+            val flashColorStarTint = ContextCompat.getColor(holder.itemView.context, R.color.white)   // Tint bintang flash: putih
 
             // Terapkan warna flash
-            holder.cardBackground.backgroundTintList = ColorStateList.valueOf(flashColor)
-            holder.menuTitle.setTextColor(flashColor) // Mengubah teks menjadi secondary color
-            holder.menuRating.setTextColor(flashColor) // Mengubah rating menjadi secondary color
-            holder.menuImage.setColorFilter(flashColor, PorterDuff.Mode.SRC_IN) // Terapkan tint secondary color pada gambar
+            holder.cardBackground.backgroundTintList = ColorStateList.valueOf(flashColorBackground)
+            holder.menuTitle.setTextColor(flashColorText)
+            holder.menuRating.setTextColor(flashColorText)
+            holder.menuImage.setColorFilter(flashColorImageTint, PorterDuff.Mode.SRC_IN)
 
-            // Terapkan tint secondary color pada ikon bintang
-            originalStarDrawable?.setColorFilter(flashColor, PorterDuff.Mode.SRC_IN)
-            holder.menuRating.setCompoundDrawablesWithIntrinsicBounds(originalStarDrawable, null, null, null) // Perbarui TextView agar redraw
+            // Terapkan tint flash pada ikon bintang
+            originalStarDrawable?.setColorFilter(flashColorStarTint, PorterDuff.Mode.SRC_IN)
+            holder.menuRating.setCompoundDrawablesWithIntrinsicBounds(originalStarDrawable, null, null, null)
 
             Handler(Looper.getMainLooper()).postDelayed({
                 // Kembalikan warna original setelah delay
@@ -69,7 +71,7 @@ class MenuAdapter(private var menuItems: List<MenuItem>, private val onItemClick
 
                 // Kembalikan ColorFilter asli ke ikon bintang
                 originalStarDrawable?.colorFilter = originalStarColorFilter
-                holder.menuRating.setCompoundDrawablesWithIntrinsicBounds(originalStarDrawable, null, null, null) // Perbarui TextView agar redraw
+                holder.menuRating.setCompoundDrawablesWithIntrinsicBounds(originalStarDrawable, null, null, null)
 
                 // Lanjutkan ke onItemClick setelah animasi selesai
                 onItemClick(item)

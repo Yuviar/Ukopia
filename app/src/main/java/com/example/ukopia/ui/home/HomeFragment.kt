@@ -1,4 +1,3 @@
-// D:/github_rama/Ukopia/app/src/main/java/com/example/ukopia/ui/home/HomeFragment.kt
 package com.example.ukopia.ui.home
 
 import android.content.Context
@@ -8,8 +7,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-// import android.widget.Toast // Hapus import ini jika tidak digunakan lagi
-// import androidx.activity.OnBackPressedCallback // Hapus import ini
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,16 +30,10 @@ class HomeFragment : Fragment() {
 
     private lateinit var filterCategories: Array<String>
 
-    // --- HAPUS variabel ini ---
-    // private var lastBackPressTime: Long = 0
-    // private val BACK_PRESS_INTERVAL = 2000 // 2 detik
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (allMenuItems.isEmpty()) {
-            allMenuItems.addAll(createDummyMenuItems())
-        }
-    }
+    // Key SharedPreferences, harus sama dengan di RatingFragment
+    private val PREFS_NAME = "UtopiaRatingPrefs"
+    private val ITEM_TOTAL_RATING_KEY_PREFIX = "item_total_rating_"
+    private val ITEM_RATING_COUNT_KEY_PREFIX = "item_rating_count_"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,9 +45,16 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         (requireActivity() as MainActivity).setBottomNavVisibility(View.VISIBLE)
 
+        // PERBAIKAN: Inisialisasi data yang memerlukan Context dipindahkan ke sini
+        // untuk mencegah crash saat fragment pertama kali dibuat.
+        if (allMenuItems.isEmpty()) {
+            allMenuItems.addAll(createDummyMenuItems())
+            loadPersistedRatings()
+        }
+
+        setupFragmentResultListener()
         updateGreetingText()
 
         filterCategories = arrayOf(
@@ -90,43 +88,52 @@ class HomeFragment : Fragment() {
 
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 currentSearchQuery = s.toString()
                 binding.ivClearSearch.visibility = if (s.isNullOrBlank()) View.GONE else View.VISIBLE
                 displayFilteredMenu(currentFilterCategory, currentSearchQuery)
             }
-
             override fun afterTextChanged(s: Editable?) { }
         })
 
         binding.ivClearSearch.setOnClickListener {
             binding.etSearch.text?.clear()
         }
+    }
 
-        // --- HAPUS seluruh blok logika "double back press to exit" ini ---
-        // val callback = object : OnBackPressedCallback(true) {
-        //     override fun handleOnBackPressed() {
-        //         if (System.currentTimeMillis() - lastBackPressTime < BACK_PRESS_INTERVAL) {
-        //             requireActivity().finish()
-        //         } else {
-        //             lastBackPressTime = System.currentTimeMillis()
-        //             Toast.makeText(requireContext(), getString(R.string.press_back_again_to_exit), Toast.LENGTH_SHORT).show()
-        //         }
-        //     }
-        // }
-        // requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-        // --- Akhir blok yang dihapus ---
+    private fun setupFragmentResultListener() {
+        parentFragmentManager.setFragmentResultListener("detailResult", viewLifecycleOwner) { _, bundle ->
+            val updatedMenuItem = bundle.getParcelable<MenuItem>("updatedMenuItem")
+            updatedMenuItem?.let { itemFromDetail ->
+                val index = allMenuItems.indexOfFirst { it.id == itemFromDetail.id }
+                if (index != -1) {
+                    allMenuItems[index] = itemFromDetail
+                    displayFilteredMenu(currentFilterCategory, currentSearchQuery)
+                }
+            }
+        }
+    }
+
+    private fun loadPersistedRatings() {
+        val prefs = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        allMenuItems.forEach { menuItem ->
+            val totalRating = prefs.getFloat(ITEM_TOTAL_RATING_KEY_PREFIX + menuItem.id, -1f)
+            val ratingCount = prefs.getInt(ITEM_RATING_COUNT_KEY_PREFIX + menuItem.id, -1)
+
+            if (totalRating != -1f && ratingCount > 0) {
+                val averageRating = totalRating / ratingCount
+                menuItem.rating = String.format(Locale.ROOT, "%.1f/5.0", averageRating)
+            }
+        }
     }
 
     override fun onResume() {
         super.onResume()
         updateGreetingText()
-        displayFilteredMenu(currentFilterCategory, currentSearchQuery)
     }
 
     private fun updateGreetingText() {
-        val userName = SessionManager.SessionManager.getUserName(requireContext())
+        val userName = SessionManager.getUserName(requireContext())
         if (!userName.isNullOrBlank()) {
             binding.tvGreeting.text = getString(R.string.greeting_salutation, userName)
         } else {
@@ -147,7 +154,6 @@ class HomeFragment : Fragment() {
                 it.name.toLowerCase(Locale.ROOT).startsWith(lowerCaseQuery)
             }
         }
-
         menuAdapter.updateData(filteredList)
         horizontalFilterAdapter.updateSelection(category)
     }

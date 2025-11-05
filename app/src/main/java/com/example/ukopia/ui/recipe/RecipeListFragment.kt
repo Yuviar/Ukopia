@@ -19,7 +19,7 @@ import com.example.ukopia.databinding.FragmentRecipeListBinding
 import com.google.android.material.button.MaterialButton
 import com.example.ukopia.MainActivity
 import com.example.ukopia.SessionManager
-import com.example.ukopia.LoginActivity
+import com.example.ukopia.ui.auth.LoginActivity
 import com.example.ukopia.databinding.DialogLoginRequiredBinding
 import androidx.appcompat.app.AlertDialog
 
@@ -44,7 +44,7 @@ class RecipeListFragment : Fragment() {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            if (SessionManager.SessionManager.isLoggedIn(requireContext())) {
+            if (SessionManager.isLoggedIn(requireContext())) {
                 displayRecipesBasedOnFilter()
 
                 if (pendingAddRecipeAction) {
@@ -163,10 +163,9 @@ class RecipeListFragment : Fragment() {
                     binding.fabAddRecipe.backgroundTintList = originalBackgroundTint
                     binding.fabAddRecipe.imageTintList = originalImageTint
                 }
-            }, 150) // Durasi flash: 150 milidetik
+            }, 150)
 
-            // --- Logika Asli Klik ---
-            if (SessionManager.SessionManager.isLoggedIn(requireContext())) {
+            if (SessionManager.isLoggedIn(requireContext())) {
                 val addFragment = AddRecipeFragment().apply {
                     arguments = Bundle().apply {
                         putString("METHOD_NAME", selectedMethodName)

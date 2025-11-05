@@ -21,7 +21,7 @@ class LoyaltyViewModel(application: Application) : AndroidViewModel(application)
     init {
         // Inisialisasi dari SessionManager saat ViewModel dibuat
         _loyaltyItems.value = emptyList() // Atau muat dari penyimpanan jika ada
-        _loyaltyUserStatus.value = SessionManager.SessionManager.getLoyaltyUserStatus(application)
+        _loyaltyUserStatus.value = SessionManager.getLoyaltyUserStatus(application)
     }
 
     fun addPurchase(item: LoyaltyItemV2) {
@@ -37,7 +37,7 @@ class LoyaltyViewModel(application: Application) : AndroidViewModel(application)
         )
         _loyaltyUserStatus.value = newStatus
 
-        SessionManager.SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
+        SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
     }
 
     // Fungsi untuk mengklaim diskon 10% di slot 5
@@ -46,7 +46,7 @@ class LoyaltyViewModel(application: Application) : AndroidViewModel(application)
         if (currentStatus.totalPoints >= 5 && !currentStatus.isDiscount10Claimed) {
             val newStatus = currentStatus.copy(isDiscount10Claimed = true)
             _loyaltyUserStatus.value = newStatus
-            SessionManager.SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
+            SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
         }
     }
 
@@ -56,7 +56,7 @@ class LoyaltyViewModel(application: Application) : AndroidViewModel(application)
         if (currentStatus.totalPoints >= 10 && !currentStatus.isFreeServeClaimed) {
             val newStatus = currentStatus.copy(isFreeServeClaimed = true)
             _loyaltyUserStatus.value = newStatus
-            SessionManager.SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
+            SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
         }
     }
 
@@ -66,7 +66,7 @@ class LoyaltyViewModel(application: Application) : AndroidViewModel(application)
         if (currentStatus.totalPoints >= 15 && !currentStatus.isDiscount10Slot15Claimed) {
             val newStatus = currentStatus.copy(isDiscount10Slot15Claimed = true)
             _loyaltyUserStatus.value = newStatus
-            SessionManager.SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
+            SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
         }
     }
 
@@ -76,9 +76,7 @@ class LoyaltyViewModel(application: Application) : AndroidViewModel(application)
         if (currentStatus.totalPoints >= 20 && !currentStatus.isFreeTshirtClaimed) {
             val newStatus = currentStatus.copy(isFreeTshirtClaimed = true)
             _loyaltyUserStatus.value = newStatus
-            SessionManager.SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
+            SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
         }
     }
-
-    // Sisa fungsi lainnya bisa dibiarkan apa adanya...
 }

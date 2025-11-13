@@ -5,21 +5,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels // <-- IMPORT BARU
+import androidx.lifecycle.Observer // <-- IMPORT BARU
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ukopia.R
 import com.example.ukopia.BestSellerAdapter
-import com.example.ukopia.data.MenuItem
 import com.example.ukopia.databinding.FragmentHomeBinding
-import com.example.ukopia.MainActivity // Import MainActivity
-import com.example.ukopia.ui.menu.DetailMenuFragment // Pertahankan ini
+import com.example.ukopia.MainActivity
+import com.example.ukopia.models.MenuApiItem // <-- IMPORT BARU (ganti dari .data.MenuItem)
+import com.example.ukopia.ui.menu.DetailMenuFragment
+import com.example.ukopia.UkopiaApplication // <-- IMPORT BARU
+import com.example.ukopia.ui.menu.MenuViewModel // <-- IMPORT BARU
+import com.example.ukopia.ui.menu.MenuViewModelFactory // <-- IMPORT BARU
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
+    // Inisialisasi ViewModel dengan Factory
+    private val viewModel: MenuViewModel by viewModels {
+        MenuViewModelFactory((requireActivity().application as UkopiaApplication).repository)
+    }
+
     private lateinit var bestSellerAdapter: BestSellerAdapter
-    private var allBestSellerItems: List<MenuItem> = emptyList() // Daftar lengkap item best seller
+    // Hapus: allBestSellerItems
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,16 +42,17 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Tampilkan BottomNavigationView saat HomeFragment ditampilkan
         (activity as? MainActivity)?.setBottomNavVisibility(View.VISIBLE)
 
-        // Inisialisasi daftar semua item menu, lalu pilih yang terlaris (disimulasikan di sini)
-        val allMenuFromApp = createDummyAllMenuItems() // Ambil daftar lengkap dari metode simulasi
-        allBestSellerItems = getTopBestSellerItems(allMenuFromApp) // Pilih 2 item terlaris
+        // HAPUS: Logika data dummy
+        // val allMenuFromApp = createDummyAllMenuItems()
+        // allBestSellerItems = getTopBestSellerItems(allMenuFromApp)
 
-        // Setup RecyclerView untuk Best Seller Menu
-        // BEST SELLER ITEM CLICK LOGIC - PERTAHANKAN INI
-        bestSellerAdapter = BestSellerAdapter(allBestSellerItems) { menuItem ->
+        // Setup RecyclerView
+        // PENTING: BestSellerAdapter Anda juga harus diperbarui (lihat di bawah)
+        bestSellerAdapter = BestSellerAdapter(emptyList()) { menuItem ->
+            // 'menuItem' di sini sekarang adalah MenuApiItem
+            // Error Anda akan HILANG
             val detailMenuFragment = DetailMenuFragment.newInstance(menuItem)
             (activity as? MainActivity)?.navigateToFragment(detailMenuFragment)
         }
@@ -49,58 +60,30 @@ class HomeFragment : Fragment() {
         binding.bestSellerRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.bestSellerRecyclerView.adapter = bestSellerAdapter
 
-        // Hapus logika search bar dari sini
-        // Hapus listener klik untuk ikon settings dan account dari sini (karena ikon sudah dihapus dari layout)
-        // Catatan: Navigasi ke AkunFragment sekarang sepenuhnya melalui Bottom Navigation Bar
+        // Panggil Observer untuk memuat data
+        setupObservers()
     }
 
-    // Metode setupSearchBar() dihapus
-    /*
-    private fun setupSearchBar() {
-        // ... logika search bar yang sudah dihapus ...
-    }
-    */
-
-    // Metode filterBestSellerItems() dihapus
-    /*
-    private fun filterBestSellerItems(query: String) {
-        // ... logika filter yang sudah dihapus ...
-    }
-    */
-
-    private fun createDummyAllMenuItems(): List<MenuItem> {
-        val context = requireContext()
-        // Asumsi string resources seperti category_black_coffee didefinisikan di strings.xml
-        return listOf(
-            MenuItem("1", "Espresso", "4.8/5.0", R.drawable.sample_coffee, "Ekstraksi kopi pekat, dasar dari semua minuman kopi.", context.getString(R.string.category_black_coffee)),
-            MenuItem("2", "Long Black", "4.5/5.0", R.drawable.sample_coffee, "Air panas dicampur dengan espresso untuk rasa yang kuat.", context.getString(R.string.category_black_coffee)),
-            MenuItem("3", "Red Eye", "4.2/5.0", R.drawable.sample_coffee, "Kopi drip dengan satu shot espresso tambahan.", context.getString(R.string.category_black_coffee)),
-            MenuItem("4", "Black Eye", "4.3/5.0", R.drawable.sample_coffee, "Kopi drip dengan dua shot espresso tambahan.", context.getString(R.string.category_black_coffee)),
-            MenuItem("5", "Dead Eye", "4.4/5.0", R.drawable.sample_coffee, "Kopi drip dengan tiga shot espresso tambahan.", context.getString(R.string.category_black_coffee)),
-            MenuItem("6", "Americano", "4.6/5.0", R.drawable.sample_coffee, "Espresso dengan tambahan air panas.", context.getString(R.string.category_black_coffee)),
-            MenuItem("7", "Flat White", "4.7/5.0", R.drawable.sample_coffee, "Espresso dengan susu steamed yang lembut, tanpa foam tebal.", context.getString(R.string.category_white_coffee)),
-            MenuItem("8", "Cappuccino", "4.6/5.0", R.drawable.sample_coffee, "Kopi klasik dengan foam susu tebal dan taburan bubuk cokelat.", context.getString(R.string.category_white_coffee)),
-            MenuItem("9", "Latte", "4.7/5.0", R.drawable.sample_coffee, "Espresso dengan susu steamed dan lapisan microfoam.", context.getString(R.string.category_white_coffee)),
-            MenuItem("10", "Piccolo", "4.4/5.0", R.drawable.sample_coffee, "Mini latte dengan ristretto.", context.getString(R.string.category_white_coffee)),
-            MenuItem("11", "Magic", "4.5/5.0", R.drawable.sample_coffee, "Double ristretto dengan susu steamed.", context.getString(R.string.category_white_coffee)),
-            MenuItem("12", "Macchiato", "4.3/5.0", R.drawable.sample_coffee, "Espresso dengan sedikit foam susu di atasnya.", context.getString(R.string.category_white_coffee)),
-            MenuItem("13", "Matcha", "4.7/5.0", R.drawable.sample_coffee, "Minuman teh hijau Jepang yang disajikan dingin atau panas.", context.getString(R.string.category_non_coffee)),
-            MenuItem("14", "Coklat", "4.8/5.0", R.drawable.sample_coffee, "Minuman cokelat kaya rasa, bisa panas atau dingin.", context.getString(R.string.category_non_coffee)),
-            MenuItem("15", "Chamomile", "4.5/5.0", R.drawable.sample_coffee, "Teh herbal yang dikenal menenangkan.", context.getString(R.string.category_artisan_tea)),
-            MenuItem("16", "Rose", "4.6/5.0", R.drawable.sample_coffee, "Teh mawar dengan aroma harum.", context.getString(R.string.category_artisan_tea)),
-            MenuItem("17", "Vanilla", "4.4/5.0", R.drawable.sample_coffee, "Teh dengan sentuhan rasa vanila yang lembut.", context.getString(R.string.category_artisan_tea)),
-            MenuItem("18", "Blueberry Pancake", "4.9/5.0", R.drawable.sample_coffee, "Susu dengan perpaduan rasa blueberry dan pancake.", context.getString(R.string.category_flavoured_milk)),
-            MenuItem("19", "Strawberry", "4.7/5.0", R.drawable.sample_coffee, "Susu dengan rasa strawberry alami.", context.getString(R.string.category_flavoured_milk)),
-            MenuItem("20", "Hazelnut", "4.8/5.0", R.drawable.sample_coffee, "Susu dengan aroma dan rasa hazelnut yang kaya.", context.getString(R.string.category_flavoured_milk)),
-            MenuItem("21", "Pistachio", "4.6/5.0", R.drawable.sample_coffee, "Susu dengan rasa pistachio yang unik dan gurih.", context.getString(R.string.category_flavoured_milk)),
-            MenuItem("22", "Vanilla", "4.5/5.0", R.drawable.sample_coffee, "Susu dengan rasa vanila klasik.", context.getString(R.string.category_flavoured_milk)),
-            MenuItem("23", "Butterscotch", "4.7/5.0", R.drawable.sample_coffee, "Susu dengan rasa butterscotch yang manis dan creamy.", context.getString(R.string.category_flavoured_milk))
-        )
+    // Fungsi BARU untuk mengambil data dari ViewModel (Room/API)
+    private fun setupObservers() {
+        viewModel.menuItems.observe(viewLifecycleOwner, Observer { menuList ->
+            // menuList adalah List<MenuApiItem> dari database
+            if (menuList != null) {
+                // Filter untuk mendapatkan best seller
+                val bestSellerItems = getTopBestSellerItems(menuList)
+                // Asumsi adapter Anda punya fungsi updateData (lihat di bawah)
+                bestSellerAdapter.updateData(bestSellerItems)
+            }
+        })
     }
 
-    private fun getTopBestSellerItems(all: List<MenuItem>): List<MenuItem> {
-        return all.sortedByDescending { it.rating.substringBefore("/").toFloatOrNull() ?: 0f }
-            .take(2) // Mengambil tepat 2 item teratas
+    // HAPUS: createDummyAllMenuItems()
+
+    // MODIFIKASI: Fungsi ini sekarang memfilter List<MenuApiItem>
+    private fun getTopBestSellerItems(all: List<MenuApiItem>): List<MenuApiItem> {
+        // Mengurutkan berdasarkan 'average_rating' (Double)
+        return all.sortedByDescending { it.average_rating }
+            .take(5) // Ambil 5 item teratas (atau 2 jika Anda mau)
     }
 
     override fun onDestroyView() {

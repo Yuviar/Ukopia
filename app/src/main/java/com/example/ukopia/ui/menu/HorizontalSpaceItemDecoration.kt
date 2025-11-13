@@ -1,4 +1,4 @@
-package com.example.ukopia.utils // Anda bisa menempatkan di package lain jika mau
+package com.example.ukopia.utils
 
 import android.graphics.Rect
 import android.view.View

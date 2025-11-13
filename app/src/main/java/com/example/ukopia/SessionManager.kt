@@ -6,7 +6,7 @@ import com.example.ukopia.data.LoyaltyUserStatus
 
 /**
  * Singleton object untuk mengelola semua data sesi aplikasi yang disimpan di SharedPreferences.
- * Termasuk status login, data pengguna, dan status loyalty.
+ * Termasuk status login, data pengguna (DENGAN UID), dan status loyalty.
  * Pemanggilan: SessionManager.isLoggedIn(context)
  */
 object SessionManager {
@@ -14,10 +14,11 @@ object SessionManager {
 
     // Kunci untuk Sesi Pengguna
     private const val KEY_IS_LOGGED_IN = "isLoggedIn"
+    private const val KEY_USER_UID = "userUid" // <-- PERUBAHAN: DITAMBAHKAN
     private const val KEY_USER_NAME = "userName"
     private const val KEY_USER_EMAIL = "userEmail"
 
-    // Kunci untuk Loyalty
+    // Kunci untuk Loyalty (Tidak disentuh)
     private const val KEY_LOYALTY_TOTAL_POINTS = "loyaltyTotalPoints"
     private const val KEY_LOYALTY_CLAIMED_DISCOUNT_10 = "loyaltyClaimedDiscount10"
     private const val KEY_LOYALTY_CLAIMED_FREE_SERVE = "loyaltyClaimedFreeServe"
@@ -36,6 +37,7 @@ object SessionManager {
         val editor = getSharedPreferences(context).edit()
         // Hapus semua data yang berhubungan dengan sesi
         editor.remove(KEY_IS_LOGGED_IN)
+        editor.remove(KEY_USER_UID) // <-- PERUBAHAN: DITAMBAHKAN
         editor.remove(KEY_USER_NAME)
         editor.remove(KEY_USER_EMAIL)
         editor.remove(KEY_LOYALTY_TOTAL_POINTS)
@@ -58,11 +60,26 @@ object SessionManager {
         return getSharedPreferences(context).getBoolean(KEY_IS_LOGGED_IN, false)
     }
 
-    fun saveUserData(context: Context, name: String, email: String) {
+    // --- PERUBAHAN DI SINI ---
+    /**
+     * Menyimpan data pengguna lengkap termasuk UID dari database.
+     */
+    fun saveUserData(context: Context, uid: Int, name: String, email: String) {
         val editor = getSharedPreferences(context).edit()
+        editor.putInt(KEY_USER_UID, uid) // <-- PERUBAHAN: DITAMBAHKAN
         editor.putString(KEY_USER_NAME, name)
         editor.putString(KEY_USER_EMAIL, email)
         editor.apply()
+    }
+
+    // --- FUNGSI BARU DI SINI ---
+    /**
+     * Mendapatkan UID pengguna yang sedang login.
+     * Penting untuk semua panggilan API.
+     */
+    fun getUid(context: Context): Int {
+        // Mengembalikan 0 jika tidak ada UID (pengguna belum login)
+        return getSharedPreferences(context).getInt(KEY_USER_UID, 0)
     }
 
     fun getUserName(context: Context): String? {
@@ -73,7 +90,7 @@ object SessionManager {
         return getSharedPreferences(context).getString(KEY_USER_EMAIL, null)
     }
 
-    // --- Fungsi Loyalty ---
+    // --- Fungsi Loyalty (Tidak Disentuh) ---
 
     fun saveLoyaltyUserStatus(context: Context, status: LoyaltyUserStatus) {
         val editor = getSharedPreferences(context).edit()

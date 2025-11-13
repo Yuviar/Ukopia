@@ -122,7 +122,7 @@ class LoginActivity : AppCompatActivity() {
 
                 val user = loginResponse.data
                 SessionManager.setLoggedIn(this, true)
-                SessionManager.saveUserData(this, user.nama, user.email) // Simpan data user
+                SessionManager.saveUserData(this, user.uid, user.nama, user.email) // Simpan data user
 
                 Toast.makeText(this, getString(R.string.login_success_toast), Toast.LENGTH_SHORT).show()
                 goToMainActivity()

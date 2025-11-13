@@ -3,7 +3,6 @@
 
     <!-- Definitions for existing styles... -->
 
-    <!-- STYLE BARU UNTUK DETAIL DIALOG RATING -->
     <style name="DetailDialogRating">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -12,22 +11,15 @@
         <item name="android:layout_marginTop">2dp</item>
     </style>
 
-    <!-- Definitions for other styles... -->
-
     <style name="Base.Theme.Ukopia" parent="Theme.Material3.Light.NoActionBar">
-
-        <item name="android:statusBarColor">@color/white</item>"/>
+        <item name="android:statusBarColor">@color/white</item>
         <item name="android:windowLightStatusBar">true</item>
-
         <item name="fontFamily">@font/montserrat</item>
         <item name="android:fontFamily">@font/montserrat</item>
 
-        <!-- ▼▼▼ MODIFIKASI: Hapus atribut yang menghubungkan ke DatePickerDialog standar ▼▼▼ -->
-        <!-- <item name="android:datePickerDialogTheme">@style/App.Theme.DatePickerDialog</item> -->
         <item name="materialCalendarStyle">@style/Widget.MaterialComponents.MaterialCalendar</item>
         <item name="materialCalendarFullscreenTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen</item>
         <item name="materialCalendarTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar</item>
-        <!-- ▲▲▲ AKHIR MODIFIKASI ▲▲▲ -->
     </style>
 
     <style name="RoundedImageViewTopCorners" parent="">
@@ -38,23 +30,20 @@
         <item name="cornerSizeBottomRight">0dp</item>
     </style>
 
-    <!-- STYLE YANG SUDAH ADA DARI ANDA, DIPERBARUI UNTUK KONSISTENSI JIKA PERLU -->
     <style name="RatingStar" parent="">
-        <item name="android:layout_width">32dp</item> <!-- Disesuaikan dari 40dp menjadi 32dp agar sama dengan yang saya berikan di XML -->
-        <item name="android:layout_height">32dp</item> <!-- Disesuaikan dari 40dp menjadi 32dp agar sama dengan yang saya berikan di XML -->
+        <item name="android:layout_width">32dp</item>
+        <item name="android:layout_height">32dp</item>
         <item name="android:padding">4dp</item>
-        <item name="android:src">@drawable/ic_star</item> <!-- Default ke bintang kosong -->
+        <item name="android:src">@drawable/ic_star</item>
     </style>
 
-    <!-- BARU: Gaya untuk bintang rating yang lebih kecil -->
     <style name="RatingStarSmall" parent="RatingStar">
         <item name="android:layout_width">24dp</item>
         <item name="android:layout_height">24dp</item>
         <item name="android:layout_marginHorizontal">2dp</item>
-        <item name="android:padding">0dp</item> <!-- Hapus padding jika tidak diperlukan untuk bintang kecil -->
+        <item name="android:padding">0dp</item>
     </style>
 
-    <!-- BARU: Gaya untuk EditText dengan border (jika diperlukan) -->
     <style name="EditTextBorder" parent="Widget.AppCompat.EditText">
         <item name="android:background">@drawable/edit_text_border</item>
         <item name="android:padding">12dp</item>
@@ -62,7 +51,6 @@
         <item name="android:textColorHint">@android:color/darker_gray</item>
     </style>
 
-    <!-- BARU: Gaya untuk tombol utama (jika diperlukan) -->
     <style name="PrimaryButton" parent="Widget.MaterialComponents.Button">
         <item name="android:backgroundTint">@color/black</item>
         <item name="android:textColor">@color/white</item>
@@ -74,13 +62,11 @@
     </style>
     <style name="Theme.Ukopia" parent="Base.Theme.Ukopia" />
 
-    <!-- ▼▼▼ DEFINISI FullScreenDialogTheme UNTUK DIALOG KUSTOM ANDA ▼▼▼ -->
     <style name="FullScreenDialogTheme" parent="Theme.MaterialComponents.Light.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowMinWidthMajor">90%</item>
         <item name="android:windowMinWidthMinor">90%</item>
-        <!-- Atur warna dialog agar sesuai tema Anda -->
         <item name="colorPrimary">@color/black</item>
         <item name="colorAccent">@color/black</item>
         <item name="colorOnPrimary">@color/white</item>
@@ -89,13 +75,11 @@
         <item name="android:textColorSecondary">@color/grey</item>
     </style>
 
-    <!-- ▼▼▼ GAYA UNTUK WIDGET DatePicker DI DALAM DIALOG KUSTOM ▼▼▼ -->
     <style name="DatePickerTheme" parent="android:Widget.Material.DatePicker">
-        <item name="android:colorAccent">@color/black</item> <!-- Warna aksen (lingkaran tanggal, dll.) -->
-        <item name="android:datePickerMode">calendar</item> <!-- Pastikan mode kalender -->
+        <item name="android:colorAccent">@color/black</item>
+        <item name="android:datePickerMode">calendar</item>
     </style>
 
-    <!-- App.Theme.DatePickerDialog ini adalah tema untuk DatePickerDialog standar -->
     <style name="App.Theme.DatePickerDialog" parent="Theme.MaterialComponents.Light.Dialog">
         <item name="colorPrimary">@color/black</item>
         <item name="colorAccent">@color/black</item>
@@ -107,31 +91,110 @@
         <item name="buttonBarNegativeButtonStyle">@style/App.DatePicker.Button</item>
     </style>
 
-    <!-- Gaya khusus untuk tombol OK/Tidak di DatePickerDialog standar -->
     <style name="App.DatePicker.Button" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <!-- NEW Loyalty Stamp ImageView Style -->
-    <style name="LoyaltyStampImageView">
+    <style name="StampCell">
         <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">56dp</item> <!-- Tinggi yang sama dengan Reward Circles -->
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:scaleType">centerInside</item>
-        <item name="android:padding">4dp</item>
-        <item name="android:contentDescription">@string/loyalty_stamp_desc</item>
+        <item name="android:layout_marginHorizontal">2dp</item>
+        <item name="android:paddingVertical">4dp</item>
+    </style>
+
+    <style name="LoyaltyStampImageView">
+        <item name="android:layout_width">32dp</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="LoyaltyStampNumber">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="LoyaltyStampCheckmark">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:src">@drawable/ic_checkmark</item>
+        <item name="android:tint">@color/white</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="LoyaltyRewardCircleFrame">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
         <item name="android:layout_marginHorizontal">4dp</item>
         <item name="android:layout_marginVertical">4dp</item>
     </style>
 
-    <!-- NEW Loyalty Reward Circle FrameLayout Style (untuk container reward) -->
-    <style name="LoyaltyRewardCircleFrame">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">56dp</item> <!-- PERBAIKI INI: Tinggi sama dengan stamp images -->
-        <item name="android:layout_weight">1</item>
-        <item name="android:gravity">center</item>
-        <item name="android:layout_marginHorizontal">4dp</item> <!-- PERBAIKI INI: Tambah margin horizontal -->
-        <item name="android:layout_marginVertical">4dp</item>   <!-- PERBAIKI INI: Tambah margin vertical -->
+    <style name="RewardCard" parent="Widget.MaterialComponents.CardView">
+        <item name="android:layout_width">140dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">2dp</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">#1A000000</item>
+        <item name="cardBackgroundColor">@color/white</item>
+    </style>
+
+    <style name="RewardCard.LinearLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:gravity">center_horizontal</item> <!-- Ini penting untuk memusatkan children yang memiliki wrap_content -->
+    </style>
+
+    <style name="RewardCard.Icon">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:tint">@color/black</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_gravity">center_horizontal</item> <!-- Pastikan ikon terpusat -->
+    </style>
+
+    <style name="RewardCard.Title">
+        <item name="android:layout_width">match_parent</item> <!-- UBAH INI dari wrap_content menjadi match_parent -->
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textAlignment">center</item> <!-- PENTING: Memusatkan teks di dalam TextView yang sekarang full-width -->
+        <!-- android:layout_gravity="center_horizontal" dihapus karena layout_width="match_parent" -->
+    </style>
+
+    <style name="RewardCard.Points">
+        <item name="android:layout_width">match_parent</item> <!-- UBAH INI dari wrap_content menjadi match_parent -->
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:textAlignment">center</item> <!-- PENTING: Memusatkan teks di dalam TextView yang sekarang full-width -->
+        <!-- android:layout_gravity="center_horizontal" dihapus karena layout_width="match_parent" -->
+    </style>
+
+    <style name="RewardCard.Button" parent="Widget.Material3.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:backgroundTint">@color/black</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="android:minHeight">36dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:layout_marginTop">0dp</item>
     </style>
 
 </resources>

@@ -1,14 +1,14 @@
-package com.example.ukopia.data // Pastikan package ini sesuai dengan proyek Anda
+package com.example.ukopia.data
 
-/**
- * Data class ini menyimpan semua status terkait loyalty card pengguna.
- * - totalPoints: Jumlah poin saat ini.
- * - is...Claimed: Flag boolean untuk setiap hadiah yang bisa diklaim.
- */
 data class LoyaltyUserStatus(
     val totalPoints: Int = 0,
-    val isDiscount10Claimed: Boolean = false,
-    val isFreeServeClaimed: Boolean = false,
-    val isFreeTshirtClaimed: Boolean = false,
-    val isDiscount10Slot15Claimed: Boolean = false
+    val isDiscount10Claimed: Boolean = false, // 5 poin
+    val isFreeServeClaimed: Boolean = false, // 10 poin
+    val isDiscount10Slot15Claimed: Boolean = false, // 15 poin
+    val isFreeTshirtClaimed: Boolean = false, // 20 poin
+    val isCoffeeGrinderClaimed: Boolean = false, // 100 poin
+    val isDiscount10_25Claimed: Boolean = false, // 25 poin
+    val isFreeServe_30Claimed: Boolean = false, // 30 poin
+    val isDiscount10_35Claimed: Boolean = false, // 35 poin
+    val isFreeServe_40Claimed: Boolean = false, // 40 poin
 )

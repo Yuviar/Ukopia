@@ -1,10 +1,8 @@
 package com.example.ukopia
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -14,7 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.ukopia.ui.akun.AkunFragment
 import com.example.ukopia.ui.akun.LocaleHelper
-import com.example.ukopia.ui.home.HomeFragment
+import com.example.ukopia.ui.home.HomeFragment // Import HomeFragment yang baru
+import com.example.ukopia.ui.menu.MenuFragment // Import MenuFragment
 import com.example.ukopia.ui.recipe.RecipeFragment
 import com.example.ukopia.ui.loyalty.LoyaltyFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -22,11 +21,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomNavigationView: BottomNavigationView
-    // --- Hapus atau abaikan variabel ini jika tidak digunakan lagi untuk logika keluar ---
-    // private var backPressedTime: Long = 0
-    // private val BACK_PRESS_INTERVAL = 2000L
-
-    // --- Variabel baru untuk melacak apakah aplikasi siap untuk keluar ---
     private var isReadyToExit = false
 
     override fun attachBaseContext(newBase: Context?) {
@@ -49,36 +43,45 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setOnNavigationItemSelectedListener(menuItemSelected)
 
         if (savedInstanceState == null) {
-            loadRootFragment(HomeFragment(), R.id.itemHome)
-            isReadyToExit = false // Pastikan flag direset saat aplikasi dimulai
+            // Muat HomeFragment sebagai fragmen awal saat aplikasi dimulai
+            loadRootFragment(HomeFragment(), R.id.itemHome) // PERUBAHAN DI SINI
+            isReadyToExit = false
         }
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val currentFragment = supportFragmentManager.findFragmentById(R.id.container)
 
-                if (supportFragmentManager.backStackEntryCount > 1 && currentFragment !is HomeFragment && currentFragment !is LoyaltyFragment && currentFragment !is RecipeFragment && currentFragment !is AkunFragment) {
-                    // Kasus 1: Pop fragmen biasa dari back stack
+                // Daftar root fragment yang ada di bottom navigation
+                val rootFragments = listOf(
+                    HomeFragment::class.java.simpleName, // Tambahkan HomeFragment
+                    MenuFragment::class.java.simpleName,
+                    LoyaltyFragment::class.java.simpleName,
+                    RecipeFragment::class.java.simpleName,
+                    AkunFragment::class.java.simpleName
+                )
+
+                // Cek apakah ada fragmen di back stack yang bukan root fragment
+                if (supportFragmentManager.backStackEntryCount > 1 &&
+                    currentFragment?.javaClass?.simpleName !in rootFragments
+                ) {
+                    // Kasus 1: Pop fragmen biasa dari back stack (bukan root fragment)
                     supportFragmentManager.popBackStack()
-                    isReadyToExit = false // Reset flag jika navigasi kembali dari sub-fragmen
-                } else if (currentFragment !is HomeFragment) {
-                    // Kasus 2: Pop kembali ke HomeFragment (dari root fragment bottom nav lainnya)
+                    isReadyToExit = false
+                } else if (currentFragment !is HomeFragment) { // Kasus 2: Berada di root fragment selain Home
+                    // Pop kembali ke HomeFragment
                     supportFragmentManager.popBackStack(HomeFragment::class.java.simpleName, 0)
-                    bottomNavigationView.selectedItemId = R.id.itemHome
-                    isReadyToExit = false // Reset flag jika beralih kembali ke HomeFragment dari tab lain
+                    bottomNavigationView.selectedItemId = R.id.itemHome // Set item Home terpilih
+                    isReadyToExit = false
                 } else {
-                    // Kasus 3: Pengguna berada di HomeFragment (atau salah satu root fragment bottom nav lain yang aktif),
-                    // dan tidak ada fragmen di atasnya yang bisa di-pop secara normal.
-                    // Di sini kita menerapkan logika "dua kali tekan tombol kembali untuk keluar"
-                    // TANPA BATAS WAKTU antar klik.
+                    // Kasus 3: Pengguna berada di HomeFragment, tidak ada fragmen lain di atasnya.
+                    // Terapkan logika "dua kali tekan tombol kembali untuk keluar"
                     if (isReadyToExit) {
-                        // Ini adalah penekanan tombol kembali ke-2. Keluar dari aplikasi.
-                        finishAffinity()
+                        finishAffinity() // Keluar dari aplikasi
                     } else {
-                        // Ini adalah penekanan tombol kembali ke-1.
-                        // Atur flag menjadi true, menunggu penekanan kedua.
                         isReadyToExit = true
-                        // Tidak ada Toast atau notifikasi.
+                        // Opsional: Tampilkan Toast "Tekan sekali lagi untuk keluar"
+                        // Toast.makeText(this@MainActivity, "Tekan sekali lagi untuk keluar", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -88,6 +91,8 @@ class MainActivity : AppCompatActivity() {
     private fun loadRootFragment(fragment: Fragment, itemId: Int) {
         val fragmentTag = fragment.javaClass.simpleName
 
+        // Hapus semua fragmen dari back stack sebelum memuat root fragment baru
+        // Ini memastikan setiap tab memiliki back stack-nya sendiri atau tidak ada sub-fragmen yang tertinggal
         supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
         supportFragmentManager.beginTransaction()
@@ -118,6 +123,10 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.itemHome -> {
                 loadRootFragment(HomeFragment(), R.id.itemHome)
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.itemMenu -> {
+                loadRootFragment(MenuFragment(), R.id.itemMenu)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.itemLoyalty -> {

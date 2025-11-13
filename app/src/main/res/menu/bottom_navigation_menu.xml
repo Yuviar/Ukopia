@@ -7,6 +7,10 @@
         android:icon="@drawable/selector_home_icon"
         android:title="" />
     <item
+        android:id="@+id/itemMenu"
+        android:icon="@drawable/selector_menu_icon"
+        android:title="" />
+    <item
         android:id="@+id/itemLoyalty"
         android:icon="@drawable/selector_loyalty_icon"
         android:title="" />

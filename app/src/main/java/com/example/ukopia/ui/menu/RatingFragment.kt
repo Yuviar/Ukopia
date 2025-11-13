@@ -1,23 +1,17 @@
-package com.example.ukopia.ui.home
+package com.example.ukopia.ui.menu
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
 import com.example.ukopia.MainActivity
 import com.example.ukopia.R
 import com.example.ukopia.data.MenuItem
 import com.example.ukopia.databinding.FragmentRatingBinding
-import android.content.res.ColorStateList
 import android.graphics.drawable.ClipDrawable
 import android.graphics.drawable.LayerDrawable
 import java.util.Locale

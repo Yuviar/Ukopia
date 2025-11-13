@@ -9,221 +9,427 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:fillViewport="true">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- User Info Section -->
+            <TextView
+                android:id="@+id/textViewUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Rama Ganteng"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewLoyaltyPoints"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                tools:text="Points: 20" />
+
+            <!-- Stamp Card Section (STATIC 2x5 GRID with Navigation) -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Stamp Card"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Collect stamps for more rewards"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/loyaltyCard"
+                android:id="@+id/stampCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@color/black"
+                android:layout_marginTop="8dp"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="0dp">
+                app:cardElevation="2dp"
+                app:strokeColor="#1A000000"
+                app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp"
-                    android:background="@drawable/loyalty_card_gradient"
-                    android:elevation="0dp">
+                    android:paddingTop="12dp"
+                    android:paddingBottom="8dp">
 
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageButton
+                            android:id="@+id/btn_prev_stamp"
+                            android:layout_width="40dp"
+                            android:layout_height="wrap_content"
+                            android:minHeight="48dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="Previous Stamps"
+                            android:src="@drawable/ic_arrow_left"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/black" />
+
+                        <LinearLayout
+                            android:id="@+id/stamps_grid_container"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:layout_constraintEnd_toStartOf="@+id/btn_next_stamp"
+                            app:layout_constraintStart_toEndOf="@+id/btn_prev_stamp"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <!-- Row 1: Stamps 1-5 (atau sesuai halaman) -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="5"
+                                android:gravity="center">
+                                <!-- Setiap FrameLayout memiliki 3 elemen: background ImageView, TextView angka, dan checkmark ImageView -->
+                                <FrameLayout style="@style/StampCell" tools:tag="stamp_1">
+                                    <ImageView android:id="@+id/iv_stamp_background_1" style="@style/LoyaltyStampImageView" />
+                                    <TextView android:id="@+id/tv_stamp_number_1" style="@style/LoyaltyStampNumber" tools:text="1" />
+                                    <ImageView android:id="@+id/iv_stamp_checkmark_1" style="@style/LoyaltyStampCheckmark" />
+                                </FrameLayout>
+                                <FrameLayout style="@style/StampCell" tools:tag="stamp_2">
+                                    <ImageView android:id="@+id/iv_stamp_background_2" style="@style/LoyaltyStampImageView" />
+                                    <TextView android:id="@+id/tv_stamp_number_2" style="@style/LoyaltyStampNumber" tools:text="2" />
+                                    <ImageView android:id="@+id/iv_stamp_checkmark_2" style="@style/LoyaltyStampCheckmark" />
+                                </FrameLayout>
+                                <FrameLayout style="@style/StampCell" tools:tag="stamp_3">
+                                    <ImageView android:id="@+id/iv_stamp_background_3" style="@style/LoyaltyStampImageView" />
+                                    <TextView android:id="@+id/tv_stamp_number_3" style="@style/LoyaltyStampNumber" tools:text="3" />
+                                    <ImageView android:id="@+id/iv_stamp_checkmark_3" style="@style/LoyaltyStampCheckmark" />
+                                </FrameLayout>
+                                <FrameLayout style="@style/StampCell" tools:tag="stamp_4">
+                                    <ImageView android:id="@+id/iv_stamp_background_4" style="@style/LoyaltyStampImageView" />
+                                    <TextView android:id="@+id/tv_stamp_number_4" style="@style/LoyaltyStampNumber" tools:text="4" />
+                                    <ImageView android:id="@+id/iv_stamp_checkmark_4" style="@style/LoyaltyStampCheckmark" />
+                                </FrameLayout>
+                                <FrameLayout style="@style/StampCell" tools:tag="stamp_5">
+                                    <ImageView android:id="@+id/iv_stamp_background_5" style="@style/LoyaltyStampImageView" />
+                                    <TextView android:id="@+id/tv_stamp_number_5" style="@style/LoyaltyStampNumber" tools:text="5" />
+                                    <ImageView android:id="@+id/iv_stamp_checkmark_5" style="@style/LoyaltyStampCheckmark" />
+                                </FrameLayout>
+                            </LinearLayout>
+
+                            <!-- Row 2: Stamps 6-10 (atau sesuai halaman) -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="5"
+                                android:gravity="center"
+                                android:layout_marginTop="8dp">
+                                <FrameLayout style="@style/StampCell" tools:tag="stamp_6">
+                                    <ImageView android:id="@+id/iv_stamp_background_6" style="@style/LoyaltyStampImageView" />
+                                    <TextView android:id="@+id/tv_stamp_number_6" style="@style/LoyaltyStampNumber" tools:text="6" />
+                                    <ImageView android:id="@+id/iv_stamp_checkmark_6" style="@style/LoyaltyStampCheckmark" />
+                                </FrameLayout>
+                                <FrameLayout style="@style/StampCell" tools:tag="stamp_7">
+                                    <ImageView android:id="@+id/iv_stamp_background_7" style="@style/LoyaltyStampImageView" />
+                                    <TextView android:id="@+id/tv_stamp_number_7" style="@style/LoyaltyStampNumber" tools:text="7" />
+                                    <ImageView android:id="@+id/iv_stamp_checkmark_7" style="@style/LoyaltyStampCheckmark" />
+                                </FrameLayout>
+                                <FrameLayout style="@style/StampCell" tools:tag="stamp_8">
+                                    <ImageView android:id="@+id/iv_stamp_background_8" style="@style/LoyaltyStampImageView" />
+                                    <TextView android:id="@+id/tv_stamp_number_8" style="@style/LoyaltyStampNumber" tools:text="8" />
+                                    <ImageView android:id="@+id/iv_stamp_checkmark_8" style="@style/LoyaltyStampCheckmark" />
+                                </FrameLayout>
+                                <FrameLayout style="@style/StampCell" tools:tag="stamp_9">
+                                    <ImageView android:id="@+id/iv_stamp_background_9" style="@style/LoyaltyStampImageView" />
+                                    <TextView android:id="@+id/tv_stamp_number_9" style="@style/LoyaltyStampNumber" tools:text="9" />
+                                    <ImageView android:id="@+id/iv_stamp_checkmark_9" style="@style/LoyaltyStampCheckmark" />
+                                </FrameLayout>
+                                <FrameLayout style="@style/StampCell" tools:tag="stamp_10">
+                                    <ImageView android:id="@+id/iv_stamp_background_10" style="@style/LoyaltyStampImageView" />
+                                    <TextView android:id="@+id/tv_stamp_number_10" style="@style/LoyaltyStampNumber" tools:text="10" />
+                                    <ImageView android:id="@+id/iv_stamp_checkmark_10" style="@style/LoyaltyStampCheckmark" />
+                                </FrameLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <ImageButton
+                            android:id="@+id/btn_next_stamp"
+                            android:layout_width="40dp"
+                            android:layout_height="wrap_content"
+                            android:minHeight="48dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="Next Stamps"
+                            android:src="@drawable/ic_arrow_right"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/black" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- Indikator progres stempel -->
                     <TextView
-                        android:id="@+id/textViewLoyaltyPoints"
+                        android:id="@+id/textViewStampProgress"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="Poin: 450"
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <!-- Stamp Card Container -->
-                    <LinearLayout
-                        android:id="@+id/stampCardContainer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginTop="18dp"
-                        android:background="@drawable/rounded_container"
-                        android:padding="8dp">
-
-                        <!-- Row 1: Stamps 1-4 and Reward 10% Disc (slot 5) -->
-                        <LinearLayout
-                            android:id="@+id/row1Container"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:weightSum="5">
-                            <ImageView android:id="@+id/iv_stamp_1" style="@style/LoyaltyStampImageView" />
-                            <ImageView android:id="@+id/iv_stamp_2" style="@style/LoyaltyStampImageView" />
-                            <ImageView android:id="@+id/iv_stamp_3" style="@style/LoyaltyStampImageView" />
-                            <ImageView android:id="@+id/iv_stamp_4" style="@style/LoyaltyStampImageView" />
-                            <!-- Reward 10% Disc (slot 5) -->
-                            <FrameLayout
-                                android:id="@+id/container_reward_disc_10_circle"
-                                android:background="@drawable/reward_circle_background_default"
-                                style="@style/LoyaltyRewardCircleFrame">
-                                <TextView
-                                    android:id="@+id/tv_reward_disc_10_text"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:textColor="@color/black"
-                                    android:textSize="12sp"
-                                    android:textStyle="bold"
-                                    android:text="@string/loyalty_reward_10_percent_discount_short"
-                                    android:maxLines="2"
-                                    android:ellipsize="end"
-                                    android:gravity="center"/>
-                                <ImageView
-                                    android:id="@+id/iv_reward_disc_10_checkmark"
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/ic_checkmark"
-                                    app:tint="@color/white"
-                                    android:visibility="gone"/>
-                            </FrameLayout>
-                        </LinearLayout>
-
-                        <!-- Row 2: Stamps 6-9 and Reward Free Serve (slot 10) -->
-                        <LinearLayout
-                            android:id="@+id/row2Container"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:weightSum="5"
-                            android:layout_marginTop="8dp">
-                            <ImageView android:id="@+id/iv_stamp_6" style="@style/LoyaltyStampImageView" />
-                            <ImageView android:id="@+id/iv_stamp_7" style="@style/LoyaltyStampImageView" />
-                            <ImageView android:id="@+id/iv_stamp_8" style="@style/LoyaltyStampImageView" />
-                            <ImageView android:id="@+id/iv_stamp_9" style="@style/LoyaltyStampImageView" />
-                            <!-- Reward Free Serve (slot 10) -->
-                            <FrameLayout
-                                android:id="@+id/container_reward_free_serve_circle"
-                                android:background="@drawable/reward_circle_background_default"
-                                style="@style/LoyaltyRewardCircleFrame">
-                                <TextView
-                                    android:id="@+id/tv_reward_free_serve_text"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:textColor="@color/black"
-                                    android:textSize="12sp"
-                                    android:textStyle="bold"
-                                    android:text="@string/loyalty_reward_free_serve_short"
-                                    android:maxLines="2"
-                                    android:ellipsize="end"
-                                    android:gravity="center"/>
-                                <ImageView
-                                    android:id="@+id/iv_reward_free_serve_checkmark"
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/ic_checkmark"
-                                    app:tint="@color/white"
-                                    android:visibility="gone"/>
-                            </FrameLayout>
-                        </LinearLayout>
-
-                        <!-- Row 3: Stamps 11-14 and Reward Disc 10% (slot 15) -->
-                        <LinearLayout
-                            android:id="@+id/row3Container"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:weightSum="5"
-                            android:layout_marginTop="8dp"
-                            android:visibility="gone">
-                            <ImageView android:id="@+id/iv_stamp_11" style="@style/LoyaltyStampImageView" />
-                            <ImageView android:id="@+id/iv_stamp_12" style="@style/LoyaltyStampImageView" />
-                            <ImageView android:id="@+id/iv_stamp_13" style="@style/LoyaltyStampImageView" />
-                            <ImageView android:id="@+id/iv_stamp_14" style="@style/LoyaltyStampImageView" />
-                            <!-- Reward 10% Disc (slot 15) -->
-                            <FrameLayout
-                                android:id="@+id/container_reward_disc_10_2_circle"
-                                android:background="@drawable/reward_circle_background_default"
-                                style="@style/LoyaltyRewardCircleFrame">
-                                <TextView
-                                    android:id="@+id/tv_reward_disc_10_2_text"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:textColor="@color/black"
-                                    android:textSize="12sp"
-                                    android:textStyle="bold"
-                                    android:text="@string/loyalty_reward_10_percent_discount_short"
-                                    android:maxLines="2"
-                                    android:ellipsize="end"
-                                    android:gravity="center"/>
-                                <ImageView
-                                    android:id="@+id/iv_reward_disc_10_2_checkmark"
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/ic_checkmark"
-                                    app:tint="@color/white"
-                                    android:visibility="gone"/>
-                            </FrameLayout>
-                        </LinearLayout>
-
-                        <!-- Row 4: Stamps 16-19 and Reward Free T-shirt (slot 20) -->
-                        <LinearLayout
-                            android:id="@+id/row4Container"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:weightSum="5"
-                            android:layout_marginTop="8dp"
-                            android:visibility="gone">
-                            <ImageView android:id="@+id/iv_stamp_16" style="@style/LoyaltyStampImageView" />
-                            <ImageView android:id="@+id/iv_stamp_17" style="@style/LoyaltyStampImageView" />
-                            <ImageView android:id="@+id/iv_stamp_18" style="@style/LoyaltyStampImageView" />
-                            <ImageView android:id="@+id/iv_stamp_19" style="@style/LoyaltyStampImageView" />
-                            <!-- Reward Free T-shirt (slot 20) -->
-                            <FrameLayout
-                                android:id="@+id/container_reward_free_tshirt_circle"
-                                android:background="@drawable/reward_circle_background_default"
-                                style="@style/LoyaltyRewardCircleFrame">
-                                <TextView
-                                    android:id="@+id/tv_reward_free_tshirt_text"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:textColor="@color/black"
-                                    android:textSize="12sp"
-                                    android:textStyle="bold"
-                                    android:text="@string/loyalty_reward_free_tshirt_short"
-                                    android:maxLines="2"
-                                    android:ellipsize="end"
-                                    android:gravity="center"/>
-                                <ImageView
-                                    android:id="@+id/iv_reward_free_tshirt_checkmark"
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/ic_checkmark"
-                                    app:tint="@color/white"
-                                    android:visibility="gone"/>
-                            </FrameLayout>
-                        </LinearLayout>
-
-                    </LinearLayout>
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"
+                        android:textColor="@color/grey"
+                        android:textSize="12sp"
+                        tools:text="Stamps 1 - 10" />
 
                 </LinearLayout>
+
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Rewards Section -->
+            <TextView
+                android:id="@+id/textViewRewardsHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Rewards"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginTop="24dp"
+                tools:ignore="HardcodedText" />
+
+            <!-- Reward Card Pagination Container (NEW) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/rewardCardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:strokeColor="#1A000000"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="8dp">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageButton
+                            android:id="@+id/btn_prev_reward"
+                            android:layout_width="40dp"
+                            android:layout_height="wrap_content"
+                            android:minHeight="48dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="Previous Rewards"
+                            android:src="@drawable/ic_arrow_left"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/black" />
+
+                        <LinearLayout
+                            android:id="@+id/rewards_container"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="2dp"
+                            android:gravity="center"
+                            app:layout_constraintEnd_toStartOf="@+id/btn_next_reward"
+                            app:layout_constraintStart_toEndOf="@+id/btn_prev_reward"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <!-- Reward Card: 10% Discount (5 Points) -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/card_reward_disc_10"
+                                style="@style/RewardCard">
+                                <LinearLayout style="@style/RewardCard.LinearLayout">
+                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Discount Icon"/>
+                                    <TextView style="@style/RewardCard.Title" android:text="Discount 10%"/>
+                                    <TextView android:id="@+id/tv_reward_points_disc_10" style="@style/RewardCard.Points" tools:text="5 Points"/>
+                                    <com.google.android.material.button.MaterialButton
+                                        android:id="@+id/btn_claim_disc_10"
+                                        style="@style/RewardCard.Button"
+                                        tools:text="KLAIM"/>
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <!-- Reward Card: Free Serve (10 Points) -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/card_reward_free_serve"
+                                style="@style/RewardCard">
+                                <LinearLayout style="@style/RewardCard.LinearLayout">
+                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Free Serve Icon"/>
+                                    <TextView style="@style/RewardCard.Title" android:text="Free Serve"/>
+                                    <TextView android:id="@+id/tv_reward_points_free_serve" style="@style/RewardCard.Points" tools:text="10 Points"/>
+                                    <com.google.android.material.button.MaterialButton
+                                        android:id="@+id/btn_claim_free_serve"
+                                        style="@style/RewardCard.Button"
+                                        tools:text="KLAIM"/>
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <!-- Reward Card: 10% Discount (15 Points) -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/card_reward_disc_10_2"
+                                style="@style/RewardCard">
+                                <LinearLayout style="@style/RewardCard.LinearLayout">
+                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Discount Icon"/>
+                                    <TextView style="@style/RewardCard.Title" android:text="Discount 10%"/>
+                                    <TextView android:id="@+id/tv_reward_points_disc_10_2" style="@style/RewardCard.Points" tools:text="15 Points"/>
+                                    <com.google.android.material.button.MaterialButton
+                                        android:id="@+id/btn_claim_disc_10_2"
+                                        style="@style/RewardCard.Button"
+                                        tools:text="KLAIM"/>
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <!-- Reward Card: Free T-Shirt (20 Points) -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/card_reward_tshirt"
+                                style="@style/RewardCard">
+                                <LinearLayout style="@style/RewardCard.LinearLayout">
+                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_tshirt" android:contentDescription="T-shirt Icon"/>
+                                    <TextView style="@style/RewardCard.Title" android:text="Free T-Shirt"/>
+                                    <TextView android:id="@+id/tv_reward_points_tshirt" style="@style/RewardCard.Points" tools:text="20 Points"/>
+                                    <com.google.android.material.button.MaterialButton
+                                        android:id="@+id/btn_claim_tshirt"
+                                        style="@style/RewardCard.Button"
+                                        tools:text="KLAIM"/>
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <!-- BARU: Reward Card: Discount 10% (25 Points) -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/card_reward_disc_10_25"
+                                style="@style/RewardCard">
+                                <LinearLayout style="@style/RewardCard.LinearLayout">
+                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Discount Icon"/>
+                                    <TextView style="@style/RewardCard.Title" android:text="Discount 10%"/>
+                                    <TextView android:id="@+id/tv_reward_points_disc_10_25" style="@style/RewardCard.Points" tools:text="25 Points"/>
+                                    <com.google.android.material.button.MaterialButton
+                                        android:id="@+id/btn_claim_disc_10_25"
+                                        style="@style/RewardCard.Button"
+                                        tools:text="KLAIM"/>
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <!-- BARU: Reward Card: Free Serve (30 Points) -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/card_reward_free_serve_30"
+                                style="@style/RewardCard">
+                                <LinearLayout style="@style/RewardCard.LinearLayout">
+                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Free Serve Icon"/>
+                                    <TextView style="@style/RewardCard.Title" android:text="Free Serve"/>
+                                    <TextView android:id="@+id/tv_reward_points_free_serve_30" style="@style/RewardCard.Points" tools:text="30 Points"/>
+                                    <com.google.android.material.button.MaterialButton
+                                        android:id="@+id/btn_claim_free_serve_30"
+                                        style="@style/RewardCard.Button"
+                                        tools:text="KLAIM"/>
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <!-- BARU: Reward Card: Discount 10% (35 Points) -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/card_reward_disc_10_35"
+                                style="@style/RewardCard">
+                                <LinearLayout style="@style/RewardCard.LinearLayout">
+                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Discount Icon"/>
+                                    <TextView style="@style/RewardCard.Title" android:text="Discount 10%"/>
+                                    <TextView android:id="@+id/tv_reward_points_disc_10_35" style="@style/RewardCard.Points" tools:text="35 Points"/>
+                                    <com.google.android.material.button.MaterialButton
+                                        android:id="@+id/btn_claim_disc_10_35"
+                                        style="@style/RewardCard.Button"
+                                        tools:text="KLAIM"/>
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <!-- BARU: Reward Card: Free Serve (40 Points) -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/card_reward_free_serve_40"
+                                style="@style/RewardCard">
+                                <LinearLayout style="@style/RewardCard.LinearLayout">
+                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Free Serve Icon"/>
+                                    <TextView style="@style/RewardCard.Title" android:text="Free Serve"/>
+                                    <TextView android:id="@+id/tv_reward_points_free_serve_40" style="@style/RewardCard.Points" tools:text="40 Points"/>
+                                    <com.google.android.material.button.MaterialButton
+                                        android:id="@+id/btn_claim_free_serve_40"
+                                        style="@style/RewardCard.Button"
+                                        tools:text="KLAIM"/>
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <!-- Reward Card: Coffee Grinder (100 Points) -->
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/card_reward_grinder"
+                                style="@style/RewardCard">
+                                <LinearLayout style="@style/RewardCard.LinearLayout">
+                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_grinder" android:contentDescription="Grinder Icon"/>
+                                    <TextView style="@style/RewardCard.Title" android:text="Coffee Grinder"/>
+                                    <TextView android:id="@+id/tv_reward_points_grinder" style="@style/RewardCard.Points" tools:text="100 Points"/>
+                                    <com.google.android.material.button.MaterialButton
+                                        android:id="@+id/btn_claim_grinder"
+                                        style="@style/RewardCard.Button"
+                                        tools:text="KLAIM"/>
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+
+                        </LinearLayout>
+
+                        <ImageButton
+                            android:id="@+id/btn_next_reward"
+                            android:layout_width="40dp"
+                            android:layout_height="wrap_content"
+                            android:minHeight="48dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="Next Rewards"
+                            android:src="@drawable/ic_arrow_right"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/black" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- Indikator progres reward -->
+                    <TextView
+                        android:id="@+id/textViewRewardProgress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"
+                        android:textColor="@color/grey"
+                        android:textSize="12sp"
+                        tools:text="Rewards 1 - 2" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Loyalty History Section -->
             <TextView
                 android:id="@+id/textViewLoyaltyHistoryHeader"
                 android:layout_width="match_parent"
@@ -232,7 +438,6 @@
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="8dp" />
 
@@ -242,8 +447,7 @@
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_loyalty_card"
-                android:elevation="0dp"/>
+                tools:listitem="@layout/item_loyalty_card" />
 
             <LinearLayout
                 android:id="@+id/placeholderContainer"
@@ -252,8 +456,7 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:paddingVertical="32dp"
-                android:visibility="gone"
-                android:elevation="0dp">
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/textViewPlaceholder"

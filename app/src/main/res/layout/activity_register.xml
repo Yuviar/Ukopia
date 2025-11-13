@@ -4,20 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="bottom"
-    android:background="@color/secondary">
+    android:background="@color/black"
+    android:gravity="top">
 
+    <!-- Bagian atas: Logo dan Slogan (Latar belakang hitam) -->
+    <!-- Menggunakan layout_weight="1" agar mengisi ruang yang tersisa di atas formulir -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:gravity="center"
-        android:layout_marginTop="80dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="50dp"
+        android:paddingBottom="40dp">
 
         <ImageView
             android:layout_width="200dp"
             android:layout_height="100dp"
-            android:src="@drawable/logo_ukopia"
+            android:src="@drawable/logo_ukopia_white"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"/>
 
@@ -26,142 +30,146 @@
             android:layout_height="wrap_content"
             android:text="@string/slogan_text"
             android:gravity="center"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="18sp"
             android:textFontWeight="800"
             android:fontFamily="@font/montserrat_extrabold"/>
     </LinearLayout>
 
-    <LinearLayout
+    <!-- Bagian formulir register di dalam MaterialCardView (Latar belakang putih dengan rounded top corners) -->
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="bottom">
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyle"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            />
+            android:orientation="vertical"
+            android:padding="20dp">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/register_screen_title"
-            android:textSize="40sp"
-            android:textFontWeight="800"
-            android:fontFamily="@font/montserrat_extrabold"
-            android:gravity="center"
-            android:layout_marginBottom="40dp"
-            android:textColor="@color/black"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/name_label"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginLeft="30dp"
-            android:textColor="@color/black"/>
-
-        <EditText
-            android:id="@+id/editNama"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/edit_text_border"
-            android:hint="@string/enter_name_hint"
-            android:textColorHint="@color/light_grey"
-            android:inputType="textPersonName"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:padding="10dp"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/email_label"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginLeft="30dp"
-            android:textColor="@color/black"/>
-
-        <EditText
-            android:id="@+id/editEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/edit_text_border"
-            android:hint="@string/enter_email_hint"
-            android:textColorHint="@color/light_grey"
-            android:inputType="textEmailAddress"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:padding="10dp"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/password_label"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginLeft="30dp"
-            android:textColor="@color/black"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/edit_text_border">
-
-            <EditText
-                android:id="@+id/editPassword"
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:inputType="textPassword"
-                android:hint="@string/enter_password_hint"
+                android:visibility="gone"
+                android:layout_marginBottom="20dp"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/register_screen_title"
+                android:textSize="40sp"
+                android:textFontWeight="800"
+                android:fontFamily="@font/montserrat_extrabold"
+                android:gravity="center"
+                android:layout_marginBottom="40dp"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/name_label"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/black"/>
+
+            <EditText
+                android:id="@+id/editNama"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/edit_text_border"
+                android:hint="@string/enter_name_hint"
                 android:textColorHint="@color/light_grey"
-                android:padding="10dp"
+                android:inputType="textPersonName"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                android:layout_alignParentStart="true"
-                android:layout_toStartOf="@id/btnTogglePassword"/>
+                android:padding="10dp"/>
 
-            <ImageView
-                android:id="@+id/btnTogglePassword"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/ic_eye"
-                android:tint="@color/black"
-                android:padding="4dp"/>
-        </RelativeLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/email_label"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/black"/>
 
-        <Button
-            android:id="@+id/btnDaftar"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="@string/signup_button_text_register_activity"
-            android:textSize="15sp"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/black"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginBottom="30dp"
-            android:layout_marginTop="5dp"
-            app:cornerRadius="8dp"/>
+            <EditText
+                android:id="@+id/editEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/edit_text_border"
+                android:hint="@string/enter_email_hint"
+                android:textColorHint="@color/light_grey"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:padding="10dp"/>
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/password_label"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/black"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/edit_text_border">
+
+                <EditText
+                    android:id="@+id/editPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:inputType="textPassword"
+                    android:hint="@string/enter_password_hint"
+                    android:textColorHint="@color/light_grey"
+                    android:padding="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:layout_alignParentStart="true"
+                    android:layout_toStartOf="@id/btnTogglePassword"/>
+
+                <ImageView
+                    android:id="@+id/btnTogglePassword"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/ic_eye"
+                    app:tint="@color/black"
+                    android:padding="4dp"/>
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/btnDaftar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="@string/signup_button_text_register_activity"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/black"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                app:cornerRadius="8dp"/>
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 </LinearLayout>

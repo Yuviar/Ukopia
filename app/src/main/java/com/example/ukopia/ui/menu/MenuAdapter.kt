@@ -1,4 +1,4 @@
-package com.example.ukopia.ui.home
+package com.example.ukopia.ui.menu
 
 import android.content.res.ColorStateList
 import android.graphics.PorterDuff

@@ -1,4 +1,4 @@
-package com.example.ukopia.ui.home
+package com.example.ukopia.ui.menu
 
 import android.app.Activity
 import android.content.Context
@@ -25,7 +25,6 @@ import com.example.ukopia.data.MenuItem
 import com.example.ukopia.databinding.DialogLoginRequiredBinding
 import com.example.ukopia.databinding.FragmentDetailMenuBinding
 import com.example.ukopia.ui.auth.LoginActivity
-import java.util.Locale
 
 class DetailMenuFragment : Fragment() {
 

@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="compound_drawable_padding_small">4dp</dimen>
+    <!-- Untuk RecyclerView filter kategori -->
+    <dimen name="filter_item_horizontal_space">8dp</dimen> <!-- Jarak antar item filter -->
+
+    <!-- Dimensi margin/padding umum -->
+    <dimen name="margin_16dp">16dp</dimen>
+    <dimen name="margin_8dp">8dp</dimen>
+    <!-- Tambahkan dimensi lain yang mungkin Anda butuhkan -->
 </resources>

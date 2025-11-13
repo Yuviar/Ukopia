@@ -30,12 +30,7 @@ import com.example.ukopia.ui.akun.LocaleHelper
 class LoginActivity : AppCompatActivity() {
     private var isPasswordVisible = false
     private lateinit var binding: ActivityLoginBinding
-    private lateinit var authViewModel: AuthViewModel // TAMBAH: ViewModel
-
-    // Hapus: Variabel Firebase tidak lagi digunakan
-    // private lateinit var btnMasuk: Button
-    // private lateinit var auth: FirebaseAuth
-    // private lateinit var progressBar: ProgressBar
+    private lateinit var authViewModel: AuthViewModel
 
     override fun attachBaseContext(newBase: Context?) {
         super.attachBaseContext(newBase?.let { LocaleHelper.onAttach(it) } ?: newBase)
@@ -46,14 +41,10 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // TAMBAH: Inisialisasi ViewModel
         authViewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
 
-        // Hapus: Inisialisasi Firebase
-        // auth = FirebaseAuth.getInstance()
-
         setupUIListeners()
-        setupObservers() // TAMBAH: Panggil method untuk mengamati ViewModel
+        setupObservers()
 
         if (SessionManager.isLoggedIn(this)) {
             goToMainActivity()
@@ -90,7 +81,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun handleLoginClick() {
-        // --- Animasi Flash Putih ---
+
         val targetBackgroundTint = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
         val targetTextColor = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white))
         val flashColorBackground = ContextCompat.getColor(this, R.color.white)
@@ -99,41 +90,36 @@ class LoginActivity : AppCompatActivity() {
         binding.btnMasuk.backgroundTintList = ColorStateList.valueOf(flashColorBackground)
         binding.btnMasuk.setTextColor(flashColorText)
 
-        // TAMBAHKAN LOG DI SINI UNTUK MEMASTIKAN FUNGSI DIPANGGIL
         Log.d("LoginDebug", "handleLoginClick: Button clicked, starting handler.")
 
         Handler(Looper.getMainLooper()).postDelayed({
-            // Kembalikan ke warna target
+
             binding.btnMasuk.backgroundTintList = targetBackgroundTint
             binding.btnMasuk.setTextColor(targetTextColor)
 
-            // --- Logika Login dengan ViewModel ---
             val email = binding.editEmail.text.toString().trim()
             val password = binding.editPassword.text.toString().trim()
 
-            // TAMBAHKAN LOG UNTUK MELIHAT NILAI VARIABEL
             Log.d("LoginDebug", "Checking credentials: Email='${email}', Password='${password}'")
 
             if (email.isEmpty() || password.isEmpty()) {
-                // TAMBAHKAN LOG UNTUK MELIHAT APAKAH VALIDASI GAGAL
+
                 Log.w("LoginDebug", "Validation failed: Fields are empty.")
                 Toast.makeText(this, getString(R.string.empty_email_password_error), Toast.LENGTH_SHORT).show()
                 return@postDelayed
             }
 
-            // TAMBAHKAN LOG UNTUK MELIHAT APAKAH VIEWMODEL DIPANGGIL
             Log.d("LoginDebug", "Validation successful. Calling ViewModel to login...")
-            // Panggil ViewModel untuk login
+
             authViewModel.login(LoginRequest(email, password))
 
         }, 150)
     }
 
-    // TAMBAH: Method untuk mengamati LiveData dari ViewModel
     private fun setupObservers() {
         authViewModel.loginResult.observe(this) { loginResponse ->
             if (loginResponse != null && loginResponse.data != null) {
-                // Login Berhasil
+
                 val user = loginResponse.data
                 SessionManager.setLoggedIn(this, true)
                 SessionManager.saveUserData(this, user.nama, user.email) // Simpan data user
@@ -141,11 +127,10 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, getString(R.string.login_success_toast), Toast.LENGTH_SHORT).show()
                 goToMainActivity()
             }
-            // Penanganan error sudah di handle oleh observer `message`
         }
 
         authViewModel.message.observe(this) { message ->
-            // Menampilkan pesan error atau pesan lainnya
+
             if (!message.isNullOrEmpty()) {
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show()
             }

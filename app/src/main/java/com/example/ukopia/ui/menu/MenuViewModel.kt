@@ -1,7 +1,7 @@
-package com.example.ukopia.ui.home
+package com.example.ukopia.ui.menu
 
 import androidx.lifecycle.ViewModel
 
-class HomeViewModel : ViewModel() {
+class MenuViewModel : ViewModel() {
     // TODO: Implement the ViewModel
 }

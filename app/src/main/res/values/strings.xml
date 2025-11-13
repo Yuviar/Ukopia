@@ -81,7 +81,7 @@
     <string name="error_description_required">Description is required!</string>
     <string name="error_coffee_amount_required">Coffee Amount is required!</string>
     <string name="error_water_amount_required">Water Amount is required!</string>
-    <string name="error_temperature_required">Temperature is required!</string> <!-- Tetap ini -->
+    <string name="error_temperature_required">Temperature is required!</string>
     <string name="error_processing_time_required">Processing Time must be filled in completely!</string>
     <string name="error_complete_all_recipe_data">Please complete all prescription data!</string>
     <string name="recipe_saved_success_toast">Recipe \'%1$s\' saved successfully!</string>
@@ -107,7 +107,6 @@
 
     <string name="back_button_desc">Back button</string>
     <string name="share_button_desc">Share button</string>
-    <string name="menu_item_coffee_latte_title_placeholder">Coffee Latte</string>
     <string name="description_title">Description: </string>
     <string name="menu_item_description_placeholder">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</string>
     <string name="your_rating_prefix">Your Rating: </string>
@@ -148,7 +147,7 @@
     <string name="coffee_amount_label">Coffee Amount</string>
     <string name="water_amount_label">Water Amount</string>
     <string name="grind_size_label">Grind Size</string>
-    <string name="temperature_label">Temperature</string> <!-- Ganti 'heat_label' menjadi 'temperature_label' -->
+    <string name="temperature_label">Temperature</string>
     <string name="process_label">PROCESS</string>
     <string name="process_time_hint">00:00</string>
     <string name="add_new_step_button_text">Add New Step</string>
@@ -156,7 +155,7 @@
     <string name="add_recipe_button_text">Add Recipe</string>
     <string name="coffee_amount_hint_placeholder">16.0 g</string>
     <string name="water_amount_hint_placeholder">200.0 ml</string>
-    <string name="temperature_hint_placeholder">90 °C</string> <!-- Ganti 'heat_hint_placeholder' menjadi 'temperature_hint_placeholder' -->
+    <string name="temperature_hint_placeholder">90 °C</string>
 
     <string-array name="grind_sizes">
         <item>Fine</item>
@@ -170,12 +169,12 @@
     <string name="coffee_icon_desc">Coffee Icon</string>
     <string name="grind_size_icon_desc">Grind Size Icon</string>
     <string name="heat_icon_desc">Heat Icon</string>
-    <string name="extraction_time_label">Extraction Time</string> <!-- Ganti 'processing_time_label' menjadi 'extraction_time_label' -->
+    <string name="extraction_time_label">Extraction Time</string>
     <string name="grind_size_placeholder">Medium</string>
-    <string name="temperature_placeholder">92°C</string> <!-- Ganti 'heat_placeholder' menjadi 'temperature_placeholder' -->
+    <string name="temperature_placeholder">92°C</string>
     <string name="water_amount_placeholder">200.0 ml</string>
     <string name="coffee_amount_placeholder">35.0 g</string>
-    <string name="extraction_time_placeholder">01:45</string> <!-- Ganti 'time_placeholder' menjadi 'extraction_time_placeholder' -->
+    <string name="extraction_time_placeholder">01:45</string>
 
     <string name="add_new_step_title">ADD NEW STEP</string>
     <string name="custom_step_title">Custom Step</string>
@@ -299,23 +298,27 @@
     <string name="add_loyalty_data_desc">Add new loyalty data</string>
     <string name="loyalty_history_title">Loyalty History</string>
 
-    <!-- String baru untuk sistem stempel -->
+    <!-- Loyalty stamp system strings -->
     <string name="loyalty_stamp_desc">Loyalty stamp</string>
     <string name="loyalty_reward_10_percent_discount_title">DISC 10%</string>
     <string name="loyalty_reward_free_serve_title">FREE 1 SERVE</string>
     <string name="loyalty_reward_free_tshirt_title">FREE T-SHIRT</string>
+    <string name="loyalty_reward_coffee_grinder_title">Coffee Grinder</string>
 
     <string name="loyalty_reward_claim_10_percent_discount">Claim DISC 10%</string>
     <string name="loyalty_reward_claim_free_serve">Claim FREE 1 SERVE</string>
     <string name="loyalty_reward_claim_free_tshirt">Claim FREE T-SHIRT</string>
 
-    <!-- String baru dan dimodifikasi untuk UI dan Toast -->
+    <!-- UI and Toast strings -->
     <string name="loyalty_reward_10_percent_discount_short">DISC 10%</string>
     <string name="loyalty_reward_free_serve_short">FREE 1 SERVE</string>
     <string name="loyalty_reward_free_tshirt_short">FREE T-SHIRT</string>
+    <string name="loyalty_reward_coffee_grinder_short">Coffee Grinder</string>
     <string name="loyalty_reward_claim_action">CLAIM</string>
     <string name="reward_claimed_title">CLAIMED</string>
+    <string name="reward_claimed_status">Claimed</string>
     <string name="reward_claimed_toast_format">Reward \'%1$s\' claimed!</string>
+    <string name="loyalty_stamp_progress_format">Stamps %1$d - %2$d</string> <!-- Fixed: Only one occurrence -->
 
     <string name="progress_stamps_needed_disc">Collect %1$d more stamps for %2$s!</string>
     <string name="progress_stamps_needed_serve">Collect %1$d more stamps for %2$s!</string>
@@ -331,14 +334,14 @@
 
     <string name="error_no_app_to_handle_link">No app found to handle this link.</string>
 
-    <!-- NEW STRINGS FOR RATING FEATURE -->
+    <!-- Rating feature strings -->
     <string name="give_rating_title">GIVE RATING</string>
     <string name="rate_for_placeholder">Rate for: Coffee Latte</string>
     <string name="average_rating_prefix">Rating: </string>
     <string name="rate_button_text">Rate</string>
     <string name="your_comment_prefix">Comment: </string>
 
-    <!-- NEW STRINGS FOR DETAIL MENU & SHARE FEATURE -->
+    <!-- Detail Menu & Share feature strings -->
     <string name="share_menu_via">Share menu via:</string>
     <string name="no_app_to_share">No app found to share the menu.</string>
     <string name="update_your_rating">Update Your Rating</string>
@@ -362,11 +365,16 @@
     <string name="equipment_category_scale">Scale</string>
     <string name="equipment_category_kettle">Kettle</string>
 
-    <!-- NEW VALIDATION STRINGS -->
+    <!-- Validation strings -->
     <string name="error_extraction_time_required">Extraction Time is required!</string>
     <string name="error_equipment_required">Please select at least one equipment!</string>
 
-    <!-- NEW DEFAULT ICON DESCRIPTION -->
+    <!-- Default Icon description -->
     <string name="default_equipment_icon_desc">Default equipment icon</string>
+
+    <string name="loyalty_points_needed_format">%1$d Points</string>
+    <string name="loyalty_rewards_progress_range_format">Rewards for points %1$d - %2$d</string>
+    <!-- String baru untuk format progres rewards (untuk satu poin saja) -->
+    <string name="loyalty_rewards_progress_single_format">Rewards for points %1$d</string>
 
 </resources>

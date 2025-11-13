@@ -7,7 +7,6 @@ import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ukopia.ui.akun.LocaleHelper
-import com.example.ukopia.ui.home.HomeFragment // Ini tidak digunakan langsung di SplashActivity, tetapi biarkan saja sesuai konteks asli
 
 class SplashActivity : AppCompatActivity() {
 

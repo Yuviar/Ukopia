@@ -5,167 +5,175 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/secondary"
-    android:gravity="bottom">
+    android:background="@color/black"
+    android:gravity="top">
 
-    <LinearLayout
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="0dp"
+android:layout_weight="1"
+android:gravity="center"
+android:orientation="vertical"
+android:paddingTop="50dp"
+android:paddingBottom="40dp"> <!-- Tambahan padding atas dan bawah -->
+
+<ImageView
+    android:layout_width="200dp"
+    android:layout_height="100dp"
+    android:src="@drawable/logo_ukopia_white"
+    android:adjustViewBounds="true"
+    android:contentDescription="@string/ukopia_logo_desc"
+    android:scaleType="fitCenter"/>
+
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/slogan_text"
+    android:gravity="center"
+    android:textColor="@color/white"
+android:textSize="18sp"
+android:textFontWeight="800"
+android:fontFamily="@font/montserrat_extrabold"/>
+</LinearLayout>
+
+    <!-- Bagian formulir login di dalam CardView untuk background putih dan rounded top corners -->
+<com.google.android.material.card.MaterialCardView
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+app:cardCornerRadius="30dp"
+    app:cardElevation="0dp"
+    app:cardBackgroundColor="@color/white"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent">
+
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="vertical"
+    android:padding="20dp"
+>
+
+<ProgressBar
+    android:id="@+id/loginProgressBar"
+    style="?android:attr/progressBarStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:visibility="gone"
+    android:layout_marginBottom="20dp"
+    />
+
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/login_screen_title"
+    android:textSize="40sp"
+    android:textFontWeight="800"
+    android:fontFamily="@font/montserrat_extrabold"
+    android:gravity="center"
+    android:layout_marginBottom="40dp"
+    android:textColor="@color/black"/>
+
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/email_label"
+    android:textSize="18sp"
+    android:textStyle="bold"
+    android:layout_marginBottom="8dp"
+    android:textColor="@color/black"/>
+
+<EditText
+    android:id="@+id/editEmail"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp"
+    android:background="@drawable/edit_text_border"
+    android:inputType="textEmailAddress"
+    android:hint="@string/enter_email_hint"
+    android:textColorHint="@color/light_grey"
+    android:padding="10dp"
+    android:textColor="@color/black"
+    android:textSize="16sp"/>
+
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/password_label"
+    android:textSize="18sp"
+    android:textStyle="bold"
+    android:layout_marginBottom="8dp"
+    android:textColor="@color/black"/>
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/edit_text_border">
+
+    <EditText
+        android:id="@+id/editPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginTop="80dp"
-        android:orientation="vertical">
+        android:background="@android:color/transparent"
+        android:inputType="textPassword"
+        android:hint="@string/enter_password_hint"
+        android:textColorHint="@color/light_grey"
+        android:padding="10dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@id/btnTogglePassword"/>
 
-        <ImageView
-            android:layout_width="200dp"
-            android:layout_height="100dp"
-            android:src="@drawable/logo_ukopia"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/ukopia_logo_desc"
-            android:scaleType="fitCenter"/>
+    <ImageView
+        android:id="@+id/btnTogglePassword"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="5dp"
+        android:src="@drawable/ic_eye"
+        app:tint="@color/black"
+        android:contentDescription="@string/key_icon_desc"
+        android:padding="4dp"/>
+</RelativeLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/slogan_text"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textFontWeight="800"
-            android:fontFamily="@font/montserrat_extrabold"/>
-    </LinearLayout>
+<com.google.android.material.button.MaterialButton
+    android:id="@+id/btnLupaPassword"
+    style="@style/Widget.MaterialComponents.Button.TextButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="end"
+    android:layout_marginTop="4dp"
+    android:text="@string/forgot_password_button_text"
+    android:textColor="@color/black"
+    android:textSize="15sp"
+    android:textAllCaps="false"
+    android:textStyle="bold"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="bottom">
+<Button
+    android:id="@+id/btnMasuk"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:text="@string/login_button_text_login_activity"
+    android:textSize="15sp"
+    android:textColor="@color/white"
+    android:backgroundTint="@color/black"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="10dp"
+    app:cornerRadius="8dp"/>
 
-        <ProgressBar
-            android:id="@+id/loginProgressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/login_screen_title"
-            android:textSize="40sp"
-            android:textFontWeight="800"
-            android:fontFamily="@font/montserrat_extrabold"
-            android:gravity="center"
-            android:layout_marginBottom="40dp"
-            android:textColor="@color/black"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/email_label"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginLeft="30dp"
-            android:textColor="@color/black"/>
-
-        <EditText
-            android:id="@+id/editEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/edit_text_border"
-            android:inputType="textEmailAddress"
-            android:hint="@string/enter_email_hint"
-            android:textColorHint="@color/light_grey"
-            android:padding="10dp"
-            android:textColor="@color/black"
-            android:textSize="16sp"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/password_label"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginLeft="30dp"
-            android:textColor="@color/black"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:background="@drawable/edit_text_border">
-
-            <EditText
-                android:id="@+id/editPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:inputType="textPassword"
-                android:hint="@string/enter_password_hint"
-                android:textColorHint="@color/light_grey"
-                android:padding="10dp"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:layout_alignParentStart="true"
-                android:layout_toStartOf="@id/btnTogglePassword"/>
-
-            <ImageView
-                android:id="@+id/btnTogglePassword"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/ic_eye"
-                android:tint="@color/black"
-                android:contentDescription="@string/key_icon_desc"
-                android:padding="4dp"/>
-        </RelativeLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnLupaPassword"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginRight="21dp"
-            android:layout_marginTop="4dp"
-            android:text="@string/forgot_password_button_text"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:textAllCaps="false"
-            android:textStyle="bold"/>
-
-        <Button
-            android:id="@+id/btnMasuk"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="@string/login_button_text_login_activity"
-            android:textSize="15sp"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/black"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginBottom="10dp"
-            app:cornerRadius="8dp"/>
-
-        <TextView
-            android:id="@+id/txtBuatAkun"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            tools:text="Don't Have an Account? Create an account here"
-            android:textAllCaps="false"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:layout_marginBottom="20dp"
-            android:singleLine="true"
-            android:ellipsize="none"
-            />
-    </LinearLayout>
+<TextView
+    android:id="@+id/txtBuatAkun"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    tools:text="Don't Have an Account? Create an account here"
+    android:textAllCaps="false"
+    android:textColor="@color/black"
+    android:textSize="15sp"
+    android:singleLine="true"
+    android:ellipsize="none"
+    />
 </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>

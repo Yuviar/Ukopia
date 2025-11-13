@@ -1,4 +1,4 @@
-package com.example.ukopia.ui.home
+package com.example.ukopia.ui.menu
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -15,13 +15,12 @@ class HorizontalFilterAdapter(
 
     inner class CategoryViewHolder(private val binding: ItemHorizontalFilterCategoryBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(category: String, isSelected: Boolean) {
-            val button = binding.buttonCategory
+            val button = binding.tvCategoryName
             button.text = category
             button.setOnClickListener {
                 val oldSelection = currentSelection
                 currentSelection = category
                 onItemClick(category)
-                // Perbarui tampilan item lama dan item baru yang terpilih
                 notifyItemChanged(categories.indexOf(oldSelection))
                 notifyItemChanged(adapterPosition)
             }

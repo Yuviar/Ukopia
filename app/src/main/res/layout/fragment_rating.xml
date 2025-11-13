@@ -8,7 +8,7 @@
     android:padding="24dp"
     android:gravity="center_horizontal"
     android:background="@color/white"
-    tools:context=".ui.home.RatingFragment">
+    tools:context=".ui.menu.RatingFragment">
 
     <TextView
         android:layout_width="wrap_content"

@@ -81,7 +81,7 @@
     <string name="error_description_required">Deskripsi wajib diisi!</string>
     <string name="error_coffee_amount_required">Jumlah Kopi wajib diisi!</string>
     <string name="error_water_amount_required">Jumlah Air wajib diisi!</string>
-    <string name="error_temperature_required">Suhu wajib diisi!</string> <!-- Tetap ini -->
+    <string name="error_temperature_required">Suhu wajib diisi!</string>
     <string name="error_processing_time_required">Waktu Proses harus diisi lengkap!</string>
     <string name="error_complete_all_recipe_data">Harap lengkapi semua data resep!</string>
     <string name="recipe_saved_success_toast">Resep \'%1$s\' berhasil disimpan!</string>
@@ -107,7 +107,6 @@
 
     <string name="back_button_desc">Tombol kembali</string>
     <string name="share_button_desc">Tombol bagikan</string>
-    <string name="menu_item_coffee_latte_title_placeholder">Kopi Latte</string>
     <string name="description_title">Deskripsi: </string>
     <string name="menu_item_description_placeholder">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</string>
     <string name="your_rating_prefix">Rating Anda: </string>
@@ -148,7 +147,7 @@
     <string name="coffee_amount_label">Jumlah Kopi</string>
     <string name="water_amount_label">Jumlah Air</string>
     <string name="grind_size_label">Ukuran Gilingan</string>
-    <string name="temperature_label">Suhu</string> <!-- Ganti 'heat_label' menjadi 'temperature_label' -->
+    <string name="temperature_label">Suhu</string>
     <string name="process_label">PROSES</string>
     <string name="process_time_hint">00:00</string>
     <string name="add_new_step_button_text">Tambah Langkah Baru</string>
@@ -156,7 +155,7 @@
     <string name="add_recipe_button_text">Tambah Resep</string>
     <string name="coffee_amount_hint_placeholder">16,0 g</string>
     <string name="water_amount_hint_placeholder">200,0 ml</string>
-    <string name="temperature_hint_placeholder">90 °C</string> <!-- Ganti 'heat_hint_placeholder' menjadi 'temperature_hint_placeholder' -->
+    <string name="temperature_hint_placeholder">90 °C</string>
 
     <string-array name="grind_sizes">
         <item>Halus</item>
@@ -170,12 +169,12 @@
     <string name="coffee_icon_desc">Ikon Kopi</string>
     <string name="grind_size_icon_desc">Ikon Gilingan</string>
     <string name="heat_icon_desc">Ikon Panas</string>
-    <string name="extraction_time_label">Waktu Ekstraksi</string> <!-- Ganti 'processing_time_label' menjadi 'extraction_time_label' -->
+    <string name="extraction_time_label">Waktu Ekstraksi</string>
     <string name="grind_size_placeholder">Sedang</string>
-    <string name="temperature_placeholder">92°C</string> <!-- Ganti 'heat_placeholder' menjadi 'temperature_placeholder' -->
+    <string name="temperature_placeholder">92°C</string>
     <string name="water_amount_placeholder">200,0 ml</string>
     <string name="coffee_amount_placeholder">35,0 g</string>
-    <string name="extraction_time_placeholder">01:45</string> <!-- Ganti 'time_placeholder' menjadi 'extraction_time_placeholder' -->
+    <string name="extraction_time_placeholder">01:45</string>
 
     <string name="add_new_step_title">TAMBAH LANGKAH BARU</string>
     <string name="custom_step_title">Langkah Kustom</string>
@@ -304,6 +303,7 @@
     <string name="loyalty_reward_10_percent_discount_title">DISKON 10%</string>
     <string name="loyalty_reward_free_serve_title">GRATIS 1 PORSI</string>
     <string name="loyalty_reward_free_tshirt_title">GRATIS KAOS</string>
+    <string name="loyalty_reward_coffee_grinder_title">Grinder Kopi</string>
 
     <string name="loyalty_reward_claim_10_percent_discount">Klaim DISKON 10%</string>
     <string name="loyalty_reward_claim_free_serve">Klaim GRATIS 1 PORSI</string>
@@ -313,9 +313,12 @@
     <string name="loyalty_reward_10_percent_discount_short">DISKON 10%</string>
     <string name="loyalty_reward_free_serve_short">GRATIS 1 PORSI</string>
     <string name="loyalty_reward_free_tshirt_short">GRATIS KAOS</string>
+    <string name="loyalty_reward_coffee_grinder_short">Grinder Kopi</string>
     <string name="loyalty_reward_claim_action">KLAIM</string>
     <string name="reward_claimed_title">DIKLAIM</string>
+    <string name="reward_claimed_status">Diklaim</string>
     <string name="reward_claimed_toast_format">Hadiah \'%1$s\' berhasil diklaim!</string>
+    <string name="loyalty_stamp_progress_format">Stempel %1$d - %2$d</string> <!-- Fixed: Only one occurrence -->
 
     <string name="progress_stamps_needed_disc">Kumpulkan %1$d stempel lagi untuk %2$s!</string>
     <string name="progress_stamps_needed_serve">Kumpulkan %1$d stempel lagi untuk %2$s!</string>
@@ -340,6 +343,11 @@
 
     <string name="press_back_again_to_exit">Klik kembali lagi untuk keluar </string>
 
+    <!-- Detail Menu & Share feature strings -->
+    <string name="share_menu_via">Share menu via:</string>
+    <string name="no_app_to_share">No app found to share the menu.</string>
+    <string name="update_your_rating">Update Your Rating</string>
+
     <!-- Equipment related strings -->
     <string name="equipment_title">Peralatan</string>
     <string name="my_equipment_title">Peralatan</string>
@@ -363,5 +371,10 @@
 
     <!-- NEW DEFAULT ICON DESCRIPTION -->
     <string name="default_equipment_icon_desc">Ikon peralatan default</string>
+
+    <string name="loyalty_points_needed_format">%1$d Poin</string>
+    <string name="loyalty_rewards_progress_range_format">Rewards untuk poin %1$d - %2$d</string>
+    <!-- String baru untuk format progres rewards (untuk satu poin saja) -->
+    <string name="loyalty_rewards_progress_single_format">Rewards untuk poin %1$d</string>
 
 </resources>

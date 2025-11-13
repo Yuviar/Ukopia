@@ -13,8 +13,6 @@ data class LoginRequest(
     val password: String
 )
 
-// --- Response Models ---
-
 data class GenericResponse(
     @SerializedName("message")
     val message: String

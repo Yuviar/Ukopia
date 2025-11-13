@@ -1,165 +1,76 @@
 package com.example.ukopia.ui.home
 
-import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.ukopia.MainActivity
 import com.example.ukopia.R
-import com.example.ukopia.SessionManager
+import com.example.ukopia.BestSellerAdapter
 import com.example.ukopia.data.MenuItem
 import com.example.ukopia.databinding.FragmentHomeBinding
-import java.util.Locale
+import com.example.ukopia.MainActivity // Import MainActivity
+import com.example.ukopia.ui.menu.DetailMenuFragment // Pertahankan ini
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var menuAdapter: MenuAdapter
-    private lateinit var horizontalFilterAdapter: HorizontalFilterAdapter
-    private var allMenuItems: MutableList<MenuItem> = mutableListOf()
-    private lateinit var currentFilterCategory: String
-    private var currentSearchQuery: String = ""
-
-    private lateinit var filterCategories: Array<String>
-
-    // Key SharedPreferences, harus sama dengan di RatingFragment
-    private val PREFS_NAME = "UtopiaRatingPrefs"
-    private val ITEM_TOTAL_RATING_KEY_PREFIX = "item_total_rating_"
-    private val ITEM_RATING_COUNT_KEY_PREFIX = "item_rating_count_"
+    private lateinit var bestSellerAdapter: BestSellerAdapter
+    private var allBestSellerItems: List<MenuItem> = emptyList() // Daftar lengkap item best seller
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (requireActivity() as MainActivity).setBottomNavVisibility(View.VISIBLE)
 
-        // PERBAIKAN: Inisialisasi data yang memerlukan Context dipindahkan ke sini
-        // untuk mencegah crash saat fragment pertama kali dibuat.
-        if (allMenuItems.isEmpty()) {
-            allMenuItems.addAll(createDummyMenuItems())
-            loadPersistedRatings()
-        }
+        // Tampilkan BottomNavigationView saat HomeFragment ditampilkan
+        (activity as? MainActivity)?.setBottomNavVisibility(View.VISIBLE)
 
-        setupFragmentResultListener()
-        updateGreetingText()
+        // Inisialisasi daftar semua item menu, lalu pilih yang terlaris (disimulasikan di sini)
+        val allMenuFromApp = createDummyAllMenuItems() // Ambil daftar lengkap dari metode simulasi
+        allBestSellerItems = getTopBestSellerItems(allMenuFromApp) // Pilih 2 item terlaris
 
-        filterCategories = arrayOf(
-            getString(R.string.category_all),
-            getString(R.string.category_black_coffee),
-            getString(R.string.category_white_coffee),
-            getString(R.string.category_non_coffee),
-            getString(R.string.category_artisan_tea),
-            getString(R.string.category_flavoured_milk)
-        )
-        currentFilterCategory = getString(R.string.category_all)
-
-        menuAdapter = MenuAdapter(allMenuItems) { menuItem ->
+        // Setup RecyclerView untuk Best Seller Menu
+        // BEST SELLER ITEM CLICK LOGIC - PERTAHANKAN INI
+        bestSellerAdapter = BestSellerAdapter(allBestSellerItems) { menuItem ->
             val detailMenuFragment = DetailMenuFragment.newInstance(menuItem)
-            (requireActivity() as MainActivity).navigateToFragment(detailMenuFragment)
+            (activity as? MainActivity)?.navigateToFragment(detailMenuFragment)
         }
 
-        binding.rvMenuItems.layoutManager = GridLayoutManager(requireContext(), 2)
-        binding.rvMenuItems.adapter = menuAdapter
+        binding.bestSellerRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.bestSellerRecyclerView.adapter = bestSellerAdapter
 
-        horizontalFilterAdapter = HorizontalFilterAdapter(filterCategories.toList(), currentFilterCategory) { selectedCategory ->
-            if (currentFilterCategory != selectedCategory) {
-                currentFilterCategory = selectedCategory
-                displayFilteredMenu(currentFilterCategory, currentSearchQuery)
-            }
-        }
-        binding.rvFilterCategories.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.rvFilterCategories.adapter = horizontalFilterAdapter
-
-        displayFilteredMenu(currentFilterCategory, currentSearchQuery)
-
-        binding.etSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                currentSearchQuery = s.toString()
-                binding.ivClearSearch.visibility = if (s.isNullOrBlank()) View.GONE else View.VISIBLE
-                displayFilteredMenu(currentFilterCategory, currentSearchQuery)
-            }
-            override fun afterTextChanged(s: Editable?) { }
-        })
-
-        binding.ivClearSearch.setOnClickListener {
-            binding.etSearch.text?.clear()
-        }
+        // Hapus logika search bar dari sini
+        // Hapus listener klik untuk ikon settings dan account dari sini (karena ikon sudah dihapus dari layout)
+        // Catatan: Navigasi ke AkunFragment sekarang sepenuhnya melalui Bottom Navigation Bar
     }
 
-    private fun setupFragmentResultListener() {
-        parentFragmentManager.setFragmentResultListener("detailResult", viewLifecycleOwner) { _, bundle ->
-            val updatedMenuItem = bundle.getParcelable<MenuItem>("updatedMenuItem")
-            updatedMenuItem?.let { itemFromDetail ->
-                val index = allMenuItems.indexOfFirst { it.id == itemFromDetail.id }
-                if (index != -1) {
-                    allMenuItems[index] = itemFromDetail
-                    displayFilteredMenu(currentFilterCategory, currentSearchQuery)
-                }
-            }
-        }
+    // Metode setupSearchBar() dihapus
+    /*
+    private fun setupSearchBar() {
+        // ... logika search bar yang sudah dihapus ...
     }
+    */
 
-    private fun loadPersistedRatings() {
-        val prefs = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        allMenuItems.forEach { menuItem ->
-            val totalRating = prefs.getFloat(ITEM_TOTAL_RATING_KEY_PREFIX + menuItem.id, -1f)
-            val ratingCount = prefs.getInt(ITEM_RATING_COUNT_KEY_PREFIX + menuItem.id, -1)
-
-            if (totalRating != -1f && ratingCount > 0) {
-                val averageRating = totalRating / ratingCount
-                menuItem.rating = String.format(Locale.ROOT, "%.1f/5.0", averageRating)
-            }
-        }
+    // Metode filterBestSellerItems() dihapus
+    /*
+    private fun filterBestSellerItems(query: String) {
+        // ... logika filter yang sudah dihapus ...
     }
+    */
 
-    override fun onResume() {
-        super.onResume()
-        updateGreetingText()
-    }
-
-    private fun updateGreetingText() {
-        val userName = SessionManager.getUserName(requireContext())
-        if (!userName.isNullOrBlank()) {
-            binding.tvGreeting.text = getString(R.string.greeting_salutation, userName)
-        } else {
-            binding.tvGreeting.text = getString(R.string.greeting_salutation_default)
-        }
-    }
-
-    private fun displayFilteredMenu(category: String, query: String) {
-        var filteredList = if (category == getString(R.string.category_all)) {
-            allMenuItems
-        } else {
-            allMenuItems.filter { it.category == category }
-        }
-
-        if (query.isNotBlank()) {
-            val lowerCaseQuery = query.toLowerCase(Locale.ROOT)
-            filteredList = filteredList.filter {
-                it.name.toLowerCase(Locale.ROOT).startsWith(lowerCaseQuery)
-            }
-        }
-        menuAdapter.updateData(filteredList)
-        horizontalFilterAdapter.updateSelection(category)
-    }
-
-    private fun createDummyMenuItems(): List<MenuItem> {
+    private fun createDummyAllMenuItems(): List<MenuItem> {
         val context = requireContext()
+        // Asumsi string resources seperti category_black_coffee didefinisikan di strings.xml
         return listOf(
             MenuItem("1", "Espresso", "4.8/5.0", R.drawable.sample_coffee, "Ekstraksi kopi pekat, dasar dari semua minuman kopi.", context.getString(R.string.category_black_coffee)),
             MenuItem("2", "Long Black", "4.5/5.0", R.drawable.sample_coffee, "Air panas dicampur dengan espresso untuk rasa yang kuat.", context.getString(R.string.category_black_coffee)),
@@ -185,6 +96,11 @@ class HomeFragment : Fragment() {
             MenuItem("22", "Vanilla", "4.5/5.0", R.drawable.sample_coffee, "Susu dengan rasa vanila klasik.", context.getString(R.string.category_flavoured_milk)),
             MenuItem("23", "Butterscotch", "4.7/5.0", R.drawable.sample_coffee, "Susu dengan rasa butterscotch yang manis dan creamy.", context.getString(R.string.category_flavoured_milk))
         )
+    }
+
+    private fun getTopBestSellerItems(all: List<MenuItem>): List<MenuItem> {
+        return all.sortedByDescending { it.rating.substringBefore("/").toFloatOrNull() ?: 0f }
+            .take(2) // Mengambil tepat 2 item teratas
     }
 
     override fun onDestroyView() {

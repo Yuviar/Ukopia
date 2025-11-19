@@ -73,16 +73,6 @@ class LoyaltyViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun claimCoffeeGrinder() {
-        val currentStatus = _loyaltyUserStatus.value ?: LoyaltyUserStatus()
-        if (currentStatus.totalPoints >= 100 && !currentStatus.isCoffeeGrinderClaimed) {
-            val newStatus = currentStatus.copy(isCoffeeGrinderClaimed = true)
-            _loyaltyUserStatus.value = newStatus
-            SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
-        }
-    }
-
-    // BARU: Fungsi klaim untuk reward tambahan (contoh)
     fun claimDiscount10_25() {
         val currentStatus = _loyaltyUserStatus.value ?: LoyaltyUserStatus()
         if (currentStatus.totalPoints >= 25 && !currentStatus.isDiscount10_25Claimed) {
@@ -114,6 +104,106 @@ class LoyaltyViewModel(application: Application) : AndroidViewModel(application)
         val currentStatus = _loyaltyUserStatus.value ?: LoyaltyUserStatus()
         if (currentStatus.totalPoints >= 40 && !currentStatus.isFreeServe_40Claimed) {
             val newStatus = currentStatus.copy(isFreeServe_40Claimed = true)
+            _loyaltyUserStatus.value = newStatus
+            SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
+        }
+    }
+
+    fun claimDiscount10_45() {
+        val currentStatus = _loyaltyUserStatus.value ?: LoyaltyUserStatus()
+        if (currentStatus.totalPoints >= 45 && !currentStatus.isDiscount10_45Claimed) {
+            val newStatus = currentStatus.copy(isDiscount10_45Claimed = true)
+            _loyaltyUserStatus.value = newStatus
+            SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
+        }
+    }
+
+    fun claimFreeServe_50() {
+        val currentStatus = _loyaltyUserStatus.value ?: LoyaltyUserStatus()
+        if (currentStatus.totalPoints >= 50 && !currentStatus.isFreeServe_50Claimed) {
+            val newStatus = currentStatus.copy(isFreeServe_50Claimed = true)
+            _loyaltyUserStatus.value = newStatus
+            SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
+        }
+    }
+
+    fun claimDiscount10_55() {
+        val currentStatus = _loyaltyUserStatus.value ?: LoyaltyUserStatus()
+        if (currentStatus.totalPoints >= 55 && !currentStatus.isDiscount10_55Claimed) {
+            val newStatus = currentStatus.copy(isDiscount10_55Claimed = true)
+            _loyaltyUserStatus.value = newStatus
+            SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
+        }
+    }
+
+    // NEW: Function for Free Serve at 60 points
+    fun claimFreeServe_60() {
+        val currentStatus = _loyaltyUserStatus.value ?: LoyaltyUserStatus()
+        if (currentStatus.totalPoints >= 60 && !currentStatus.isFreeServe_60Claimed) {
+            val newStatus = currentStatus.copy(isFreeServe_60Claimed = true)
+            _loyaltyUserStatus.value = newStatus
+            SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
+        }
+    }
+
+    fun claimDiscount10_65() {
+        val currentStatus = _loyaltyUserStatus.value ?: LoyaltyUserStatus()
+        if (currentStatus.totalPoints >= 65 && !currentStatus.isDiscount10_65Claimed) {
+            val newStatus = currentStatus.copy(isDiscount10_65Claimed = true)
+            _loyaltyUserStatus.value = newStatus
+            SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
+        }
+    }
+
+    fun claimFreeServe_70() {
+        val currentStatus = _loyaltyUserStatus.value ?: LoyaltyUserStatus()
+        if (currentStatus.totalPoints >= 70 && !currentStatus.isFreeServe_70Claimed) {
+            val newStatus = currentStatus.copy(isFreeServe_70Claimed = true)
+            _loyaltyUserStatus.value = newStatus
+            SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
+        }
+    }
+
+    fun claimDiscount10_75() {
+        val currentStatus = _loyaltyUserStatus.value ?: LoyaltyUserStatus()
+        if (currentStatus.totalPoints >= 75 && !currentStatus.isDiscount10_75Claimed) {
+            val newStatus = currentStatus.copy(isDiscount10_75Claimed = true)
+            _loyaltyUserStatus.value = newStatus
+            SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
+        }
+    }
+
+    fun claimFreeServe_80() {
+        val currentStatus = _loyaltyUserStatus.value ?: LoyaltyUserStatus()
+        if (currentStatus.totalPoints >= 80 && !currentStatus.isFreeServe_80Claimed) {
+            val newStatus = currentStatus.copy(isFreeServe_80Claimed = true)
+            _loyaltyUserStatus.value = newStatus
+            SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
+        }
+    }
+
+    fun claimDiscount10_85() {
+        val currentStatus = _loyaltyUserStatus.value ?: LoyaltyUserStatus()
+        if (currentStatus.totalPoints >= 85 && !currentStatus.isDiscount10_85Claimed) {
+            val newStatus = currentStatus.copy(isDiscount10_85Claimed = true)
+            _loyaltyUserStatus.value = newStatus
+            SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
+        }
+    }
+
+    fun claimFreeServe_90() {
+        val currentStatus = _loyaltyUserStatus.value ?: LoyaltyUserStatus()
+        if (currentStatus.totalPoints >= 90 && !currentStatus.isFreeServe_90Claimed) {
+            val newStatus = currentStatus.copy(isFreeServe_90Claimed = true)
+            _loyaltyUserStatus.value = newStatus
+            SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
+        }
+    }
+
+    fun claimDiscount10_95() {
+        val currentStatus = _loyaltyUserStatus.value ?: LoyaltyUserStatus()
+        if (currentStatus.totalPoints >= 95 && !currentStatus.isDiscount10_95Claimed) {
+            val newStatus = currentStatus.copy(isDiscount10_95Claimed = true)
             _loyaltyUserStatus.value = newStatus
             SessionManager.saveLoyaltyUserStatus(getApplication(), newStatus)
         }

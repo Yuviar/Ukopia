@@ -43,8 +43,7 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setOnNavigationItemSelectedListener(menuItemSelected)
 
         if (savedInstanceState == null) {
-            // Muat HomeFragment sebagai fragmen awal saat aplikasi dimulai
-            loadRootFragment(HomeFragment(), R.id.itemHome) // PERUBAHAN DI SINI
+            loadRootFragment(HomeFragment(), R.id.itemHome)
             isReadyToExit = false
         }
 
@@ -52,37 +51,29 @@ class MainActivity : AppCompatActivity() {
             override fun handleOnBackPressed() {
                 val currentFragment = supportFragmentManager.findFragmentById(R.id.container)
 
-                // Daftar root fragment yang ada di bottom navigation
                 val rootFragments = listOf(
-                    HomeFragment::class.java.simpleName, // Tambahkan HomeFragment
+                    HomeFragment::class.java.simpleName,
                     MenuFragment::class.java.simpleName,
                     LoyaltyFragment::class.java.simpleName,
                     RecipeFragment::class.java.simpleName,
                     AkunFragment::class.java.simpleName
                 )
 
-                // Cek apakah ada fragmen di back stack yang bukan root fragment
                 if (supportFragmentManager.backStackEntryCount > 1 &&
                     currentFragment?.javaClass?.simpleName !in rootFragments
                 ) {
-                    // Kasus 1: Pop fragmen biasa dari back stack (bukan root fragment)
                     supportFragmentManager.popBackStack()
                     isReadyToExit = false
-                } else if (currentFragment !is HomeFragment) { // Kasus 2: Berada di root fragment selain Home
-                    // Pop kembali ke HomeFragment
+                } else if (currentFragment !is HomeFragment) {
                     supportFragmentManager.popBackStack(HomeFragment::class.java.simpleName, 0)
-                    bottomNavigationView.selectedItemId = R.id.itemHome // Set item Home terpilih
+                    bottomNavigationView.selectedItemId = R.id.itemHome
                     isReadyToExit = false
                 } else {
-                    // Kasus 3: Pengguna berada di HomeFragment, tidak ada fragmen lain di atasnya.
-                    // Terapkan logika "dua kali tekan tombol kembali untuk keluar"
                     if (isReadyToExit) {
-                        finishAffinity() // Keluar dari aplikasi
+                        finishAffinity()
                     } else {
                         isReadyToExit = true
-                        // Opsional: Tampilkan Toast "Tekan sekali lagi untuk keluar"
-                        // Toast.makeText(this@MainActivity, "Tekan sekali lagi untuk keluar", Toast.LENGTH_SHORT).show()
-                    }
+                        }
                 }
             }
         })
@@ -91,15 +82,13 @@ class MainActivity : AppCompatActivity() {
     private fun loadRootFragment(fragment: Fragment, itemId: Int) {
         val fragmentTag = fragment.javaClass.simpleName
 
-        // Hapus semua fragmen dari back stack sebelum memuat root fragment baru
-        // Ini memastikan setiap tab memiliki back stack-nya sendiri atau tidak ada sub-fragmen yang tertinggal
         supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, fragment, fragmentTag)
-            .addToBackStack(fragmentTag) // Menambahkan root fragment ke back stack
+            .addToBackStack(fragmentTag)
             .commit()
-        isReadyToExit = false // Reset flag setiap kali memuat fragmen root baru (dari bottom nav)
+        isReadyToExit = false
     }
 
     fun navigateToFragment(fragment: Fragment, addToBackStack: Boolean = true) {
@@ -111,12 +100,10 @@ class MainActivity : AppCompatActivity() {
         if (addToBackStack) {
             transaction.addToBackStack(fragmentTag)
         } else {
-            // Logika ini akan menghapus semua instance fragmen dengan tag yang sama dari back stack
-            // hingga fragmen terakhir dengan tag tersebut (inklusif).
             supportFragmentManager.popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
         transaction.commit()
-        isReadyToExit = false // Reset flag setiap kali menavigasi ke fragmen lain
+        isReadyToExit = false
     }
 
     private val menuItemSelected = BottomNavigationView.OnNavigationItemSelectedListener { item ->

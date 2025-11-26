@@ -8,9 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResultListener
 import com.example.ukopia.R
 import com.example.ukopia.data.LoyaltyItemV2
 import com.example.ukopia.databinding.FragmentLoyaltyDetailDialogBinding
+import com.example.ukopia.MainActivity // NEW: Import ini, asumsi MainActivity adalah host untuk fragmen
 
 class LoyaltyDetailDialogFragment : DialogFragment() {
 
@@ -69,9 +71,26 @@ class LoyaltyDetailDialogFragment : DialogFragment() {
                 binding.textViewMenuData.text = getString(R.string.menu_data_title)
                 binding.textViewDialogNamaNonKopi.text = getString(R.string.non_coffee_name_prefix ) + (it.namaNonKopi ?: getString(R.string.not_available_text))
             }
+
+            // NEW: Set up Edit button
+            binding.buttonDialogEdit.setOnClickListener {
+                // Navigate to EditLoyaltyFragment
+                val editFragment = EditLoyaltyFragment.newInstance(item)
+                // Assuming MainActivity has a method to navigate to another fragment
+                (requireActivity() as MainActivity).navigateToFragment(editFragment)
+                dismiss() // Dismiss the detail dialog
+            }
         }
 
         binding.buttonDialogClose.setOnClickListener {
+            dismiss()
+        }
+
+        // NEW: Listen for result from EditLoyaltyFragment (optional, mainly if this dialog needs to react after edit,
+        // but LoyaltyFragment also listens)
+        setFragmentResultListener(EditLoyaltyFragment.REQUEST_KEY_LOYALTY_EDITED) { _, _ ->
+            // If the EditLoyaltyFragment just dismissed itself, this dialog could also dismiss
+            // or refresh. Since LoyaltyFragment handles the main refresh, this is mostly for flow.
             dismiss()
         }
     }
@@ -97,7 +116,6 @@ class LoyaltyDetailDialogFragment : DialogFragment() {
         }
     }
 
-
     companion object {
         private const val ARG_ITEM = "loyalty_item"
 
@@ -110,4 +128,3 @@ class LoyaltyDetailDialogFragment : DialogFragment() {
         }
     }
 }
-

@@ -21,30 +21,46 @@
             android:layout_width="match_parent"
             android:layout_height="90dp"
             android:gravity="center_vertical"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:padding="16dp"
             android:background="@drawable/rounded_bottom_bg_black"
             android:elevation="0dp"
             android:layout_marginBottom="8dp">
 
-            <!-- User Info Section - DIPINDAHKAN KE SINI -->
-            <TextView
-                android:id="@+id/textViewUserName"
-                android:layout_width="wrap_content"
+            <!-- User Info Section -->
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                tools:text="Rama Ganteng"
-                android:textColor="@color/white"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/textViewUserName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Rama Ganteng"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textViewLoyaltyPoints"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                tools:text="Points: 20" />
-            <!-- AKHIR PEMINDAHAN -->
+                <TextView
+                    android:id="@+id/textViewLoyaltyPoints"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    tools:text="Points: 20" />
+            </LinearLayout>
+
+            <!-- NEW: Reward History Icon -->
+            <ImageButton
+                android:id="@+id/btn_reward_history"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_reward"
+                app:tint="@color/white"
+                android:contentDescription="@string/reward_history_desc" />
 
         </LinearLayout>
     </LinearLayout>
@@ -646,18 +662,4 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <!-- Floating Action Button (FAB) -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add_recipe"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_add"
-        app:backgroundTint="@color/black"
-        app:tint="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:contentDescription="@string/add_loyalty_data_desc" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

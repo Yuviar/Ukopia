@@ -1,24 +1,27 @@
+// D:/github rama/Ukopia/app/src/main/java/com/example/ukopia/data/LoyaltyUserStatus.kt
 package com.example.ukopia.data
 
 data class LoyaltyUserStatus(
     val totalPoints: Int = 0,
-    val isDiscount10Claimed: Boolean = false, // 5 poin
-    val isFreeServeClaimed: Boolean = false, // 10 poin
-    val isDiscount10Slot15Claimed: Boolean = false, // 15 poin
-    val isFreeTshirtClaimed: Boolean = false, // 20 poin - Only T-shirt reward
-    val isDiscount10_25Claimed: Boolean = false, // 25 poin
-    val isFreeServe_30Claimed: Boolean = false, // 30 poin
-    val isDiscount10_35Claimed: Boolean = false, // 35 poin
-    val isFreeServe_40Claimed: Boolean = false, // 40 poin
-    val isDiscount10_45Claimed: Boolean = false, // 45 poin
-    val isFreeServe_50Claimed: Boolean = false, // 50 poin
-    val isDiscount10_55Claimed: Boolean = false, // 55 poin
-    val isFreeServe_60Claimed: Boolean = false, // 60 poin - Changed from Free T-shirt to Free Serve
-    val isDiscount10_65Claimed: Boolean = false, // 65 poin
-    val isFreeServe_70Claimed: Boolean = false, // 70 poin
-    val isDiscount10_75Claimed: Boolean = false, // 75 poin
-    val isFreeServe_80Claimed: Boolean = false, // 80 poin
-    val isDiscount10_85Claimed: Boolean = false, // 85 poin
-    val isFreeServe_90Claimed: Boolean = false, // 90 poin
-    val isDiscount10_95Claimed: Boolean = false // 95 poin
+    // Mengubah boolean menjadi String? untuk menyimpan tanggal klaim (format "YYYY-MM-DD")
+    // Jika null, berarti reward belum diklaim.
+    val discount10ClaimDate: String? = null, // 5 poin
+    val freeServeClaimDate: String? = null, // 10 poin
+    val discount10Slot15ClaimDate: String? = null, // 15 poin
+    val freeTshirtClaimDate: String? = null, // 20 poin - Only T-shirt reward
+    val discount10_25ClaimDate: String? = null, // 25 poin
+    val freeServe_30ClaimDate: String? = null, // 30 poin
+    val discount10_35ClaimDate: String? = null, // 35 poin
+    val freeServe_40ClaimDate: String? = null, // 40 poin
+    val discount10_45ClaimDate: String? = null, // 45 poin
+    val freeServe_50ClaimDate: String? = null, // 50 poin
+    val discount10_55ClaimDate: String? = null, // 55 poin
+    val freeServe_60ClaimDate: String? = null, // 60 poin - Changed from Free T-shirt to Free Serve
+    val discount10_65ClaimDate: String? = null, // 65 poin
+    val freeServe_70ClaimDate: String? = null, // 70 poin
+    val discount10_75ClaimDate: String? = null, // 75 poin
+    val freeServe_80ClaimDate: String? = null, // 80 poin
+    val discount10_85ClaimDate: String? = null, // 85 poin
+    val freeServe_90ClaimDate: String? = null, // 90 poin
+    val discount10_95ClaimDate: String? = null // 95 poin
 )

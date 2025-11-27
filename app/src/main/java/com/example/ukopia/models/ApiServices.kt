@@ -1,5 +1,11 @@
 package com.example.ukopia.models
 
+import com.example.ukopia.data.ApiResponse
+import com.example.ukopia.data.BrewMethod
+import com.example.ukopia.data.CreateRecipeRequest
+import com.example.ukopia.data.EquipmentItem
+import com.example.ukopia.data.RecipeItem
+import com.example.ukopia.data.SubEquipmentItem
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -51,4 +57,36 @@ interface ApiService {
     suspend fun deleteReview(
         @Body requestBody: ReviewDeleteRequest
     ): Response<GenericResponse>
+    @GET("resep/metode.php")
+    suspend fun getBrewMethods(): Response<ApiResponse<List<BrewMethod>>>
+
+    @GET("alat/kategori_with_count.php")
+    suspend fun getEquipmentCategories(): Response<ApiResponse<List<EquipmentItem>>>
+
+    @GET("alat/by_kategori.php")
+    suspend fun getToolsByCategory(
+        @Query("id_kategori") categoryId: Int
+    ): Response<ApiResponse<List<SubEquipmentItem>>>
+
+    @GET("resep/by_metode.php")
+    suspend fun getRecipes(
+        @Query("id_metode") methodId: Int,
+        @Query("type") type: String, // 'all' atau 'my'
+        @Query("uid") uid: Int = 0
+    ): Response<ApiResponse<List<RecipeItem>>>
+
+    @GET("resep/detail.php")
+    suspend fun getRecipeDetail(
+        @Query("id_resep") recipeId: Int
+    ): Response<ApiResponse<RecipeItem>>
+
+    @POST("resep/create.php")
+    suspend fun createRecipe(
+        @Body request: CreateRecipeRequest
+    ): Response<ApiResponse<Any>>
+
+    @POST("resep/delete.php")
+    suspend fun deleteRecipe(
+        @Body body: Map<String, Int> // Kirim {"id_resep": 123}
+    ): Response<ApiResponse<Any>>
 }

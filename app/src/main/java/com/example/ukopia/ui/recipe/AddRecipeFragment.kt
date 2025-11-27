@@ -20,11 +20,12 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ukopia.MainActivity
 import com.example.ukopia.R
-import com.example.ukopia.data.RecipeItem
+import com.example.ukopia.SessionManager
+import com.example.ukopia.data.CreateRecipeRequest
 import com.example.ukopia.data.SubEquipmentItem
 import com.example.ukopia.databinding.FragmentAddRecipeBinding
-import com.example.ukopia.ui.loyalty.CustomDatePickerDialogFragment
 import com.example.ukopia.ui.equipment.EquipmentFragment
+import com.example.ukopia.ui.loyalty.CustomDatePickerDialogFragment
 import java.util.*
 
 class AddRecipeFragment : Fragment() {
@@ -33,7 +34,10 @@ class AddRecipeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val recipeViewModel: RecipeViewModel by activityViewModels()
+
+    // Data dari Fragment Sebelumnya
     private var methodName: String? = null
+    private var methodId: Int = 0 // ID Metode (Wajib untuk API)
 
     private val selectedEquipmentList = mutableListOf<SubEquipmentItem>()
     private lateinit var selectedEquipmentAdapter: SelectedEquipmentAdapter
@@ -52,7 +56,9 @@ class AddRecipeFragment : Fragment() {
 
         (requireActivity() as MainActivity).setBottomNavVisibility(View.GONE)
 
+        // Ambil Argument dari RecipeListFragment
         methodName = arguments?.getString("METHOD_NAME")
+        methodId = arguments?.getInt("ID_METODE") ?: 0
 
         setupListeners()
         setupGrindSizeSpinner()
@@ -62,8 +68,13 @@ class AddRecipeFragment : Fragment() {
         setupSelectedEquipmentRecyclerView()
 
         updateRatios()
-
         updateSelectedEquipmentDisplay()
+
+        // Observe status loading (Opsional: Tambahkan ProgressBar di layout)
+        recipeViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.buttonSimpanResep.isEnabled = !isLoading
+            binding.buttonSimpanResep.text = if (isLoading) "Menyimpan..." else getString(R.string.add_recipe_button_text)
+        }
     }
 
     private fun setupListeners() {
@@ -81,7 +92,7 @@ class AddRecipeFragment : Fragment() {
         }
 
         binding.buttonSimpanResep.setOnClickListener {
-            saveRecipe()
+            saveRecipeToApi() // Panggil fungsi simpan ke API
         }
 
         binding.fabAddEquipmentRecipe.setOnClickListener {
@@ -95,14 +106,14 @@ class AddRecipeFragment : Fragment() {
 
     private fun setupSelectedEquipmentRecyclerView() {
         selectedEquipmentAdapter = SelectedEquipmentAdapter(selectedEquipmentList) { itemToDelete ->
-            selectedEquipmentAdapter.removeItem(itemToDelete)
+            selectedEquipmentList.remove(itemToDelete)
+            selectedEquipmentAdapter.notifyDataSetChanged()
             updateSelectedEquipmentDisplay()
             Toast.makeText(requireContext(), "Removed: ${itemToDelete.name}", Toast.LENGTH_SHORT).show()
         }
         binding.recyclerSelectedEquipment.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.recyclerSelectedEquipment.adapter = selectedEquipmentAdapter
     }
-
 
     private fun setupGrindSizeSpinner() {
         val grindSizes = resources.getStringArray(R.array.grind_sizes)
@@ -111,18 +122,12 @@ class AddRecipeFragment : Fragment() {
     }
 
     private fun setupSuffixFormatters() {
-        binding.editTextCoffeeAmount.addTextChangedListener(SuffixTextWatcher(binding.editTextCoffeeAmount, " g") { rawValue ->
-            updateRatios()
-        })
-        binding.editTextWaterAmount.addTextChangedListener(SuffixTextWatcher(binding.editTextWaterAmount, " ml") { rawValue ->
-            updateRatios()
-        })
-        binding.editTextHeat.addTextChangedListener(SuffixTextWatcher(binding.editTextHeat, "°C") { /* no-op */ })
-        binding.editTextBrewWeight.addTextChangedListener(SuffixTextWatcher(binding.editTextBrewWeight, " g") { rawValue ->
-            updateRatios()
-        })
-        binding.editTextTds.addTextChangedListener(SuffixTextWatcher(binding.editTextTds, " %") { /* no-op */ })
-        binding.editTextExtractionTime.addTextChangedListener(SuffixTextWatcher(binding.editTextExtractionTime, " s") { /* no-op */ })
+        binding.editTextCoffeeAmount.addTextChangedListener(SuffixTextWatcher(binding.editTextCoffeeAmount, " g") { updateRatios() })
+        binding.editTextWaterAmount.addTextChangedListener(SuffixTextWatcher(binding.editTextWaterAmount, " ml") { updateRatios() })
+        binding.editTextHeat.addTextChangedListener(SuffixTextWatcher(binding.editTextHeat, "°C") {})
+        binding.editTextBrewWeight.addTextChangedListener(SuffixTextWatcher(binding.editTextBrewWeight, " g") { updateRatios() })
+        binding.editTextTds.addTextChangedListener(SuffixTextWatcher(binding.editTextTds, " %") {})
+        binding.editTextExtractionTime.addTextChangedListener(SuffixTextWatcher(binding.editTextExtractionTime, " s") {})
     }
 
     private fun setupDatePicker() {
@@ -149,17 +154,20 @@ class AddRecipeFragment : Fragment() {
 
     private fun setupEquipmentResultListener() {
         setFragmentResultListener(EquipmentFragment.REQUEST_KEY_EQUIPMENT_SELECTION) { _, bundle ->
-            val category = bundle.getString(EquipmentFragment.BUNDLE_KEY_SELECTED_CATEGORY)
-            val nameWithDetail = bundle.getString(EquipmentFragment.BUNDLE_KEY_SELECTED_SUB_EQUIPMENT_NAME)
-            val iconResId = bundle.getInt(EquipmentFragment.BUNDLE_KEY_SELECTED_SUB_EQUIPMENT_ICON, 0)
+            val category = bundle.getString(EquipmentFragment.BUNDLE_KEY_SELECTED_CATEGORY) ?: ""
+            val nameWithDetail = bundle.getString(EquipmentFragment.BUNDLE_KEY_SELECTED_SUB_EQUIPMENT_NAME) ?: ""
 
-            if (category != null && nameWithDetail != null && iconResId != 0) {
+            // [PERUBAHAN] Menerima ID dan ImageUrl dari EquipmentFragment (Nanti disesuaikan di tahap selanjutnya)
+            val equipId = bundle.getInt("BUNDLE_KEY_EQUIPMENT_ID", 0)
+            val imageUrl = bundle.getString("BUNDLE_KEY_EQUIPMENT_IMAGE_URL") ?: ""
+
+            if (equipId != 0) {
                 val newEquipment = SubEquipmentItem(
-                    id = UUID.randomUUID().toString(),
+                    id = equipId,
                     category = category,
                     name = nameWithDetail,
-                    detail = null,
-                    iconResId = iconResId
+                    imageUrl = imageUrl,
+                    detail = null
                 )
 
                 selectedEquipmentList.add(newEquipment)
@@ -170,20 +178,8 @@ class AddRecipeFragment : Fragment() {
     }
 
     private fun updateSelectedEquipmentDisplay() {
-        if (selectedEquipmentList.isNotEmpty()) {
-            binding.recyclerSelectedEquipment.visibility = View.VISIBLE
-        } else {
-            binding.recyclerSelectedEquipment.visibility = View.GONE
-        }
+        binding.recyclerSelectedEquipment.visibility = if (selectedEquipmentList.isNotEmpty()) View.VISIBLE else View.GONE
         binding.fabAddEquipmentRecipe.visibility = View.VISIBLE
-    }
-
-
-    private fun clearSelectedEquipment() {
-        selectedEquipmentList.clear()
-        selectedEquipmentAdapter.notifyDataSetChanged()
-        updateSelectedEquipmentDisplay()
-        Toast.makeText(requireContext(), "All equipment cleared", Toast.LENGTH_SHORT).show()
     }
 
     private fun updateRatios() {
@@ -206,123 +202,82 @@ class AddRecipeFragment : Fragment() {
         }
     }
 
-    private fun saveRecipe() {
-        if (methodName == null) {
+    // --- FUNGSI UTAMA: SIMPAN KE API ---
+    private fun saveRecipeToApi() {
+        // 1. Ambil UID dari Session (Wajib Login)
+        val uid = SessionManager.getUid(requireContext())
+
+        // 2. Cek Data Wajib
+        if (methodId == 0 || methodName == null) {
             Toast.makeText(requireContext(), getString(R.string.error_brewing_method_unknown), Toast.LENGTH_SHORT).show()
             return
         }
+        if (uid == 0) {
+            Toast.makeText(requireContext(), "Sesi berakhir, silakan login ulang.", Toast.LENGTH_SHORT).show()
+            return
+        }
 
+        // 3. Ambil Nilai Inputan
         val name = binding.editTextRecipeName.text.toString().trim()
         val description = binding.editTextDescription.text.toString().trim()
-        val coffeeAmountStr = binding.editTextCoffeeAmount.text.toString().removeSuffix(" g").trim()
-        val waterAmountStr = binding.editTextWaterAmount.text.toString().removeSuffix(" ml").trim()
-        val temperatureStr = binding.editTextHeat.text.toString().removeSuffix("°C").trim()
-        val grindSize = binding.spinnerGrindSize.selectedItem.toString()
+        val coffeeStr = binding.editTextCoffeeAmount.text.toString().removeSuffix(" g").trim()
+        val waterStr = binding.editTextWaterAmount.text.toString().removeSuffix(" ml").trim()
+        val tempStr = binding.editTextHeat.text.toString().removeSuffix("°C").trim()
+        val grind = binding.spinnerGrindSize.selectedItem.toString()
         val brewWeightStr = binding.editTextBrewWeight.text.toString().removeSuffix(" g").trim()
         val tdsStr = binding.editTextTds.text.toString().removeSuffix(" %").trim()
-        val extractionTimeStr = binding.editTextExtractionTime.text.toString().removeSuffix(" s").trim()
-        val coffeeBrewRatio = binding.tvCoffeeBrewRatio.text.toString()
-        val coffeeWaterRatio = binding.tvCoffeeWaterRatio.text.toString()
-
+        val timeStr = binding.editTextExtractionTime.text.toString().removeSuffix(" s").trim()
         val dateStr = binding.editTextDate.text.toString()
-        val notesStr = binding.editTextCatatan.text.toString()
 
-
+        // 4. Validasi Input (Sama seperti sebelumnya)
         var isValid = true
-        var firstErrorView: View? = null // Untuk fokus ke view pertama yang error
+        var firstErrorView: View? = null
 
-        // --- Validasi Kolom Wajib ---
-        if (name.isEmpty()) {
-            binding.editTextRecipeName.error = getString(R.string.error_recipe_name_required)
-            if (firstErrorView == null) firstErrorView = binding.editTextRecipeName
-            isValid = false
-        }
-        if (description.isEmpty()) {
-            binding.editTextDescription.error = getString(R.string.error_description_required)
-            if (firstErrorView == null) firstErrorView = binding.editTextDescription
-            isValid = false
-        }
-        if (coffeeAmountStr.isEmpty()) {
-            binding.editTextCoffeeAmount.error = getString(R.string.error_coffee_amount_required)
-            if (firstErrorView == null) firstErrorView = binding.editTextCoffeeAmount
-            isValid = false
-        }
-        if (waterAmountStr.isEmpty()) {
-            binding.editTextWaterAmount.error = getString(R.string.error_water_amount_required)
-            if (firstErrorView == null) firstErrorView = binding.editTextWaterAmount
-            isValid = false
-        }
-        if (temperatureStr.isEmpty()) {
-            binding.editTextHeat.error = getString(R.string.error_temperature_required)
-            if (firstErrorView == null) firstErrorView = binding.editTextHeat
-            isValid = false
-        }
-        if (extractionTimeStr.isEmpty()) {
-            binding.editTextExtractionTime.error = getString(R.string.error_extraction_time_required) // Pastikan string ini ada
-            if (firstErrorView == null) firstErrorView = binding.editTextExtractionTime
-            isValid = false
-        }
-        if (dateStr.isEmpty()) {
-            binding.editTextDate.error = getString(R.string.error_date_required)
-            if (firstErrorView == null) firstErrorView = binding.editTextDate
-            isValid = false
-        }
-        // Validasi Equipment List (minimal 1)
-        if (selectedEquipmentList.isEmpty()) {
-            Toast.makeText(requireContext(), getString(R.string.error_equipment_required), Toast.LENGTH_SHORT).show() // Pastikan string ini ada
-            // Tidak bisa memberi error pada FAB, jadi beri toast dan fokus ke area terdekat
-            if (firstErrorView == null) firstErrorView = binding.fabAddEquipmentRecipe
-            isValid = false
-        }
-        // --- Akhir Validasi Kolom Wajib ---
+        if (name.isEmpty()) { binding.editTextRecipeName.error = getString(R.string.error_recipe_name_required); isValid = false; firstErrorView = binding.editTextRecipeName }
+        if (description.isEmpty()) { binding.editTextDescription.error = getString(R.string.error_description_required); isValid = false; if(firstErrorView==null) firstErrorView = binding.editTextDescription }
+        if (coffeeStr.isEmpty()) { binding.editTextCoffeeAmount.error = getString(R.string.error_coffee_amount_required); isValid = false; if(firstErrorView==null) firstErrorView = binding.editTextCoffeeAmount }
+        if (waterStr.isEmpty()) { binding.editTextWaterAmount.error = getString(R.string.error_water_amount_required); isValid = false; if(firstErrorView==null) firstErrorView = binding.editTextWaterAmount }
+        if (tempStr.isEmpty()) { binding.editTextHeat.error = getString(R.string.error_temperature_required); isValid = false; if(firstErrorView==null) firstErrorView = binding.editTextHeat }
+        if (timeStr.isEmpty()) { binding.editTextExtractionTime.error = getString(R.string.error_extraction_time_required); isValid = false; if(firstErrorView==null) firstErrorView = binding.editTextExtractionTime }
+        if (dateStr.isEmpty()) { binding.editTextDate.error = getString(R.string.error_date_required); isValid = false; if(firstErrorView==null) firstErrorView = binding.editTextDate }
+        if (selectedEquipmentList.isEmpty()) { Toast.makeText(requireContext(), getString(R.string.error_equipment_required), Toast.LENGTH_SHORT).show(); isValid = false }
 
         if (!isValid) {
             Toast.makeText(requireContext(), getString(R.string.error_complete_all_recipe_data), Toast.LENGTH_SHORT).show()
             firstErrorView?.requestFocus()
-            binding.layoutAddRecipe.post {
-                if (firstErrorView != null) {
-                    binding.layoutAddRecipe.smoothScrollTo(0, firstErrorView.top)
-                }
-            }
             return
         }
 
-        val newRecipe = RecipeItem(
-            id = System.currentTimeMillis().toString(),
-            method = methodName!!,
+        // 5. Buat Object Request
+        val request = CreateRecipeRequest(
+            uid = uid,
+            methodId = methodId,
             name = name,
             description = description,
-            waterAmount = "$waterAmountStr ml",
-            coffeeAmount = "$coffeeAmountStr g",
-            grindSize = grindSize,
-            temperature = "$temperatureStr°C",
-            extractionTime = "$extractionTimeStr s",
-            isMine = true,
-            steps = listOf(),
-
-            brewWeight = if (brewWeightStr.isNotEmpty()) "$brewWeightStr g" else null,
-            tds = if (tdsStr.isNotEmpty()) "$tdsStr %" else null,
-            coffeeBrewRatio = if (coffeeBrewRatio != "?") coffeeBrewRatio else null,
-            coffeeWaterRatio = if (coffeeWaterRatio != "?") coffeeWaterRatio else null,
-            date = dateStr,
-            notes = notesStr.ifEmpty { null },
-            equipmentUsed = selectedEquipmentList.toList()
+            coffee = coffeeStr.toIntOrNull() ?: 0,
+            water = waterStr.toIntOrNull() ?: 0,
+            temp = tempStr.toIntOrNull() ?: 90,
+            grindSize = grind,
+            time = timeStr.toIntOrNull() ?: 0,
+            weight = brewWeightStr.toIntOrNull() ?: 0,
+            tds = tdsStr.toIntOrNull() ?: 0, // Database pakai INT
+            equipmentIds = selectedEquipmentList.map { it.id } // Kirim Array ID Alat
         )
 
-        recipeViewModel.addRecipe(newRecipe)
-        Toast.makeText(requireContext(), getString(R.string.recipe_saved_success_toast, name), Toast.LENGTH_SHORT).show()
+        // 6. Kirim ke ViewModel
+        recipeViewModel.createRecipe(
+            request = request,
+            onSuccess = {
+                Toast.makeText(requireContext(), getString(R.string.recipe_saved_success_toast, name), Toast.LENGTH_SHORT).show()
 
-        val listFragment = RecipeListFragment().apply {
-            arguments = Bundle().apply {
-                putString("SELECTED_METHOD_NAME", methodName)
-                putBoolean("SHOW_MY_RECIPES", true)
-                putString("SPECIFIC_RECIPE_TITLE", newRecipe.name)
+                // Kembali ke list dan refresh otomatis (karena data diambil dari API/DB)
+                parentFragmentManager.popBackStack()
+                (requireActivity() as MainActivity).setBottomNavVisibility(View.VISIBLE)
+            },
+            onError = { msg ->
+                Toast.makeText(requireContext(), "Gagal: $msg", Toast.LENGTH_LONG).show()
             }
-        }
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.container, listFragment)
-            .commit()
-        (requireActivity() as MainActivity).setBottomNavVisibility(View.VISIBLE)
+        )
     }
 
     override fun onDestroyView() {
@@ -331,7 +286,7 @@ class AddRecipeFragment : Fragment() {
     }
 }
 
-// SuffixTextWatcher class (tetap sama dan di sini)
+// Class SuffixTextWatcher tetap sama
 class SuffixTextWatcher(
     private val editText: EditText,
     private val suffix: String,
@@ -358,6 +313,7 @@ class SuffixTextWatcher(
         val newText = s.toString()
         val oldSelection = editText.selectionStart
         val rawValueInput = newText.removeSuffix(suffix).trim()
+        // Regex untuk angka (termasuk desimal jika perlu, tapi di API kita pakai int, jadi bisa disesuaikan)
         val numberRegex = "^\\d*\\.?\\d*$".toRegex()
 
         if (rawValueInput.matches(numberRegex)) {
@@ -371,13 +327,11 @@ class SuffixTextWatcher(
                 editText.setSelection(newSelection)
             }
         } else {
+            // Revert jika input invalid
             val formattedText = if (currentRawValue.isNotEmpty()) "$currentRawValue$suffix" else ""
             if (editText.text.toString() != formattedText) {
                 editText.setText(formattedText)
                 val newSelection = currentRawValue.length
-                    .coerceAtLeast(0)
-                    .coerceAtMost(formattedText.length - suffix.length.coerceAtMost(formattedText.length))
-                editText.setSelection(newSelection)
             }
         }
         onRawValueChange(currentRawValue)

@@ -5,10 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.example.ukopia.R
-import com.example.ukopia.data.SubEquipmentItem // Menggunakan model data SubEquipment
+import com.example.ukopia.data.SubEquipmentItem
 
 class SelectedEquipmentAdapter(
     private val selectedEquipmentList: MutableList<SubEquipmentItem>,
@@ -38,18 +38,17 @@ class SelectedEquipmentAdapter(
         val equipment = selectedEquipmentList[position]
         holder.name.text = equipment.name
 
-        equipment.iconResId?.let {
-            holder.icon.setImageResource(it)
-            holder.icon.setColorFilter(ContextCompat.getColor(holder.itemView.context, R.color.black))
-        } ?: run {
-            holder.icon.setImageResource(R.drawable.ic_grinder) // Pastikan ikon default ada
-            holder.icon.setColorFilter(ContextCompat.getColor(holder.itemView.context, R.color.black))
+        // [UBAH] Pakai Coil untuk load gambar URL/SVG
+        holder.icon.load(equipment.imageUrl) {
+            crossfade(true)
+            placeholder(R.drawable.ic_grinder)
+            error(R.drawable.ic_error)
         }
     }
 
     override fun getItemCount(): Int = selectedEquipmentList.size
 
-    fun removeItem(item: SubEquipmentItem) {
+    fun removeItem(item: SubEquipmentItem) { // Hapus item dari list tampilan
         val index = selectedEquipmentList.indexOf(item)
         if (index != -1) {
             selectedEquipmentList.removeAt(index)

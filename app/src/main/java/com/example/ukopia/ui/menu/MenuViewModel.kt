@@ -14,35 +14,25 @@ import kotlinx.coroutines.launch
 
 class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
 
-    // API Service untuk fitur ulasan (non-cache)
+    // ... (properti lain tetap sama) ...
     private val apiService = ApiClient.instance
-
-    // === Untuk MenuFragment (Daftar Menu dari ROOM) ===
     val menuItems: LiveData<List<MenuApiItem>> = repository.allMenuItems
-
-    // === Loading & Error (Umum) ===
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> = _errorMessage
-
-    // === Untuk DetailMenuFragment (Daftar Ulasan dari API) ===
     private val _reviews = MutableLiveData<List<ReviewApiItem>>()
     val reviews: LiveData<List<ReviewApiItem>> = _reviews
     private val _userReview = MutableLiveData<ReviewApiItem?>()
     val userReview: LiveData<ReviewApiItem?> = _userReview
-
-    // === Untuk RatingFragment (Hasil Post/Update ke API) ===
     private val _reviewPostSuccess = MutableLiveData<Boolean>()
     val reviewPostSuccess: LiveData<Boolean> = _reviewPostSuccess
 
-
     // --- FUNGSI-FUNGSI ---
 
-    // Dipanggil oleh MenuFragment
     fun fetchMenuItems() {
         viewModelScope.launch {
-            repository.refreshMenu() // Minta repository untuk refresh
+            repository.refreshMenu()
         }
     }
 
@@ -54,13 +44,21 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
                 val response = apiService.getMenuDetails(menuId, userId)
                 if (response.isSuccessful) {
                     val allReviews = response.body()?.data_ulasan ?: emptyList()
-                    _reviews.value = allReviews
-                    _userReview.value = allReviews.find { it.is_owner }
+
+                    // ==========================================================
+                    // PERBAIKAN LOGIKA DI SINI
+                    // ==========================================================
+                    // _reviews sekarang HANYA berisi ulasan orang lain
+                    _reviews.value = allReviews.filter { it.is_owner == 0 }
+
+                    // _userReview tetap berisi ulasan milik user
+                    _userReview.value = allReviews.find { it.is_owner == 1 }
+                    // ==========================================================
+
                 } else {
                     _errorMessage.value = "Gagal memuat detail: ${response.message()}"
                 }
             } catch (e: Exception) {
-                // Pastikan blok catch memiliki kurung kurawal
                 _errorMessage.value = "Error: ${e.message}"
             } finally {
                 _isLoading.value = false
@@ -68,7 +66,7 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
         }
     }
 
-    // Dipanggil oleh RatingFragment
+    // ... (Fungsi submitReview, clearErrorMessage, resetReviewPostStatus tetap sama) ...
     fun submitReview(request: ReviewPostRequest) {
         _isLoading.value = true
         _reviewPostSuccess.value = false
@@ -77,12 +75,11 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
                 val response = apiService.postReview(request)
                 if (response.isSuccessful) {
                     _reviewPostSuccess.value = true
-                    // Refresh data ulasan di detail (opsional)
                     fetchMenuDetails(request.id_menu, request.uid_akun)
                 } else {
                     _errorMessage.value = "Gagal mengirim ulasan: ${response.message()}"
                 }
-            } catch (e: Exception) { // PERBAIKAN: Tambahkan kurung kurawal di sini
+            } catch (e: Exception) {
                 _errorMessage.value = "Error: ${e.message}"
             } finally {
                 _isLoading.value = false
@@ -90,19 +87,17 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
         }
     }
 
-    // PERBAIKAN: Fungsi ini dipindahkan ke dalam kelas MenuViewModel
     fun clearErrorMessage() {
         _errorMessage.value = null
     }
 
-    // PERBAIKAN: Fungsi ini dipindahkan ke dalam kelas MenuViewModel
     fun resetReviewPostStatus() {
         _reviewPostSuccess.value = false
     }
 }
 
 
-// TAMBAHKAN: Factory untuk ViewModel
+// ... (Factory tetap sama) ...
 class MenuViewModelFactory(private val repository: MenuRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MenuViewModel::class.java)) {

@@ -1,17 +1,14 @@
 package com.example.ukopia.adapter
 
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.example.ukopia.R
 import com.example.ukopia.data.BrewMethod
 import com.example.ukopia.databinding.ItemRecipeCardBinding
-import android.content.res.ColorStateList
 
 class BrewMethodAdapter(
     private val onItemClick: (BrewMethod) -> Unit
@@ -23,56 +20,30 @@ class BrewMethodAdapter(
     }
 
     override fun onBindViewHolder(holder: BrewMethodViewHolder, position: Int) {
-        val item = getItem(position)
-        holder.bind(item, onItemClick)
+        holder.bind(getItem(position), onItemClick)
     }
 
-    class BrewMethodViewHolder(
-        private val binding: ItemRecipeCardBinding
-    ) : RecyclerView.ViewHolder(binding.root) {
-
+    class BrewMethodViewHolder(private val binding: ItemRecipeCardBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: BrewMethod, onItemClick: (BrewMethod) -> Unit) {
-            binding.textViewRecipeName.text = item.name
-            binding.imageViewRecipe.setImageResource(item.imageUrl)
+            binding.textViewRecipeName.text = item.name.uppercase()
 
-            // --- Animasi Flash untuk Tombol 'Selengkapnya' SAJA ---
-            // MENGUBAH BARIS INI: originalButtonBackgroundTint diatur menjadi hitam secara eksplisit
-            val originalButtonBackgroundTint = ColorStateList.valueOf(ContextCompat.getColor(binding.root.context, R.color.black))
-            // originalButtonTextColor diatur menjadi hitam secara eksplisit
-            val originalButtonTextColor = ColorStateList.valueOf(ContextCompat.getColor(binding.root.context, R.color.black))
-
-            // Definisikan warna flash (putih untuk background, hitam untuk teks agar kontras)
-            val flashBackgroundColor = ContextCompat.getColor(binding.root.context, R.color.white)
-            val flashTextColor = ContextCompat.getColor(binding.root.context, R.color.black)
-
-            // Hapus listener dari root view agar hanya tombol yang bisa diklik
-            binding.root.setOnClickListener(null) // Penting: Menghapus listener dari keseluruhan card
-
-            binding.btnSelengkapnya.setOnClickListener {
-                // Terapkan animasi flash pada *hanya tombol*
-                binding.btnSelengkapnya.backgroundTintList = ColorStateList.valueOf(flashBackgroundColor)
-                binding.btnSelengkapnya.setTextColor(flashTextColor)
-
-                Handler(Looper.getMainLooper()).postDelayed({
-                    // Kembalikan warna background tombol ke hitam (sesuai permintaan)
-                    binding.btnSelengkapnya.backgroundTintList = originalButtonBackgroundTint
-                    // Kembalikan warna teks tombol ke hitam (sesuai permintaan)
-                    binding.btnSelengkapnya.setTextColor(originalButtonTextColor)
-                    // Lanjutkan ke aksi klik yang sebenarnya
-                    onItemClick(item)
-                }, 150) // Durasi flash: 150 milidetik
+            // Load Gambar dari URL (API) menggunakan Coil
+            binding.imageViewRecipe.load(item.imageUrl) {
+                crossfade(true)
+                placeholder(R.drawable.ic_aeropress) // Gambar default saat loading
+                error(
+                    R.drawable.ic_error) // Gambar default jika error
             }
-            // --- Akhir Animasi Flash ---
+
+            // Klik tombol selengkapnya
+            binding.btnSelengkapnya.setOnClickListener {
+                onItemClick(item)
+            }
         }
     }
 
     class BrewMethodDiffCallback : DiffUtil.ItemCallback<BrewMethod>() {
-        override fun areItemsTheSame(oldItem: BrewMethod, newItem: BrewMethod): Boolean {
-            return oldItem.name == newItem.name
-        }
-
-        override fun areContentsTheSame(oldItem: BrewMethod, newItem: BrewMethod): Boolean {
-            return oldItem == newItem
-        }
+        override fun areItemsTheSame(oldItem: BrewMethod, newItem: BrewMethod) = oldItem.id == newItem.id
+        override fun areContentsTheSame(oldItem: BrewMethod, newItem: BrewMethod) = oldItem == newItem
     }
 }

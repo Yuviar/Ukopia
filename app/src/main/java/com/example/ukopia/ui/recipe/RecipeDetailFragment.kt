@@ -1,125 +1,141 @@
 package com.example.ukopia.ui.recipe
 
-import android.content.res.ColorStateList
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ukopia.MainActivity
-import com.example.ukopia.R
 import com.example.ukopia.data.RecipeItem
 import com.example.ukopia.databinding.FragmentRecipeDetailBinding
+import com.example.ukopia.models.ApiClient
+import kotlinx.coroutines.launch
 
 class RecipeDetailFragment : Fragment() {
 
     private var _binding: FragmentRecipeDetailBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentRecipeDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         (requireActivity() as MainActivity).setBottomNavVisibility(View.GONE)
 
-        setupListeners()
+        binding.btnBack.setOnClickListener { parentFragmentManager.popBackStack() }
 
-        val recipeItem = arguments?.getParcelable<RecipeItem>("RECIPE_ITEM")
+        // 1. Tampilkan Data Dasar (dari List) agar user tidak menunggu kosong
+        val basicRecipe = arguments?.getParcelable<RecipeItem>("RECIPE_ITEM")
+        if (basicRecipe != null) {
+            bindBasicData(basicRecipe)
+        }
 
-        recipeItem?.let {
-            binding.tvHeaderTitle.text = it.name.uppercase()
-            binding.tvRecipeTitle.text = it.name
-            binding.tvRecipeDescription.text = it.description
-            binding.tvWaterAmount.text = it.waterAmount
-            binding.tvCoffeeAmount.text = it.coffeeAmount
-            binding.tvGrindSize.text = it.grindSize
-            binding.tvHeat.text = it.temperature
-            binding.tvTime.text = it.extractionTime
+        // 2. Ambil Data Lengkap dari Server
+        val recipeId = arguments?.getInt("ID_RESEP") ?: basicRecipe?.id?.toIntOrNull() ?: 0
+        if (recipeId > 0) {
+            loadRecipeDetail(recipeId)
+        }
+    }
 
-            binding.tvBrewWeight.text = it.brewWeight ?: "?"
-            binding.tvTds.text = it.tds ?: "?"
-            binding.tvCoffeeBrewRatio.text = it.coffeeBrewRatio ?: "?"
-            binding.tvCoffeeWaterRatio.text = it.coffeeWaterRatio ?: "?"
-
-            binding.layoutBrewWeight.visibility = if (it.brewWeight.isNullOrEmpty()) View.GONE else View.VISIBLE
-            binding.layoutTds.visibility = if (it.tds.isNullOrEmpty()) View.GONE else View.VISIBLE
-            binding.layoutCoffeeBrewRatio.visibility = if (it.coffeeBrewRatio.isNullOrEmpty() || it.coffeeBrewRatio == "?") View.GONE else View.VISIBLE
-            binding.layoutCoffeeWaterRatio.visibility = if (it.coffeeWaterRatio.isNullOrEmpty() || it.coffeeWaterRatio == "?") View.GONE else View.VISIBLE
-
-            // Menampilkan daftar equipment (VERTICAL)
-            it.equipmentUsed?.let { equipmentList ->
-                if (equipmentList.isNotEmpty()) {
-                    binding.labelEquipmentDetail.visibility = View.VISIBLE
-                    binding.recyclerRecipeDetailEquipment.visibility = View.VISIBLE
-                    // Pastikan ini VERTICAL
-                    binding.recyclerRecipeDetailEquipment.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-                    binding.recyclerRecipeDetailEquipment.adapter = RecipeDetailEquipmentAdapter(equipmentList)
+    private fun loadRecipeDetail(id: Int) {
+        lifecycleScope.launch {
+            try {
+                val response = ApiClient.instance.getRecipeDetail(id)
+                if (response.isSuccessful && response.body()?.success == true) {
+                    val fullRecipe = response.body()?.data
+                    if (fullRecipe != null) {
+                        bindFullData(fullRecipe)
+                    }
                 } else {
-                    binding.labelEquipmentDetail.visibility = View.GONE
-                    binding.recyclerRecipeDetailEquipment.visibility = View.GONE
+                    Toast.makeText(context, "Gagal memuat detail", Toast.LENGTH_SHORT).show()
                 }
-            } ?: run {
-                binding.labelEquipmentDetail.visibility = View.GONE
-                binding.recyclerRecipeDetailEquipment.visibility = View.GONE
-            }
-
-            // Menampilkan Tanggal dan Catatan
-            it.date?.let { date ->
-                if (date.isNotEmpty()) {
-                    binding.tvDetailDateLabel.visibility = View.VISIBLE
-                    binding.tvDetailDate.visibility = View.VISIBLE
-                    binding.tvDetailDate.text = date
-                } else {
-                    binding.tvDetailDateLabel.visibility = View.GONE
-                    binding.tvDetailDate.visibility = View.GONE
-                }
-            } ?: run {
-                binding.tvDetailDateLabel.visibility = View.GONE
-                binding.tvDetailDate.visibility = View.GONE
-            }
-
-            it.notes?.let { notes ->
-                if (notes.isNotEmpty()) {
-                    binding.tvDetailNotesLabel.visibility = View.VISIBLE
-                    binding.tvDetailNotes.visibility = View.VISIBLE
-                    binding.tvDetailNotes.text = notes
-                } else {
-                    binding.tvDetailNotesLabel.visibility = View.GONE
-                    binding.tvDetailNotes.visibility = View.GONE
-                }
-            } ?: run {
-                binding.tvDetailNotesLabel.visibility = View.GONE
-                binding.tvDetailNotes.visibility = View.GONE
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
 
-    private fun setupListeners() {
-        binding.btnBack.setOnClickListener {
-            val originalTintList = binding.btnBack.imageTintList
-            binding.btnBack.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.black))
+    private fun bindBasicData(item: RecipeItem) {
+        binding.tvHeaderTitle.text = item.name.uppercase()
+        binding.tvRecipeTitle.text = item.name
+        binding.tvRecipeDescription.text = item.description
 
-            Handler(Looper.getMainLooper()).postDelayed({
-                if (isAdded && activity != null) {
-                    binding.btnBack.imageTintList = originalTintList
-                    parentFragmentManager.popBackStack()
-                    (requireActivity() as MainActivity).setBottomNavVisibility(View.VISIBLE)
-                }
-            }, 150)
-        }
+        // Set Data Dasar
+        binding.tvWaterAmount.text = item.waterAmount
+        binding.tvCoffeeAmount.text = item.coffeeAmount
+        binding.tvTime.text = item.extractionTime
     }
 
+    private fun bindFullData(item: RecipeItem) {
+        // Update Data Dasar (Pastikan data terbaru tampil)
+        binding.tvWaterAmount.text = item.waterAmount
+        binding.tvCoffeeAmount.text = item.coffeeAmount
+        binding.tvTime.text = item.extractionTime
+
+        // Update Data Detail
+        binding.tvGrindSize.text = item.grindSize ?: "-"
+        binding.tvHeat.text = item.temperature
+        binding.tvBrewWeight.text = item.brewWeightText
+        binding.tvTds.text = item.tdsText
+
+        // --- PERHITUNGAN RATIO ---
+
+        val coffeeVal = item.coffeeAmountInt.toDouble()
+
+        // 1. WATER RATIO (Kopi : Jumlah Air)
+        // Rumus: Air / Kopi
+        val waterVal = item.waterAmountInt.toDouble()
+        if (coffeeVal > 0 && waterVal > 0) {
+            val ratioWater = waterVal / coffeeVal
+            // Format 1 angka belakang koma, misal: 1:16.7
+            binding.tvCoffeeWaterRatio.text = String.format("1:%.1f", ratioWater)
+        } else {
+            binding.tvCoffeeWaterRatio.text = "-"
+        }
+        binding.layoutCoffeeWaterRatio.visibility = View.VISIBLE
+
+        // 2. BREW RATIO (Kopi : Berat Minuman)
+        // Rumus: Berat Minuman / Kopi
+        val brewWeightVal = item.brewWeight?.toDouble() ?: 0.0
+        if (coffeeVal > 0 && brewWeightVal > 0) {
+            val ratioBrew = brewWeightVal / coffeeVal
+            // Format 1 angka belakang koma, misal: 1:14.5
+            binding.tvCoffeeBrewRatio.text = String.format("1:%.1f", ratioBrew)
+        } else {
+            // Jika berat minuman tidak diisi (0), tampilkan strip
+            binding.tvCoffeeBrewRatio.text = "-"
+        }
+        binding.layoutCoffeeBrewRatio.visibility = View.VISIBLE
+
+        // --- END PERHITUNGAN ---
+
+        // Bind Alat (Equipment)
+        if (!item.equipmentUsed.isNullOrEmpty()) {
+            binding.labelEquipmentDetail.visibility = View.VISIBLE
+            binding.recyclerRecipeDetailEquipment.visibility = View.VISIBLE
+            binding.recyclerRecipeDetailEquipment.layoutManager = LinearLayoutManager(requireContext())
+            binding.recyclerRecipeDetailEquipment.adapter = RecipeDetailEquipmentAdapter(item.equipmentUsed)
+        } else {
+            binding.labelEquipmentDetail.visibility = View.GONE
+            binding.recyclerRecipeDetailEquipment.visibility = View.GONE
+        }
+
+        // Tanggal & Notes
+        if (!item.date.isNullOrEmpty()) {
+            binding.tvDetailDate.text = item.date
+            binding.tvDetailDateLabel.visibility = View.VISIBLE
+            binding.tvDetailDate.visibility = View.VISIBLE
+        } else {
+            binding.tvDetailDateLabel.visibility = View.GONE
+            binding.tvDetailDate.visibility = View.GONE
+        }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

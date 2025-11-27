@@ -6,46 +6,47 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ukopia.data.RecipeItem
-import com.example.ukopia.databinding.ItemRecipeCardBinding
-import com.example.ukopia.R
+// Pastikan import ini sesuai dengan nama file XML kamu
+import com.example.ukopia.databinding.ItemRecipeCardSmallBinding
 
 class RecipeAdapter(
     private val onItemClick: (RecipeItem) -> Unit
 ) : ListAdapter<RecipeItem, RecipeAdapter.RecipeViewHolder>(RecipeItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
-        val binding = ItemRecipeCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemRecipeCardSmallBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return RecipeViewHolder(binding, onItemClick)
     }
 
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
-        val item = getItem(position)
-        holder.bind(item)
+        holder.bind(getItem(position))
     }
 
     class RecipeViewHolder(
-        private val binding: ItemRecipeCardBinding,
+        private val binding: ItemRecipeCardSmallBinding,
         private val onItemClick: (RecipeItem) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: RecipeItem) {
-            binding.textViewRecipeName.text = item.name
-            // Teks tombol "Selengkapnya" sudah ada di XML, jadi tidak perlu diset di sini
-            // binding.btnSelengkapnya.text = itemView.context.getString(R.string.more_button_text)
+            // Binding data ke Layout XML kamu
+            binding.tvRecipeTitle.text = item.name
+            binding.tvRecipeDescription.text = item.description
 
-            binding.btnSelengkapnya.setOnClickListener {
+
+            // Menggunakan helper property dari RecipeItem.kt
+            binding.tvWaterAmount.text = item.waterAmount
+            binding.tvCoffeeAmount.text = item.coffeeAmount
+            binding.tvTime.text = item.extractionTime
+
+            // Klik Card -> Pindah ke Detail
+            binding.root.setOnClickListener {
                 onItemClick(item)
             }
         }
     }
 
     class RecipeItemDiffCallback : DiffUtil.ItemCallback<RecipeItem>() {
-        override fun areItemsTheSame(oldItem: RecipeItem, newItem: RecipeItem): Boolean {
-            return oldItem.name == newItem.name && oldItem.description == newItem.description
-        }
-
-        override fun areContentsTheSame(oldItem: RecipeItem, newItem: RecipeItem): Boolean {
-            return oldItem == newItem
-        }
+        override fun areItemsTheSame(oldItem: RecipeItem, newItem: RecipeItem) = oldItem.id == newItem.id
+        override fun areContentsTheSame(oldItem: RecipeItem, newItem: RecipeItem) = oldItem == newItem
     }
 }

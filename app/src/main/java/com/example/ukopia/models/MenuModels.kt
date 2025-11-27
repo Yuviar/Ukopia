@@ -59,7 +59,7 @@ data class ReviewApiItem(
     @SerializedName("komentar")
     val komentar: String,
     @SerializedName("is_owner")
-    val is_owner: Boolean // GSON akan konversi 0/1 ke boolean
+    val is_owner: Int // GSON akan konversi 0/1 ke boolean
 ) : Parcelable
 
 

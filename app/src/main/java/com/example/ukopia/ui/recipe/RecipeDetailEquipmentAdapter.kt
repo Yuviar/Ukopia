@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ukopia.R
 import com.example.ukopia.data.SubEquipmentItem // Menggunakan model data SubEquipment
+import coil.load
 
 class RecipeDetailEquipmentAdapter(private val equipmentList: List<SubEquipmentItem>) :
     RecyclerView.Adapter<RecipeDetailEquipmentAdapter.EquipmentViewHolder>() {
@@ -27,12 +28,9 @@ class RecipeDetailEquipmentAdapter(private val equipmentList: List<SubEquipmentI
         val equipment = equipmentList[position]
         holder.name.text = equipment.name
 
-        equipment.iconResId?.let {
-            holder.icon.setImageResource(it)
-            holder.icon.setColorFilter(ContextCompat.getColor(holder.itemView.context, R.color.black))
-        } ?: run {
-            holder.icon.setImageResource(R.drawable.ic_grinder) // Pastikan ikon default ada
-            holder.icon.setColorFilter(ContextCompat.getColor(holder.itemView.context, R.color.black))
+        holder.icon.load(equipment.imageUrl) {
+            crossfade(true)
+            error(R.drawable.ic_error) // Siapkan drawable error jika gagal load
         }
     }
 

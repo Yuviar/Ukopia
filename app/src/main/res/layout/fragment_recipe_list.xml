@@ -7,7 +7,6 @@
     android:background="@color/black"
     tools:context=".ui.recipe.RecipeListFragment">
 
-    <!-- HEADER DISAMAKAN DENGAN LOYALTY -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
@@ -22,7 +21,6 @@
             android:layout_height="48dp"
             android:layout_marginStart="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/back_button_desc"
             android:src="@drawable/ic_arrow_back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -35,213 +33,99 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="16dp"
-            android:gravity="left"
+            android:gravity="center_vertical"
             android:paddingVertical="16dp"
             android:textColor="@color/white"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/btn_back"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/btn_back"
             app:layout_constraintTop_toTopOf="@+id/btn_back"
-            tools:text="V60 RECIPE" />
-
+            tools:text="RECIPES" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Wadah Konten Utama (Berlatar Belakang Secondary) -->
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/rounded_top_bg"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/secondary"
+        app:cardCornerRadius="16dp"
         app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/header_layout">
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/secondary"
-            android:paddingTop="8dp"
-            android:scrollbars="none">
+            android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/filter_buttons_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="80dp"
-                android:paddingHorizontal="16dp">
+                android:layout_margin="16dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="2">
 
-                <!-- Mengembalikan Tombol Filter (seperti semula) -->
-                <LinearLayout
-                    android:id="@+id/filter_buttons_container"
-                    android:layout_width="match_parent"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonSemuaResep"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/black"
+                    android:text="@string/all_recipes_button_text"
+                    android:textColor="@color/white"
+                    app:cornerRadius="8dp" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/buttonSemuaResep"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="@color/black"
-                        android:text="@string/all_recipes_button_text"
-                        android:textColor="@color/white"
-                        app:cornerRadius="8dp" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/buttonResepSaya"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="@color/white"
-                        android:text="@string/my_recipe_button_text"
-                        android:textColor="@color/black"
-                        app:cornerRadius="8dp" />
-                </LinearLayout>
-
-                <!-- Card untuk Detail Resep (Konten Utama) -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardViewRecipeInfoContainer"
-                    android:layout_width="match_parent"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonResepSaya"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="0dp">
-
-                    <LinearLayout
-                        android:id="@+id/recipe_content_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-
-                        <TextView
-                            android:id="@+id/tv_recipe_title"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:textColor="@color/black"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            tools:text="@string/recipe_title_placeholder" />
-
-                        <TextView
-                            android:id="@+id/tv_recipe_description"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            tools:text="@string/recipe_description_placeholder" />
-
-                        <!-- Water, Coffee, and Time Containers (Tampilan 3 Kolom) -->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:orientation="horizontal">
-
-                            <!-- Water Amount -->
-                            <LinearLayout
-                                android:id="@+id/layoutWaterAmount"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@drawable/rounded_bg"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal"
-                                android:padding="8dp">
-                                <ImageView
-                                    android:layout_width="16dp"
-                                    android:layout_height="16dp"
-                                    android:contentDescription="@string/water_icon_desc"
-                                    android:src="@drawable/ic_water_white" />
-                                <TextView
-                                    android:id="@+id/tv_water_amount"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="8dp"
-                                    android:textColor="@color/white"
-                                    tools:text="@string/water_amount_placeholder" />
-                            </LinearLayout>
-
-                            <!-- Coffee Amount -->
-                            <LinearLayout
-                                android:id="@+id/layoutCoffeeAmount"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/rounded_bg"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal"
-                                android:padding="8dp">
-                                <ImageView
-                                    android:layout_width="15dp"
-                                    android:layout_height="15dp"
-                                    android:contentDescription="@string/coffee_bean_icon_desc"
-                                    android:src="@drawable/ic_bean_coffee"
-                                    app:tint="@color/white" />
-                                <TextView
-                                    android:id="@+id/tv_coffee_amount"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="8dp"
-                                    android:textColor="@color/white"
-                                    tools:text="@string/coffee_amount_placeholder" />
-                            </LinearLayout>
-
-                            <!-- Time -->
-                            <LinearLayout
-                                android:id="@+id/layoutTimer"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/rounded_bg"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal"
-                                android:padding="8dp">
-                                <ImageView
-                                    android:layout_width="17dp"
-                                    android:layout_height="17dp"
-                                    android:contentDescription="@string/timer_icon_desc"
-                                    android:src="@drawable/ic_timer" />
-                                <TextView
-                                    android:id="@+id/tv_time"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="8dp"
-                                    android:textColor="@color/white"
-                                    tools:text="@string/time_placeholder" />
-                            </LinearLayout>
-                        </LinearLayout>
-
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/white"
+                    android:text="@string/my_recipe_button_text"
+                    android:textColor="@color/black"
+                    app:cornerRadius="8dp" />
             </LinearLayout>
-        </ScrollView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewRecipeList"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:clipToPadding="false"
+                android:paddingHorizontal="16dp"
+                android:paddingBottom="80dp"
+                tools:listitem="@layout/item_recipe_card_small" /> </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Floating Action Button di luar ScrollView agar bisa melayang -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:elevation="10dp"
+        android:indeterminateTint="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_recipe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:contentDescription="@string/add_recipe_fab_desc"
+        android:layout_margin="24dp"
         android:src="@drawable/ic_add"
         app:backgroundTint="@color/black"
+        app:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/white" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,7 +22,7 @@ class MenuAdapter(private var menuItems: List<MenuApiItem>, private val onItemCl
     inner class MenuItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val menuImage: ShapeableImageView = itemView.findViewById(R.id.iv_menu_image)
         val menuTitle: TextView = itemView.findViewById(R.id.tv_menu_title)
-        val menuRating: TextView = itemView.findViewById(R.id.tv_menu_rating)
+        val menuRating: TextView = itemView.findViewById(R.id.tv_menu_rating)   
         val cardBackground: View = itemView.findViewById(R.id.card_view_background)
     }
 

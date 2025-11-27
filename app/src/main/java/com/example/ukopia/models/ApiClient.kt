@@ -7,10 +7,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
     // PASTIKAN IP INI SUDAH BENAR
-    private const val BASE_URL = "http://10.10.4.44/SI-ukopia/BackOffice/api/"
+    private const val BASE_URL = "http://10.10.4.148/SI-ukopia/BackOffice/api/"
 
     val instance: ApiService by lazy {
-
         val logging = HttpLoggingInterceptor()
         logging.setLevel(HttpLoggingInterceptor.Level.BODY)
 

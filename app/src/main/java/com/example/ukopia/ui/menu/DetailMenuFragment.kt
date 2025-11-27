@@ -45,17 +45,11 @@ class DetailMenuFragment : Fragment() {
 
     private lateinit var reviewAdapter: ReviewAdapter // Adapter BARU untuk ulasan
 
-    // Hapus: SharedPreferences Keys
-    // Hapus: pendingRateAction
-    // Hapus: hasRatingChanged
-    // Hapus: ActivityResultLauncher (kita sederhanakan)
-
     private val averageStarImageViews: MutableList<ImageView> = mutableListOf()
     private val userStarImageViews: MutableList<ImageView> = mutableListOf()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentDetailMenuBinding.inflate(inflater, container, false)
-        // SessionManager adalah object, tidak perlu inisiasi
         return binding.root
     }
 
@@ -68,7 +62,7 @@ class DetailMenuFragment : Fragment() {
 
         // Setup adapter ulasan BARU
         reviewAdapter = ReviewAdapter(emptyList())
-        binding.rvReviews.adapter = reviewAdapter // Pastikan ID 'rv_reviews' ada di XML Anda
+        binding.rvReviews.adapter = reviewAdapter
 
         // Ambil argumen dengan model BARU
         currentMenuItem = arguments?.getParcelable(ARG_MENU_ITEM)
@@ -81,8 +75,6 @@ class DetailMenuFragment : Fragment() {
             // Panggil ViewModel untuk ambil detail (ulasan) dari API
             viewModel.fetchMenuDetails(menuItem.id_menu, SessionManager.getUid(requireContext()))
         } ?: parentFragmentManager.popBackStack()
-
-        // Hapus: setupFragmentResultListener()
     }
 
     private fun setupInitialUI(menuItem: MenuApiItem) {
@@ -100,9 +92,6 @@ class DetailMenuFragment : Fragment() {
         binding.tvAverageRatingText.text = getString(R.string.average_rating_prefix) + " " +
                 String.format(Locale.ROOT, "%.1f/5.0", averageRatingValue)
         displayStarsWithProgress(averageRatingValue, averageStarImageViews)
-
-        // Hapus: Logika SharedPreferences
-        // Rating pengguna sekarang diambil dari API via ViewModel
     }
 
     private fun setupListeners(menuItem: MenuApiItem) {
@@ -110,12 +99,9 @@ class DetailMenuFragment : Fragment() {
         binding.btnBack.setOnClickListener {
             val targetTint = ContextCompat.getColorStateList(requireContext(), R.color.black)
             val flashTint = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white))
-
             binding.btnBack.imageTintList = flashTint
-
             Handler(Looper.getMainLooper()).postDelayed({
                 binding.btnBack.imageTintList = targetTint
-                // Hapus: sendResultToHomeFragment()
                 parentFragmentManager.popBackStack()
             }, 150)
         }
@@ -134,12 +120,9 @@ class DetailMenuFragment : Fragment() {
                 binding.btnRateThisMenu.backgroundTintList = targetBackgroundTint
                 binding.btnRateThisMenu.setTextColor(targetTextColors)
 
-                // Cek login pakai SessionManager (object)
                 if (SessionManager.isLoggedIn(requireContext())) {
-                    // Kirim ulasan yang ada (jika mode update)
                     navigateToRatingFragment(menuItem, currentUserReview)
                 } else {
-                    // Hapus: pendingRateAction
                     showLoginRequiredDialog()
                 }
             }, 150)
@@ -166,12 +149,15 @@ class DetailMenuFragment : Fragment() {
     private fun setupObservers() {
         // Observer untuk daftar ulasan (dari pengguna lain)
         viewModel.reviews.observe(viewLifecycleOwner, Observer { reviews ->
-            // Filter ulasan agar tidak menampilkan ulasan milik sendiri
-            val otherReviews = reviews.filter { !it.is_owner }
-            reviewAdapter.updateData(otherReviews)
+
+            // ==========================================================
+            // PERBAIKAN LOGIKA DI SINI
+            // ==========================================================
+            // HAPUS FILTER! ViewModel sudah melakukannya.
+            reviewAdapter.updateData(reviews)
+            // ==========================================================
         })
 
-        // Observer untuk ulasan milik user (jika ada)
         viewModel.userReview.observe(viewLifecycleOwner, Observer { userReview ->
             currentUserReview = userReview // Simpan ulasan user
             if (userReview != null) {
@@ -184,7 +170,6 @@ class DetailMenuFragment : Fragment() {
             }
         })
 
-        // (Opsional) Observer untuk loading dan error
         viewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
             // Anda bisa tambahkan progress bar di sini
         })
@@ -195,8 +180,6 @@ class DetailMenuFragment : Fragment() {
             }
         })
     }
-
-    // Hapus: setupFragmentResultListener()
 
     // Fungsi ini tidak berubah, hanya dipanggil dari observer
     private fun showUserRating(rating: Float, comment: String) {
@@ -247,11 +230,8 @@ class DetailMenuFragment : Fragment() {
         dialog.show()
     }
 
-    // Hapus: sendResultToHomeFragment()
-
     override fun onDestroyView() {
         super.onDestroyView()
-        // Hapus: sendResultToHomeFragment()
         _binding = null
     }
 

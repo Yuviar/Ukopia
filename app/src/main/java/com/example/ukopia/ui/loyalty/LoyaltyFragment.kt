@@ -9,12 +9,10 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
+// Hapus import androidx.activity.result.contract.ActivityResultContracts
+// Hapus import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -25,13 +23,13 @@ import com.example.ukopia.R
 import com.example.ukopia.SessionManager
 import com.example.ukopia.adapter.LoyaltyAdapter
 import com.example.ukopia.data.LoyaltyUserStatus
-import com.example.ukopia.databinding.DialogLoginRequiredBinding
+// Hapus import com.example.ukopia.databinding.DialogLoginRequiredBinding
 import com.example.ukopia.databinding.FragmentLoyaltyBinding
-import com.example.ukopia.ui.auth.LoginActivity
+// Hapus import com.example.ukopia.ui.auth.LoginActivity
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.card.MaterialCardView // Import MaterialCardView
+import com.google.android.material.card.MaterialCardView
 import kotlin.math.min
-import kotlin.math.ceil // Untuk perhitungan total halaman
+import kotlin.math.ceil
 
 class LoyaltyFragment : Fragment() {
 
@@ -39,13 +37,11 @@ class LoyaltyFragment : Fragment() {
     private val loyaltyViewModel: LoyaltyViewModel by activityViewModels()
 
     private lateinit var loyaltyItemAdapter: LoyaltyAdapter
-    private var pendingAddLoyaltyAction = false
+    // Hapus: private var pendingAddLoyaltyAction = false
 
     // State untuk navigasi stempel
     private var currentStampPage = 0
     private val stampsPerPage = 10 // 5 mendatar x 2 ke bawah = 10 stempel per tampilan
-    private val totalPossibleStamps = 100 // Total stempel yang bisa didapatkan
-    private val totalStampPages = totalPossibleStamps / stampsPerPage // 100 / 10 = 10 halaman
 
     // Daftar untuk menampung referensi ke UI stempel
     private val stampBackgrounds = mutableListOf<ImageView>()
@@ -56,41 +52,42 @@ class LoyaltyFragment : Fragment() {
     private var currentRewardPage = 0
     private val rewardsPerPage = 2 // Menampilkan 2 kartu reward per halaman
     private val allRewardCards = mutableListOf<MaterialCardView>() // Daftar semua kartu reward
-    private val totalRewards = 9 // Total reward yang ada (5,10,15,20,25,30,35,40,100)
+
+    // NEW: Daftar threshold poin untuk rewards, HARUS SESUAI URUTAN allRewardCards dan LoyaltyUserStatus
+    private val rewardThresholds = listOf(
+        5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95
+    )
+    private val totalRewards = rewardThresholds.size // Total reward yang ada
     private val totalRewardPages = ceil(totalRewards.toDouble() / rewardsPerPage).toInt()
 
-    // NEW: Daftar threshold poin untuk rewards, harus sesuai urutan allRewardCards
-    private val rewardThresholds = listOf(5, 10, 15, 20, 25, 30, 35, 40, 100)
-
-
-    private val loginActivityResultLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK && SessionManager.isLoggedIn(requireContext())) {
-            updateUserInfo()
-            // Panggil updateLoyaltyUI untuk memuat ulang data dan menyesuaikan halaman
-            loyaltyViewModel.loyaltyUserStatus.value?.let { status ->
-                updateLoyaltyUI(status, true) // forceRecalculatePages = true
-            }
-            updateLoyaltyItemsVisibility()
-
-            if (pendingAddLoyaltyAction) {
-                pendingAddLoyaltyAction = false
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.container, AddLoyaltyFragment())
-                    .addToBackStack(null)
-                    .commit()
-            }
-        }
-    }
+    // Hapus: loginActivityResultLauncher as it's no longer needed for adding loyalty
+    // private val loginActivityResultLauncher = registerForActivityResult(...)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Hapus: setFragmentResultListener for AddLoyaltyFragment.REQUEST_KEY_LOYALTY_ADDED
+        /*
         setFragmentResultListener(AddLoyaltyFragment.REQUEST_KEY_LOYALTY_ADDED) { _, bundle ->
             if (bundle.getBoolean(AddLoyaltyFragment.BUNDLE_KEY_LOYALTY_ADDED, false)) {
                 Handler(Looper.getMainLooper()).postDelayed({
                     if (isAdded) {
                         // Panggil updateLoyaltyUI untuk memuat ulang data dan menyesuaikan halaman
+                        loyaltyViewModel.loyaltyUserStatus.value?.let { status ->
+                            updateLoyaltyUI(status, true) // forceRecalculatePages = true
+                        }
+                        updateLoyaltyItemsVisibility()
+                    }
+                }, 200)
+            }
+        }
+        */
+
+        // NEW: Listener for loyalty item edits
+        setFragmentResultListener(EditLoyaltyFragment.REQUEST_KEY_LOYALTY_EDITED) { _, bundle ->
+            if (bundle.getBoolean(EditLoyaltyFragment.BUNDLE_KEY_LOYALTY_EDITED, false)) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    if (isAdded) {
+                        loyaltyViewModel.refreshLoyaltyItems() // Refresh data from ViewModel
                         loyaltyViewModel.loyaltyUserStatus.value?.let { status ->
                             updateLoyaltyUI(status, true) // forceRecalculatePages = true
                         }
@@ -110,17 +107,17 @@ class LoyaltyFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as MainActivity).setBottomNavVisibility(View.VISIBLE)
 
-        // Hanya inisialisasi tampilan statis dan listener
         setupLoyaltyItemsRecyclerView()
         initializeStampViews()
         initializeRewardViews()
-        initializeRewardButtons()
 
-        binding.fabAddRecipe.setOnClickListener { handleFabClick() }
+        // Hapus: binding.fabAddRecipe.setOnClickListener { handleFabClick() }
 
-        // Observe loyaltyUserStatus untuk update UI dan menghitung halaman awal
+        binding.btnRewardHistory.setOnClickListener {
+            (activity as? MainActivity)?.navigateToFragment(RewardListFragment())
+        }
+
         loyaltyViewModel.loyaltyUserStatus.observe(viewLifecycleOwner) { status ->
-            // Perbarui UI dan hitung halaman secara default saat status berubah/dimuat
             updateLoyaltyUI(status, true) // forceRecalculatePages = true
         }
 
@@ -145,13 +142,19 @@ class LoyaltyFragment : Fragment() {
             val numberId = resources.getIdentifier("tv_stamp_number_$i", "id", requireContext().packageName)
             val checkmarkId = resources.getIdentifier("iv_stamp_checkmark_$i", "id", requireContext().packageName)
 
-            stampBackgrounds.add(binding.root.findViewById(backgroundId))
-            stampNumbers.add(binding.root.findViewById(numberId))
-            stampCheckmarks.add(binding.root.findViewById(checkmarkId))
+            binding.root.findViewById<ImageView>(backgroundId)?.let { stampBackgrounds.add(it) }
+            binding.root.findViewById<TextView>(numberId)?.let { stampNumbers.add(it) }
+            binding.root.findViewById<ImageView>(checkmarkId)?.let { stampCheckmarks.add(it) }
         }
 
         binding.btnNextStamp.setOnClickListener {
-            if (currentStampPage < totalStampPages - 1) {
+            val totalPoints = loyaltyViewModel.loyaltyUserStatus.value?.totalPoints ?: 0
+            // Menggunakan ceil untuk mendapatkan jumlah halaman yang benar.
+            // Jika ada 10 poin, ceil(10/10) = 1, jadi maxPage = 0.
+            // Jika ada 11 poin, ceil(11/10) = 2, jadi maxPage = 1.
+            val maxStampPage = if (totalPoints > 0) ceil(totalPoints.toDouble() / stampsPerPage).toInt() - 1 else 0
+
+            if (currentStampPage < maxStampPage) {
                 currentStampPage++
                 updateStampCardDisplay()
             }
@@ -163,14 +166,11 @@ class LoyaltyFragment : Fragment() {
                 updateStampCardDisplay()
             }
         }
-        // updateStampCardDisplay() TIDAK DIPANGGIL DI SINI lagi, akan dipanggil di updateLoyaltyUI
     }
 
-    // NEW: Inisialisasi view rewards dan tombol navigasinya
     private fun initializeRewardViews() {
         allRewardCards.clear()
 
-        // Ambil semua MaterialCardView rewards dari layout dan simpan dalam list
         allRewardCards.add(binding.cardRewardDisc10)
         allRewardCards.add(binding.cardRewardFreeServe)
         allRewardCards.add(binding.cardRewardDisc102)
@@ -179,13 +179,29 @@ class LoyaltyFragment : Fragment() {
         allRewardCards.add(binding.cardRewardFreeServe30)
         allRewardCards.add(binding.cardRewardDisc1035)
         allRewardCards.add(binding.cardRewardFreeServe40)
-        allRewardCards.add(binding.cardRewardGrinder)
+        allRewardCards.add(binding.cardRewardDisc1045)
+        allRewardCards.add(binding.cardRewardFreeServe50)
+        allRewardCards.add(binding.cardRewardDisc1055)
+        allRewardCards.add(binding.cardRewardFreeServe60)
+        allRewardCards.add(binding.cardRewardDisc1065)
+        allRewardCards.add(binding.cardRewardFreeServe70)
+        allRewardCards.add(binding.cardRewardDisc1075)
+        allRewardCards.add(binding.cardRewardFreeServe80)
+        allRewardCards.add(binding.cardRewardDisc1085)
+        allRewardCards.add(binding.cardRewardFreeServe90)
+        allRewardCards.add(binding.cardRewardDisc1095)
 
         binding.btnNextReward.setOnClickListener {
-            if (currentRewardPage < totalRewardPages - 1) {
+            val status = loyaltyViewModel.loyaltyUserStatus.value ?: LoyaltyUserStatus()
+
+            // Calculate maxPageForNextButton correctly.
+            // This should allow scrolling through all defined reward cards.
+            val maxPageForNavigation = (totalRewards - 1) / rewardsPerPage
+
+            if (currentRewardPage < maxPageForNavigation) {
                 currentRewardPage++
                 updateRewardCardDisplay()
-                loyaltyViewModel.loyaltyUserStatus.value?.let { updateRewardsSection(it) } // Perbarui status tombol untuk kartu baru
+                updateRewardsSection(status)
             }
         }
 
@@ -193,28 +209,11 @@ class LoyaltyFragment : Fragment() {
             if (currentRewardPage > 0) {
                 currentRewardPage--
                 updateRewardCardDisplay()
-                loyaltyViewModel.loyaltyUserStatus.value?.let { updateRewardsSection(it) } // Perbarui status tombol untuk kartu baru
+                loyaltyViewModel.loyaltyUserStatus.value?.let { updateRewardsSection(it) }
             }
         }
-        // updateRewardCardDisplay() TIDAK DIPANGGIL DI SINI lagi, akan dipanggil di updateLoyaltyUI
     }
 
-
-    private fun initializeRewardButtons() {
-        // Set listener untuk tombol reward
-        binding.btnClaimDisc10.setOnClickListener { handleRewardClaim(5) }
-        binding.btnClaimFreeServe.setOnClickListener { handleRewardClaim(10) }
-        binding.btnClaimDisc102.setOnClickListener { handleRewardClaim(15) }
-        binding.btnClaimTshirt.setOnClickListener { handleRewardClaim(20) }
-        binding.btnClaimGrinder.setOnClickListener { handleRewardClaim(100) }
-        binding.btnClaimDisc1025.setOnClickListener { handleRewardClaim(25) }
-        binding.btnClaimFreeServe30.setOnClickListener { handleRewardClaim(30) }
-        binding.btnClaimDisc1035.setOnClickListener { handleRewardClaim(35) }
-        binding.btnClaimFreeServe40.setOnClickListener { handleRewardClaim(40) }
-    }
-
-
-    // Fungsi untuk memperbarui tampilan 10 stempel yang sedang ditampilkan
     private fun updateStampCardDisplay() {
         val totalPoints = loyaltyViewModel.loyaltyUserStatus.value?.totalPoints ?: 0
         val startIndex = currentStampPage * stampsPerPage
@@ -226,14 +225,7 @@ class LoyaltyFragment : Fragment() {
         for (i in 0 until stampsPerPage) {
             val stampActualNumber = startIndex + i + 1
 
-            if (stampActualNumber > totalPossibleStamps) {
-                stampBackgrounds[i].visibility = View.INVISIBLE
-                stampNumbers[i].visibility = View.INVISIBLE
-                stampCheckmarks[i].visibility = View.INVISIBLE
-                continue
-            } else {
-                stampBackgrounds[i].visibility = View.VISIBLE
-            }
+            stampBackgrounds[i].visibility = View.VISIBLE
 
             stampNumbers[i].text = stampActualNumber.toString()
 
@@ -252,237 +244,153 @@ class LoyaltyFragment : Fragment() {
     }
 
     private fun updateStampNavigationIndicator() {
+        val totalPoints = loyaltyViewModel.loyaltyUserStatus.value?.totalPoints ?: 0
         val startStamp = currentStampPage * stampsPerPage + 1
-        val endStamp = (currentStampPage + 1) * stampsPerPage
+        val endStamp = min((currentStampPage + 1) * stampsPerPage, 100) // Batasi hingga 100 jika max stamps
 
-        val actualEndStamp = minOf(endStamp, totalPossibleStamps)
+        // Calculate maxPageForNextButton correctly based on total possible stamps
+        val maxPageForNextButton = if (totalPoints == 0) 0 else (ceil(totalPoints.toDouble() / stampsPerPage).toInt() - 1).coerceAtLeast(0)
 
-        binding.textViewStampProgress.text = getString(R.string.loyalty_stamp_progress_format, startStamp, actualEndStamp)
+        binding.textViewStampProgress.text = getString(R.string.loyalty_stamp_progress_format, startStamp, endStamp)
 
         binding.btnPrevStamp.visibility = if (currentStampPage == 0) View.INVISIBLE else View.VISIBLE
-        binding.btnNextStamp.visibility = if (currentStampPage == totalStampPages - 1) View.INVISIBLE else View.VISIBLE
+        binding.btnNextStamp.visibility = if (currentStampPage >= maxPageForNextButton) View.INVISIBLE else View.VISIBLE
     }
 
-    // NEW: Fungsi untuk memperbarui tampilan kartu reward yang sedang ditampilkan
     private fun updateRewardCardDisplay() {
-        val startIndex = currentRewardPage * rewardsPerPage // Indeks awal reward untuk halaman ini
-        val endIndex = min(startIndex + rewardsPerPage, allRewardCards.size) // Indeks akhir reward (eksklusif)
+        val startIndex = currentRewardPage * rewardsPerPage
+        val endIndex = min(startIndex + rewardsPerPage, allRewardCards.size)
 
         for (i in allRewardCards.indices) {
-            // Sembunyikan semua kartu reward terlebih dahulu
             allRewardCards[i].visibility = View.GONE
         }
 
-        // Tampilkan hanya kartu reward untuk halaman saat ini
         for (i in startIndex until endIndex) {
             allRewardCards[i].visibility = View.VISIBLE
         }
 
-        updateRewardNavigationIndicator() // Perbarui indikator navigasi setelah display diupdate
+        updateRewardNavigationIndicator()
     }
 
-    // NEW: Fungsi untuk memperbarui teks dan visibilitas tombol navigasi rewards
     private fun updateRewardNavigationIndicator() {
+        // val status = loyaltyViewModel.loyaltyUserStatus.value ?: LoyaltyUserStatus() // No need for status here
         val startIndex = currentRewardPage * rewardsPerPage
         val endIndex = min((currentRewardPage + 1) * rewardsPerPage, allRewardCards.size)
 
-        if (allRewardCards.isEmpty() || rewardThresholds.isEmpty() || startIndex >= rewardThresholds.size) {
-            binding.textViewRewardProgress.text = "" // Atau placeholder seperti "No Rewards"
+        if (allRewardCards.isEmpty() || rewardThresholds.isEmpty()) {
+            binding.textViewRewardProgress.text = ""
             binding.btnPrevReward.visibility = View.INVISIBLE
             binding.btnNextReward.visibility = View.INVISIBLE
             return
         }
 
-        val firstRewardPoints = rewardThresholds[startIndex]
+        val firstRewardPoints = rewardThresholds.getOrNull(startIndex) ?: 0
 
-        // Handle the last page where there might be only one item
-        if (endIndex - 1 >= rewardThresholds.size) { // Should not happen with minOf, but as a safeguard
-            binding.textViewRewardProgress.text = getString(R.string.loyalty_rewards_progress_single_format, firstRewardPoints)
-        } else if (startIndex == endIndex - 1) { // Only one item on this page
-            binding.textViewRewardProgress.text = getString(R.string.loyalty_rewards_progress_single_format, firstRewardPoints)
+        val textProgress = if (startIndex == endIndex - 1) {
+            getString(R.string.loyalty_rewards_progress_single_format, firstRewardPoints)
         } else {
-            val lastRewardPoints = rewardThresholds[endIndex - 1]
-            binding.textViewRewardProgress.text = getString(R.string.loyalty_rewards_progress_range_format, firstRewardPoints, lastRewardPoints)
+            val lastRewardPoints = rewardThresholds.getOrNull(endIndex - 1) ?: rewardThresholds.last()
+            getString(R.string.loyalty_rewards_progress_range_format, firstRewardPoints, lastRewardPoints)
         }
+        binding.textViewRewardProgress.text = textProgress
 
         binding.btnPrevReward.visibility = if (currentRewardPage == 0) View.INVISIBLE else View.VISIBLE
-        binding.btnNextReward.visibility = if (currentRewardPage == totalRewardPages - 1) View.INVISIBLE else View.VISIBLE
+
+        // Max page for next button is the last possible page, considering total available rewards
+        val maxPageForNextButton = (totalRewards - 1) / rewardsPerPage
+        binding.btnNextReward.visibility = if (currentRewardPage >= maxPageForNextButton) View.INVISIBLE else View.VISIBLE
     }
 
-    // FUNGSI INI DIMODIFIKASI untuk menghitung halaman default
     private fun updateLoyaltyUI(status: LoyaltyUserStatus, forceRecalculatePages: Boolean = false) {
         updateUserInfo()
         binding.textViewLoyaltyPoints.text = getString(R.string.loyalty_points_format, status.totalPoints)
 
         if (forceRecalculatePages) {
-            // Hitung halaman stempel default
             currentStampPage = if (status.totalPoints > 0) {
                 (status.totalPoints - 1) / stampsPerPage
             } else {
                 0
             }
-            // Pastikan tidak melebihi total halaman
-            currentStampPage = min(currentStampPage, totalStampPages - 1)
 
-            // Hitung halaman reward default
-            var firstUnmetRewardIndex = rewardThresholds.indexOfFirst { it > status.totalPoints }
-            currentRewardPage = if (firstUnmetRewardIndex == -1 || status.totalPoints >= rewardThresholds.last()) {
-                // Jika semua reward sudah terpenuhi atau user punya poin cukup untuk reward terakhir, tampilkan halaman terakhir
-                totalRewardPages - 1
-            } else {
-                // Tampilkan halaman yang berisi reward pertama yang belum terpenuhi
-                firstUnmetRewardIndex / rewardsPerPage
+            // Adjust currentRewardPage to show relevant rewards, typically the first page or the page containing current points
+            var targetRewardIndex = rewardThresholds.indexOfFirst { it > status.totalPoints }
+            if (targetRewardIndex == -1) { // If all rewards are achieved or none are defined, show the last available page of rewards
+                targetRewardIndex = (totalRewards - 1).coerceAtLeast(0) // Ensure it's not -1 if totalRewards is 0
             }
-            // Pastikan tidak melebihi total halaman
-            currentRewardPage = min(currentRewardPage, totalRewardPages - 1)
+            currentRewardPage = if (targetRewardIndex >= 0) {
+                (targetRewardIndex / rewardsPerPage).coerceAtLeast(0)
+            } else {
+                0
+            }
         }
 
-        // Sekarang perbarui tampilan berdasarkan halaman yang dihitung atau yang sedang aktif
         updateStampCardDisplay()
         updateRewardCardDisplay()
-        updateRewardsSection(status) // Ini akan memperbarui status tombol klaim untuk reward yang saat ini terlihat
+        updateRewardsSection(status)
+    }
+
+    private fun updateRewardClaimStatusDisplay(
+        button: MaterialButton,
+        pointsTextView: TextView,
+        currentPoints: Int,
+        threshold: Int,
+        claimDate: String?
+    ) {
+        val context = button.context
+
+        pointsTextView.text = context.getString(R.string.reward_points_format_display, threshold)
+
+        button.isEnabled = false // User tidak dapat mengklaim secara langsung
+
+        if (claimDate != null) {
+            // Status: Sudah Diklaim (Latar belakang hitam, teks putih)
+            button.text = context.getString(R.string.reward_status_claimed_date_format, claimDate)
+            button.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.black))
+            button.setTextColor(ContextCompat.getColor(context, R.color.white))
+        } else if (currentPoints >= threshold) {
+            // Status: Tercapai, Belum Diklaim (Latar belakang hitam, teks putih)
+            button.text = context.getString(R.string.reward_status_not_yet_claimed)
+            button.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.black))
+            button.setTextColor(ContextCompat.getColor(context, R.color.white))
+        } else {
+            // Status: Belum Tercapai (Latar belakang hitam, teks putih)
+            button.text = context.getString(R.string.reward_status_not_achieved)
+            button.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.black))
+            button.setTextColor(ContextCompat.getColor(context, R.color.white))
+        }
     }
 
     private fun updateRewardsSection(status: LoyaltyUserStatus) {
-        // Hanya perbarui status tombol untuk kartu reward yang saat ini terlihat
         val startIndex = currentRewardPage * rewardsPerPage
         val endIndex = min(startIndex + rewardsPerPage, allRewardCards.size)
 
         for (i in startIndex until endIndex) {
             val rewardCard = allRewardCards[i]
             when (rewardCard.id) {
-                R.id.card_reward_disc_10 -> updateRewardButtonState(binding.btnClaimDisc10, binding.tvRewardPointsDisc10, status.totalPoints, 5, status.isDiscount10Claimed)
-                R.id.card_reward_free_serve -> updateRewardButtonState(binding.btnClaimFreeServe, binding.tvRewardPointsFreeServe, status.totalPoints, 10, status.isFreeServeClaimed)
-                R.id.card_reward_disc_10_2 -> updateRewardButtonState(binding.btnClaimDisc102, binding.tvRewardPointsDisc102, status.totalPoints, 15, status.isDiscount10Slot15Claimed)
-                R.id.card_reward_tshirt -> updateRewardButtonState(binding.btnClaimTshirt, binding.tvRewardPointsTshirt, status.totalPoints, 20, status.isFreeTshirtClaimed)
-                R.id.card_reward_disc_10_25 -> updateRewardButtonState(binding.btnClaimDisc1025, binding.tvRewardPointsDisc1025, status.totalPoints, 25, status.isDiscount10_25Claimed)
-                R.id.card_reward_free_serve_30 -> updateRewardButtonState(binding.btnClaimFreeServe30, binding.tvRewardPointsFreeServe30, status.totalPoints, 30, status.isFreeServe_30Claimed)
-                R.id.card_reward_disc_10_35 -> updateRewardButtonState(binding.btnClaimDisc1035, binding.tvRewardPointsDisc1035, status.totalPoints, 35, status.isDiscount10_35Claimed)
-                R.id.card_reward_free_serve_40 -> updateRewardButtonState(binding.btnClaimFreeServe40, binding.tvRewardPointsFreeServe40, status.totalPoints, 40, status.isFreeServe_40Claimed)
-                R.id.card_reward_grinder -> updateRewardButtonState(binding.btnClaimGrinder, binding.tvRewardPointsGrinder, status.totalPoints, 100, status.isCoffeeGrinderClaimed)
+                R.id.card_reward_disc_10 -> updateRewardClaimStatusDisplay(binding.btnClaimDisc10, binding.tvRewardPointsDisc10, status.totalPoints, 5, status.discount10ClaimDate)
+                R.id.card_reward_free_serve -> updateRewardClaimStatusDisplay(binding.btnClaimFreeServe, binding.tvRewardPointsFreeServe, status.totalPoints, 10, status.freeServeClaimDate)
+                R.id.card_reward_disc_10_2 -> updateRewardClaimStatusDisplay(binding.btnClaimDisc102, binding.tvRewardPointsDisc102, status.totalPoints, 15, status.discount10Slot15ClaimDate)
+                R.id.card_reward_tshirt -> updateRewardClaimStatusDisplay(binding.btnClaimTshirt, binding.tvRewardPointsTshirt, status.totalPoints, 20, status.freeTshirtClaimDate)
+                R.id.card_reward_disc_10_25 -> updateRewardClaimStatusDisplay(binding.btnClaimDisc1025, binding.tvRewardPointsDisc1025, status.totalPoints, 25, status.discount10_25ClaimDate)
+                R.id.card_reward_free_serve_30 -> updateRewardClaimStatusDisplay(binding.btnClaimFreeServe30, binding.tvRewardPointsFreeServe30, status.totalPoints, 30, status.freeServe_30ClaimDate)
+                R.id.card_reward_disc_10_35 -> updateRewardClaimStatusDisplay(binding.btnClaimDisc1035, binding.tvRewardPointsDisc1035, status.totalPoints, 35, status.discount10_35ClaimDate)
+                R.id.card_reward_free_serve_40 -> updateRewardClaimStatusDisplay(binding.btnClaimFreeServe40, binding.tvRewardPointsFreeServe40, status.totalPoints, 40, status.freeServe_40ClaimDate)
+                R.id.card_reward_disc_10_45 -> updateRewardClaimStatusDisplay(binding.btnClaimDisc1045, binding.tvRewardPointsDisc1045, status.totalPoints, 45, status.discount10_45ClaimDate)
+                R.id.card_reward_free_serve_50 -> updateRewardClaimStatusDisplay(binding.btnClaimFreeServe50, binding.tvRewardPointsFreeServe50, status.totalPoints, 50, status.freeServe_50ClaimDate)
+                R.id.card_reward_disc_10_55 -> updateRewardClaimStatusDisplay(binding.btnClaimDisc1055, binding.tvRewardPointsDisc1055, status.totalPoints, 55, status.discount10_55ClaimDate)
+                R.id.card_reward_free_serve_60 -> updateRewardClaimStatusDisplay(binding.btnClaimFreeServe60, binding.tvRewardPointsFreeServe60, status.totalPoints, 60, status.freeServe_60ClaimDate)
+                R.id.card_reward_disc_10_65 -> updateRewardClaimStatusDisplay(binding.btnClaimDisc1065, binding.tvRewardPointsDisc1065, status.totalPoints, 65, status.discount10_65ClaimDate)
+                R.id.card_reward_free_serve_70 -> updateRewardClaimStatusDisplay(binding.btnClaimFreeServe70, binding.tvRewardPointsFreeServe70, status.totalPoints, 70, status.freeServe_70ClaimDate)
+                R.id.card_reward_disc_10_75 -> updateRewardClaimStatusDisplay(binding.btnClaimDisc1075, binding.tvRewardPointsDisc1075, status.totalPoints, 75, status.discount10_75ClaimDate)
+                R.id.card_reward_free_serve_80 -> updateRewardClaimStatusDisplay(binding.btnClaimFreeServe80, binding.tvRewardPointsFreeServe80, status.totalPoints, 80, status.freeServe_80ClaimDate)
+                R.id.card_reward_disc_10_85 -> updateRewardClaimStatusDisplay(binding.btnClaimDisc1085, binding.tvRewardPointsDisc1085, status.totalPoints, 85, status.discount10_85ClaimDate)
+                R.id.card_reward_free_serve_90 -> updateRewardClaimStatusDisplay(binding.btnClaimFreeServe90, binding.tvRewardPointsFreeServe90, status.totalPoints, 90, status.freeServe_90ClaimDate)
+                R.id.card_reward_disc_10_95 -> updateRewardClaimStatusDisplay(binding.btnClaimDisc1095, binding.tvRewardPointsDisc1095, status.totalPoints, 95, status.discount10_95ClaimDate)
             }
         }
     }
 
-    private fun updateRewardButtonState(
-        button: MaterialButton,
-        pointsTextView: TextView,
-        currentPoints: Int,
-        threshold: Int,
-        isClaimed: Boolean
-    ) {
-        when {
-            isClaimed -> {
-                pointsTextView.visibility = View.VISIBLE
-                pointsTextView.text = getString(R.string.loyalty_points_format, threshold)
-                button.text = getString(R.string.reward_claimed_status)
-                button.isEnabled = false
-                button.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.grey))
-            }
-            currentPoints >= threshold -> {
-                pointsTextView.visibility = View.VISIBLE
-                pointsTextView.text = getString(R.string.loyalty_points_format, threshold)
-                button.text = getString(R.string.loyalty_reward_claim_action)
-                button.isEnabled = true
-                button.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.black))
-            }
-            else -> {
-                pointsTextView.visibility = View.GONE
-                button.text = getString(R.string.loyalty_points_needed_format, threshold)
-                button.isEnabled = false
-                button.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.grey))
-            }
-        }
-    }
-
-    private fun handleRewardClaim(threshold: Int) {
-        val currentStatus = loyaltyViewModel.loyaltyUserStatus.value ?: return
-        if (currentStatus.totalPoints < threshold) {
-            Toast.makeText(requireContext(), getString(R.string.not_enough_stamps), Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        when (threshold) {
-            5 -> if (!currentStatus.isDiscount10Claimed) {
-                loyaltyViewModel.claimDiscount10()
-                showToast(getString(R.string.loyalty_reward_10_percent_discount_short))
-            } else showAlreadyClaimedToast()
-
-            10 -> if (!currentStatus.isFreeServeClaimed) {
-                loyaltyViewModel.claimFreeServe()
-                showToast(getString(R.string.loyalty_reward_free_serve_short))
-            } else showAlreadyClaimedToast()
-
-            15 -> if (!currentStatus.isDiscount10Slot15Claimed) {
-                loyaltyViewModel.claimDiscount10Slot15()
-                showToast(getString(R.string.loyalty_reward_10_percent_discount_short))
-            } else showAlreadyClaimedToast()
-
-            20 -> if (!currentStatus.isFreeTshirtClaimed) {
-                loyaltyViewModel.claimFreeTshirt()
-                showToast(getString(R.string.loyalty_reward_free_tshirt_short))
-            } else showAlreadyClaimedToast()
-
-            25 -> if (!currentStatus.isDiscount10_25Claimed) {
-                loyaltyViewModel.claimDiscount10_25()
-                showToast(getString(R.string.loyalty_reward_10_percent_discount_short))
-            } else showAlreadyClaimedToast()
-
-            30 -> if (!currentStatus.isFreeServe_30Claimed) {
-                loyaltyViewModel.claimFreeServe_30()
-                showToast(getString(R.string.loyalty_reward_free_serve_short))
-            } else showAlreadyClaimedToast()
-
-            35 -> if (!currentStatus.isDiscount10_35Claimed) {
-                loyaltyViewModel.claimDiscount10_35()
-                showToast(getString(R.string.loyalty_reward_10_percent_discount_short))
-            } else showAlreadyClaimedToast()
-
-            40 -> if (!currentStatus.isFreeServe_40Claimed) {
-                loyaltyViewModel.claimFreeServe_40()
-                showToast(getString(R.string.loyalty_reward_free_serve_short))
-            } else showAlreadyClaimedToast()
-
-            100 -> if (!currentStatus.isCoffeeGrinderClaimed) {
-                loyaltyViewModel.claimCoffeeGrinder()
-                showToast(getString(R.string.loyalty_reward_coffee_grinder_short))
-            } else showAlreadyClaimedToast()
-        }
-    }
-
-    private fun showToast(rewardName: String) {
-        Toast.makeText(requireContext(), getString(R.string.reward_claimed_toast_format, rewardName), Toast.LENGTH_SHORT).show()
-    }
-    private fun showAlreadyClaimedToast() {
-        Toast.makeText(requireContext(), getString(R.string.reward_already_claimed), Toast.LENGTH_SHORT).show()
-    }
-
-    private fun handleFabClick() {
-        val originalBackgroundTint = ContextCompat.getColor(requireContext(), R.color.black)
-        val originalImageTint = ContextCompat.getColor(requireContext(), R.color.white)
-        val flashColorBackground = ContextCompat.getColor(requireContext(), R.color.white)
-        val flashColorImage = ContextCompat.getColor(requireContext(), R.color.black)
-
-        binding.fabAddRecipe.backgroundTintList = ColorStateList.valueOf(flashColorBackground)
-        binding.fabAddRecipe.imageTintList = ColorStateList.valueOf(flashColorImage)
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            if (isAdded && activity != null) {
-                binding.fabAddRecipe.backgroundTintList = ColorStateList.valueOf(originalBackgroundTint)
-                binding.fabAddRecipe.imageTintList = ColorStateList.valueOf(originalImageTint)
-
-                if (SessionManager.isLoggedIn(requireContext())) {
-                    parentFragmentManager.beginTransaction()
-                        .replace(R.id.container, AddLoyaltyFragment())
-                        .addToBackStack(null)
-                        .commit()
-                } else {
-                    pendingAddLoyaltyAction = true
-                    showLoginRequiredDialog()
-                }
-            }
-        }, 150)
-    }
+    // Hapus: handleFabClick()
 
     private fun setupLoyaltyItemsRecyclerView() {
         loyaltyItemAdapter = LoyaltyAdapter { item ->
@@ -496,19 +404,5 @@ class LoyaltyFragment : Fragment() {
         binding.recyclerViewLoyaltyItems.visibility = if (hasItems) View.VISIBLE else View.GONE
         binding.placeholderContainer.visibility = if (hasItems) View.GONE else View.VISIBLE
     }
-    private fun showLoginRequiredDialog() {
-        val dialogBinding = DialogLoginRequiredBinding.inflate(layoutInflater)
-        val dialog = AlertDialog.Builder(requireContext())
-            .setView(dialogBinding.root)
-            .create()
-        dialogBinding.buttonDialogLogin.setOnClickListener {
-            loginActivityResultLauncher.launch(Intent(requireContext(), LoginActivity::class.java))
-            dialog.dismiss()
-        }
-        dialogBinding.buttonDialogCancel.setOnClickListener {
-            dialog.dismiss()
-        }
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        dialog.show()
-    }
+    // Hapus: showLoginRequiredDialog() as it was only for add loyalty
 }

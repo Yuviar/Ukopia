@@ -1,35 +1,54 @@
 package com.example.ukopia.ui.home
 
 import android.os.Bundle
+import android.util.Log // Import Log untuk debugging
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels // <-- IMPORT BARU
-import androidx.lifecycle.Observer // <-- IMPORT BARU
+import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ukopia.R
 import com.example.ukopia.BestSellerAdapter
 import com.example.ukopia.databinding.FragmentHomeBinding
 import com.example.ukopia.MainActivity
-import com.example.ukopia.models.MenuApiItem // <-- IMPORT BARU (ganti dari .data.MenuItem)
+import com.example.ukopia.models.MenuApiItem
 import com.example.ukopia.ui.menu.DetailMenuFragment
-import com.example.ukopia.UkopiaApplication // <-- IMPORT BARU
-import com.example.ukopia.ui.menu.MenuViewModel // <-- IMPORT BARU
-import com.example.ukopia.ui.menu.MenuViewModelFactory // <-- IMPORT BARU
+import com.example.ukopia.UkopiaApplication
+import com.example.ukopia.ui.menu.MenuViewModel
+import com.example.ukopia.ui.menu.MenuViewModelFactory
+import com.example.ukopia.ui.loyalty.LoyaltyViewModel
+import com.example.ukopia.SessionManager
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    // Inisialisasi ViewModel dengan Factory
     private val viewModel: MenuViewModel by viewModels {
         MenuViewModelFactory((requireActivity().application as UkopiaApplication).repository)
     }
 
+    private val loyaltyViewModel: LoyaltyViewModel by activityViewModels()
+
     private lateinit var bestSellerAdapter: BestSellerAdapter
-    // Hapus: allBestSellerItems
+
+    private var currentStampPage = 0
+    private val stampsPerPage = 10
+
+    private val stampBackgrounds = mutableListOf<ImageView>()
+    private val stampNumbers = mutableListOf<TextView>()
+    private val stampCheckmarks = mutableListOf<ImageView>()
+
+    // Tag untuk Logcat
+    private val TAG = "HomeFragment"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,15 +63,7 @@ class HomeFragment : Fragment() {
 
         (activity as? MainActivity)?.setBottomNavVisibility(View.VISIBLE)
 
-        // HAPUS: Logika data dummy
-        // val allMenuFromApp = createDummyAllMenuItems()
-        // allBestSellerItems = getTopBestSellerItems(allMenuFromApp)
-
-        // Setup RecyclerView
-        // PENTING: BestSellerAdapter Anda juga harus diperbarui (lihat di bawah)
         bestSellerAdapter = BestSellerAdapter(emptyList()) { menuItem ->
-            // 'menuItem' di sini sekarang adalah MenuApiItem
-            // Error Anda akan HILANG
             val detailMenuFragment = DetailMenuFragment.newInstance(menuItem)
             (activity as? MainActivity)?.navigateToFragment(detailMenuFragment)
         }
@@ -60,30 +71,169 @@ class HomeFragment : Fragment() {
         binding.bestSellerRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.bestSellerRecyclerView.adapter = bestSellerAdapter
 
-        // Panggil Observer untuk memuat data
         setupObservers()
+        setupStampCardSection()
     }
 
-    // Fungsi BARU untuk mengambil data dari ViewModel (Room/API)
     private fun setupObservers() {
         viewModel.menuItems.observe(viewLifecycleOwner, Observer { menuList ->
-            // menuList adalah List<MenuApiItem> dari database
             if (menuList != null) {
-                // Filter untuk mendapatkan best seller
                 val bestSellerItems = getTopBestSellerItems(menuList)
-                // Asumsi adapter Anda punya fungsi updateData (lihat di bawah)
                 bestSellerAdapter.updateData(bestSellerItems)
             }
         })
+
+        loyaltyViewModel.loyaltyUserStatus.observe(viewLifecycleOwner) { status ->
+            Log.d(TAG, "Loyalty status observed. Total points: ${status.totalPoints}, IsLoggedIn: ${SessionManager.isLoggedIn(requireContext())}")
+
+            val isLoggedIn = SessionManager.isLoggedIn(requireContext())
+            val userName = SessionManager.getUserName(requireContext())
+
+            // 1. Set "Welcome!" message
+            if (isLoggedIn && !userName.isNullOrEmpty()) {
+                binding.textViewUserName.text = getString(R.string.welcome_format, userName)
+            } else {
+                binding.textViewUserName.text = "Welcome!"
+            }
+
+            // 2. Set visibility of loyalty elements
+            if (isLoggedIn) {
+                // Jika sudah login: tampilkan elemen loyalty
+                binding.textViewLoyaltyPoints.visibility = View.VISIBLE
+                binding.tvHomeStampCardTitle.visibility = View.VISIBLE
+                binding.stampCardView.visibility = View.VISIBLE
+
+                // Update Loyalty Points & Stamp Card Display
+                binding.textViewLoyaltyPoints.text = getString(R.string.loyalty_points_format, status.totalPoints)
+                updateStampCardDisplay(status.totalPoints)
+            } else {
+                // Jika belum login: sembunyikan semua elemen loyalty
+                binding.textViewLoyaltyPoints.visibility = View.GONE
+                binding.tvHomeStampCardTitle.visibility = View.GONE
+                binding.stampCardView.visibility = View.GONE
+            }
+        }
     }
 
-    // HAPUS: createDummyAllMenuItems()
-
-    // MODIFIKASI: Fungsi ini sekarang memfilter List<MenuApiItem>
     private fun getTopBestSellerItems(all: List<MenuApiItem>): List<MenuApiItem> {
-        // Mengurutkan berdasarkan 'average_rating' (Double)
         return all.sortedByDescending { it.average_rating }
-            .take(5) // Ambil 5 item teratas (atau 2 jika Anda mau)
+            .take(5)
+    }
+
+    private fun setupStampCardSection() {
+        Log.d(TAG, "setupStampCardSection called.")
+        initializeStampViews() // Panggil inisialisasi view stempel
+
+        binding.btnNextStamp.setOnClickListener {
+            val totalPoints = loyaltyViewModel.loyaltyUserStatus.value?.totalPoints ?: 0
+            val maxStampPageBasedOnPoints = if (totalPoints == 0) 0 else (totalPoints - 1) / stampsPerPage
+
+            if (currentStampPage < maxStampPageBasedOnPoints) {
+                currentStampPage++
+                updateStampCardDisplay(totalPoints)
+            }
+        }
+
+        binding.btnPrevStamp.setOnClickListener {
+            if (currentStampPage > 0) {
+                currentStampPage--
+                updateStampCardDisplay(loyaltyViewModel.loyaltyUserStatus.value?.totalPoints ?: 0)
+            }
+        }
+
+        // Panggilan awal untuk memperbarui tampilan stempel
+        updateStampCardDisplay(loyaltyViewModel.loyaltyUserStatus.value?.totalPoints ?: 0)
+    }
+
+    private fun initializeStampViews() {
+        stampBackgrounds.clear()
+        stampNumbers.clear()
+        stampCheckmarks.clear()
+        Log.d(TAG, "initializeStampViews: Cleared previous lists.")
+
+        for (i in 1..stampsPerPage) {
+            val backgroundId = resources.getIdentifier("iv_stamp_background_$i", "id", requireContext().packageName)
+            val numberId = resources.getIdentifier("tv_stamp_number_$i", "id", requireContext().packageName)
+            val checkmarkId = resources.getIdentifier("iv_stamp_checkmark_$i", "id", requireContext().packageName)
+
+            // Log ID yang dicari
+            Log.d(TAG, "Searching for: iv_stamp_background_$i (ID=$backgroundId), tv_stamp_number_$i (ID=$numberId), iv_stamp_checkmark_$i (ID=$checkmarkId)")
+
+            val bg = binding.root.findViewById<ImageView>(backgroundId)
+            val num = binding.root.findViewById<TextView>(numberId)
+            val check = binding.root.findViewById<ImageView>(checkmarkId)
+
+            if (bg != null) {
+                stampBackgrounds.add(bg)
+                Log.d(TAG, "Added background $i.")
+            } else {
+                Log.w(TAG, "ImageView iv_stamp_background_$i not found!")
+            }
+            if (num != null) {
+                stampNumbers.add(num)
+                Log.d(TAG, "Added number $i.")
+            } else {
+                Log.w(TAG, "TextView tv_stamp_number_$i not found!")
+            }
+            if (check != null) {
+                stampCheckmarks.add(check)
+                Log.d(TAG, "Added checkmark $i.")
+            } else {
+                Log.w(TAG, "ImageView iv_stamp_checkmark_$i not found!")
+            }
+        }
+        Log.d(TAG, "initializeStampViews: Finished. Lists sizes -> Backgrounds: ${stampBackgrounds.size}, Numbers: ${stampNumbers.size}, Checkmarks: ${stampCheckmarks.size}")
+    }
+
+    private fun updateStampCardDisplay(totalPoints: Int) {
+        Log.d(TAG, "updateStampCardDisplay called with totalPoints: $totalPoints")
+        val startIndex = currentStampPage * stampsPerPage
+
+        if (stampBackgrounds.isEmpty() || stampNumbers.isEmpty() || stampCheckmarks.isEmpty()) {
+            Log.e(TAG, "updateStampCardDisplay: Stamp view lists are empty. Cannot update display.")
+            return
+        }
+        Log.d(TAG, "updateStampCardDisplay: Lists are populated. Sizes: bg=${stampBackgrounds.size}, num=${stampNumbers.size}, check=${stampCheckmarks.size}")
+
+
+        for (i in 0 until stampsPerPage) {
+            val stampActualNumber = startIndex + i + 1
+            Log.d(TAG, "Processing stamp index $i, actual number $stampActualNumber")
+
+            if (i < stampBackgrounds.size) {
+                stampBackgrounds[i].visibility = View.VISIBLE
+                stampNumbers[i].text = stampActualNumber.toString()
+
+                if (stampActualNumber <= totalPoints) {
+                    stampBackgrounds[i].background = ContextCompat.getDrawable(requireContext(), R.drawable.circle_background_white_stroke_black_fill)
+                    stampNumbers[i].visibility = View.GONE
+                    stampCheckmarks[i].visibility = View.VISIBLE
+                    Log.d(TAG, "Stamp $stampActualNumber: FILLED")
+                } else {
+                    stampBackgrounds[i].background = ContextCompat.getDrawable(requireContext(), R.drawable.reward_circle_background_default)
+                    stampNumbers[i].visibility = View.VISIBLE
+                    stampNumbers[i].setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                    stampCheckmarks[i].visibility = View.GONE
+                    Log.d(TAG, "Stamp $stampActualNumber: EMPTY")
+                }
+            } else {
+                Log.w(TAG, "Skipping stamp index $i because stampBackgrounds.size (${stampBackgrounds.size}) is too small.")
+            }
+        }
+        updateStampNavigationIndicator(totalPoints)
+    }
+
+    private fun updateStampNavigationIndicator(totalPoints: Int) {
+        val startStamp = currentStampPage * stampsPerPage + 1
+        val endStamp = (currentStampPage + 1) * stampsPerPage
+
+        val maxPageForNextButton = if (totalPoints == 0) 0 else (totalPoints - 1) / stampsPerPage
+
+        binding.textViewStampProgress.text = getString(R.string.loyalty_stamp_progress_format, startStamp, endStamp)
+
+        binding.btnPrevStamp.visibility = if (currentStampPage == 0) View.INVISIBLE else View.VISIBLE
+        binding.btnNextStamp.visibility = if (currentStampPage >= maxPageForNextButton) View.INVISIBLE else View.VISIBLE
+        Log.d(TAG, "Navigation indicator updated: Current Page $currentStampPage, Max Page $maxPageForNextButton. Prev:${binding.btnPrevStamp.visibility}, Next:${binding.btnNextStamp.visibility}")
     }
 
     override fun onDestroyView() {

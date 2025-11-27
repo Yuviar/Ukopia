@@ -42,12 +42,11 @@ android:weightSum="2">
     android:layout_height="wrap_content"
     android:layout_weight="1"
     android:layout_marginEnd="8dp"
-    android:backgroundTint="@color/white"
+    android:backgroundTint="@color/black"
     android:text="@string/no_button_text"
-    android:textColor="@color/black"
+    android:textColor="@color/white"
     app:cornerRadius="8dp"
-    app:strokeColor="@color/black"
-    app:strokeWidth="1dp"/>
+    />
 
 <com.google.android.material.button.MaterialButton
     android:id="@+id/button_dialog_yes"
@@ -55,10 +54,13 @@ android:weightSum="2">
     android:layout_height="wrap_content"
     android:layout_weight="1"
     android:layout_marginStart="8dp"
-    android:backgroundTint="@color/black"
+    android:backgroundTint="@color/white"
     android:text="@string/yes_button_text"
-    android:textColor="@color/white"
-    app:cornerRadius="8dp"/>
+    android:textColor="@color/black"
+    app:cornerRadius="8dp"
+    app:strokeColor="@color/black"
+    app:strokeWidth="1dp"
+    />
 </LinearLayout>
 
     </LinearLayout>

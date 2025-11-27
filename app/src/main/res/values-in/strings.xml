@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="firestore_users_collection">users</string>
-    <string name="firestore_field_name">name</string>
-    <string name="firestore_field_email">email</string>
     <string name="app_name">Ukopia</string>
     <string name="hello_blank_fragment">Halo fragmen kosong</string>
     <string name="cancel_button_text">Batal</string>
@@ -33,6 +30,9 @@
     <string name="change_button_text">Ganti</string>
     <string name="no_account_prefix">Belum Punya Akun? </string>
     <string name="create_account_clickable_part">Buat Akun di Sini</string>
+
+    <string name="verification_dialog_title">Verifikasi Email</string>
+    <string name="ok_button_text">Oke</string>
 
     <string name="my_account_title">AKUN\nSAYA</string>
     <string name="profile_photo_desc">Foto Profil</string>
@@ -67,6 +67,7 @@
     <string name="password_change_success">Kata sandi berhasil diubah!</string>
     <string name="no_app_to_open_url">Tidak ada aplikasi yang dapat membuka URL ini.</string>
     <string name="empty_email_password_error">Email dan kata sandi tidak boleh kosong!</string>
+    <string name="error_email_empty">Email tidak boleh kosong!</string>
     <string name="login_success_toast">Login berhasil!</string>
     <string name="user_not_found_error">Pengguna tidak ditemukan.</string>
     <string name="failed_retrieve_user_data_error">Gagal mengambil data pengguna: </string>
@@ -274,7 +275,6 @@
     <string name="non_coffee_item_name_label">Nama Item Non-Kopi</string>
 
     <string name="add_loyalty_title">TAMBAH \nLOYALITAS</string>
-    <string name="date_prefix_title">Tanggal</string>
     <string name="notes_label">Catatan</string>
     <string name="notes_hint_optional">Catatan (Opsional)</string>
     <string name="add_button_text">Tambah</string>
@@ -296,7 +296,7 @@
     <string name="level_label">Level</string>
     <string name="loyalty_points_format">Poin: %1$d</string>
     <string name="add_loyalty_data_desc">Tambah data loyalitas baru</string>
-    <string name="loyalty_history_title">Riwayat Loyalitas</string>
+    <string name="loyalty_history_title">Riwayat Pemesanan</string>
 
     <!-- String baru untuk sistem stempel -->
     <string name="loyalty_stamp_desc">Stempel loyalitas</string>
@@ -377,4 +377,33 @@
     <!-- String baru untuk format progres rewards (untuk satu poin saja) -->
     <string name="loyalty_rewards_progress_single_format">Rewards untuk poin %1$d</string>
 
+    <!-- NEW ADDED STRINGS FOR HOME FRAGMENT HEADER AND PROMO -->
+    <string name="welcome_format">Selamat Datang! %s</string>
+    <string name="collect_stamps_for_rewards">Kumpulkan Stempel untuk Hadiah!</string>
+    <string name="todays_promo">Promo Hari Ini!</string>
+    <string name="promo_description_halloween">Hadiri acara Halloween di Ukopia Brew Sauce!\nKlik untuk detail lebih lanjut..</string>
+
+    <!-- NEW STRINGS for RewardListFragment and Reward Status Display -->
+    <string name="reward_status_not_yet_claimed">Belum Diklaim</string>
+    <string name="reward_status_claimed_date_format">Diklaim: %s</string>
+    <string name="reward_status_not_achieved">Belum Tercapai</string>
+    <string name="reward_points_format_display">%d Poin</string>
+    <string name="all_rewards_title">Semua Rewards</string>
+    <string name="no_rewards_defined">Belum ada rewards yang didefinisikan.</string>
+    <string name="reward_history_desc">Riwayat Reward</string>
+
+    <!-- NEW STRINGS FOR EDIT LOYALTY FEATURE -->
+    <string name="edit_button_text">Edit</string>
+    <string name="save_button_text">Simpan</string>
+    <string name="loyalty_data_updated_success">Data loyalitas berhasil diperbarui</string>
+    <string name="edit_loyalty_title">Edit Data Loyalitas</string>
+    <string name="date_prefix_title">Tanggal:</string>
+
+    <!-- NEW STRINGS FOR PASSWORD RESET FLOW -->
+    <string name="verify_account_button_text">Verifikasi Akun</string>
+    <string name="verification_email_sent_toast">Link verifikasi telah dikirim ke email Anda. Silakan cek email Anda.</string>
+    <string name="new_password_title">KATA SANDI\nBARU</string>
+    <string name="confirm_new_password_label">Konfirmasi Kata Sandi Baru</string>
+    <string name="enter_confirm_new_password_hint">Masukkan Kata Sandi Baru Lagi</string>
+    <string name="password_mismatch_error">Kata sandi baru tidak cocok.</string>
 </resources>

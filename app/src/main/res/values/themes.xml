@@ -113,7 +113,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -163,32 +163,29 @@
     </style>
 
     <style name="RewardCard.Title">
-        <item name="android:layout_width">match_parent</item> <!-- UBAH INI dari wrap_content menjadi match_parent -->
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:textAlignment">center</item> <!-- PENTING: Memusatkan teks di dalam TextView yang sekarang full-width -->
-        <!-- android:layout_gravity="center_horizontal" dihapus karena layout_width="match_parent" -->
+        <item name="android:textAlignment">center</item>
     </style>
 
     <style name="RewardCard.Points">
-        <item name="android:layout_width">match_parent</item> <!-- UBAH INI dari wrap_content menjadi match_parent -->
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">12sp</item>
         <item name="android:layout_marginTop">4dp</item>
         <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:textAlignment">center</item> <!-- PENTING: Memusatkan teks di dalam TextView yang sekarang full-width -->
-        <!-- android:layout_gravity="center_horizontal" dihapus karena layout_width="match_parent" -->
+        <item name="android:textAlignment">center</item>
     </style>
 
     <style name="RewardCard.Button" parent="Widget.Material3.Button">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:backgroundTint">@color/black</item>
         <item name="android:textColor">@color/white</item>
         <item name="cornerRadius">8dp</item>
         <item name="android:minHeight">36dp</item>

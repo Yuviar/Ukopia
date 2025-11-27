@@ -9,118 +9,128 @@
     android:padding="20dp"
     >
 
-<TextView
-android:id="@+id/textViewDialogNamaMenu"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:textSize="22sp"
-android:textStyle="bold"
-android:textColor="@color/black"
-android:layout_marginBottom="16dp"
-tools:text="@string/loyalty_detail_menu_title_placeholder" />
+    <TextView
+        android:id="@+id/textViewDialogNamaMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginBottom="16dp"
+        tools:text="@string/loyalty_detail_menu_title_placeholder" />
 
     <!-- Bagian Kopi -->
-<LinearLayout
-android:id="@+id/linearLayoutDialogKopi"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:orientation="vertical"
-android:visibility="gone">
+    <LinearLayout
+        android:id="@+id/linearLayoutDialogKopi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-<TextView
-    android:id="@+id/textViewBeanData"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/coffee_bean_data_title"
-    android:textSize="16sp"
-    android:textStyle="bold"
-    android:textColor="@color/black"/>
+        <TextView
+            android:id="@+id/textViewBeanData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/coffee_bean_data_title"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
 
-<TextView
-    android:id="@+id/textViewDialogNamaBeans"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="4dp"
-    android:textSize="16sp"
-    android:textColor="@color/black"
-    tools:text="@string/coffee_bean_name_label"/>
+        <TextView
+            android:id="@+id/textViewDialogNamaBeans"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            tools:text="@string/coffee_bean_name_label"/>
 
-<TextView
-    android:id="@+id/textViewTasteProfil"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/taste_profile_title"
-    android:textSize="16sp"
-    android:textStyle="bold"
-    android:textColor="@color/black"
-    android:layout_marginTop="16dp"/>
+        <TextView
+            android:id="@+id/textViewTasteProfil"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/taste_profile_title"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginTop="16dp"/>
 
-<TextView android:id="@+id/textViewDetailAroma" style="@style/DetailDialogRating" tools:text="Aroma: 5"/>
-<TextView android:id="@+id/textViewDetailSweetness" style="@style/DetailDialogRating" tools:text="Sweetness: 4"/>
-<TextView android:id="@+id/textViewDetailAcidity" style="@style/DetailDialogRating" tools:text="Acidity: 3"/>
-<TextView android:id="@+id/textViewDetailBitterness" style="@style/DetailDialogRating" tools:text="Bitterness: 2"/>
-<TextView android:id="@+id/textViewDetailBody" style="@style/DetailDialogRating" tools:text="Body: 5"/>
-</LinearLayout>
+        <TextView android:id="@+id/textViewDetailAroma" style="@style/DetailDialogRating" tools:text="Aroma: 5"/>
+        <TextView android:id="@+id/textViewDetailSweetness" style="@style/DetailDialogRating" tools:text="Sweetness: 4"/>
+        <TextView android:id="@+id/textViewDetailAcidity" style="@style/DetailDialogRating" tools:text="Acidity: 3"/>
+        <TextView android:id="@+id/textViewDetailBitterness" style="@style/DetailDialogRating" tools:text="Bitterness: 2"/>
+        <TextView android:id="@+id/textViewDetailBody" style="@style/DetailDialogRating" tools:text="Body: 5"/>
+    </LinearLayout>
 
     <!-- Bagian Non-Kopi -->
-<LinearLayout
-android:id="@+id/linearLayoutDialogNonKopi"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:orientation="vertical"
-android:visibility="gone">
+    <LinearLayout
+        android:id="@+id/linearLayoutDialogNonKopi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-<TextView
-    android:id="@+id/textViewMenuData"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/menu_data_title"
-    android:textSize="16sp"
-    android:textStyle="bold"
-    android:textColor="@color/black"/>
+        <TextView
+            android:id="@+id/textViewMenuData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/menu_data_title"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
 
-<TextView
-    android:id="@+id/textViewDialogNamaNonKopi"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="4dp"
-    android:textColor="@color/black"
-    tools:text="@string/menu_name_label"/>
-</LinearLayout>
+        <TextView
+            android:id="@+id/textViewDialogNamaNonKopi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/black"
+            tools:text="@string/menu_name_label"/>
+    </LinearLayout>
 
-<View
-android:layout_width="match_parent"
-android:layout_height="1dp"
-android:background="@color/white"
-android:layout_marginVertical="16dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/white"
+        android:layout_marginVertical="16dp"/>
 
     <!-- Data Umum -->
-<TextView
-android:id="@+id/textViewDialogTanggal"
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:textColor="@color/black"
-android:textSize="16sp"
-tools:text="@string/loyalty_date_placeholder"/>
+    <TextView
+        android:id="@+id/textViewDialogTanggal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        tools:text="@string/loyalty_date_placeholder"/>
 
-<TextView
-android:id="@+id/textViewDialogCatatan"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:layout_marginTop="8dp"
-android:textColor="@color/black"
-android:textSize="16sp"
-tools:text="@string/notes_placeholder"/>
+    <TextView
+        android:id="@+id/textViewDialogCatatan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        tools:text="@string/notes_placeholder"/>
 
+    <!-- NEW: Tombol Edit -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_dialog_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/black"
+        android:text="@string/edit_button_text"
+        android:textColor="@color/white"
+        app:cornerRadius="8dp"
+        android:layout_marginTop="16dp"/>
 
-<com.google.android.material.button.MaterialButton
-android:id="@+id/button_dialog_close"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:backgroundTint="@color/black"
-android:text="@string/close_button_text"
-android:textColor="@color/white"
-app:cornerRadius="8dp"
-android:layout_marginTop="16dp"/>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_dialog_close"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/black"
+        android:text="@string/close_button_text"
+        android:textColor="@color/white"
+        app:cornerRadius="8dp"
+        android:layout_marginTop="8dp"/>
 
-    </LinearLayout>
+</LinearLayout>

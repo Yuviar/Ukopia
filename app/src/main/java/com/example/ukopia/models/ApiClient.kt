@@ -10,6 +10,7 @@ object ApiClient {
     private const val BASE_URL = "http://10.10.4.148/SI-ukopia/BackOffice/api/"
 
     val instance: ApiService by lazy {
+
         val logging = HttpLoggingInterceptor()
         logging.setLevel(HttpLoggingInterceptor.Level.BODY)
 

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:strokeColor="#1A000000"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/iv_reward_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_coffee_cup"
+            app:tint="@color/black"
+            android:contentDescription="Reward Icon" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_reward_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Discount 10%"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_points_required"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Requires 5 Points"
+                android:textColor="@color/grey"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_reward_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Claimed: 2023-10-26"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/rounded_corner_status_bg"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"/>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="firestore_users_collection">users</string>
-    <string name="firestore_field_name">name</string>
-    <string name="firestore_field_email">email</string>
     <string name="app_name">Ukopia</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="cancel_button_text">Cancel</string>
@@ -33,6 +30,9 @@
     <string name="change_button_text">Change</string>
     <string name="no_account_prefix">Don\'t Have an Account? </string>
     <string name="create_account_clickable_part">Create an Account Here</string>
+
+    <string name="verification_dialog_title">Email Verification</string>
+    <string name="ok_button_text">OK</string>
 
     <string name="my_account_title">MY\nACCOUNT</string>
     <string name="profile_photo_desc">Profile Photo</string>
@@ -67,6 +67,7 @@
     <string name="password_change_success">Password changed successfully!</string>
     <string name="no_app_to_open_url">No app found to open this URL.</string>
     <string name="empty_email_password_error">Email and password cannot be empty!</string>
+    <string name="error_email_empty">Email cannot be empty!</string>
     <string name="login_success_toast">Login successful!</string>
     <string name="user_not_found_error">User not found.</string>
     <string name="failed_retrieve_user_data_error">Failed to retrieve user data: </string>
@@ -274,7 +275,6 @@
     <string name="non_coffee_item_name_label">Non-Coffee Item Name</string>
 
     <string name="add_loyalty_title">ADD NEW LOYALTY</string>
-    <string name="date_prefix_title">Date</string>
     <string name="notes_label">Notes</string>
     <string name="notes_hint_optional">Notes (Optional)</string>
     <string name="add_button_text">Add</string>
@@ -296,7 +296,7 @@
     <string name="level_label">Level</string>
     <string name="loyalty_points_format">Points: %1$d</string>
     <string name="add_loyalty_data_desc">Add new loyalty data</string>
-    <string name="loyalty_history_title">Loyalty History</string>
+    <string name="loyalty_history_title">Order History</string>
 
     <!-- Loyalty stamp system strings -->
     <string name="loyalty_stamp_desc">Loyalty stamp</string>
@@ -377,4 +377,33 @@
     <!-- String baru untuk format progres rewards (untuk satu poin saja) -->
     <string name="loyalty_rewards_progress_single_format">Rewards for points %1$d</string>
 
+    <!-- NEW ADDED STRINGS FOR HOME FRAGMENT HEADER AND PROMO -->
+    <string name="welcome_format">Welcome! %s</string>
+    <string name="collect_stamps_for_rewards">Collect Stamps for Rewards!</string>
+    <string name="todays_promo">Today\'s Promo!</string>
+    <string name="promo_description_halloween">Attend the Halloween event at Ukopia Brew Sauce!\nClick for more details..</string>
+
+    <!-- NEW STRINGS for RewardListFragment and Reward Status Display -->
+    <string name="reward_status_not_yet_claimed">Not Yet Claimed</string>
+    <string name="reward_status_claimed_date_format">Claimed: %s</string>
+    <string name="reward_status_not_achieved">Not Achieved</string>
+    <string name="reward_points_format_display">%d Points</string>
+    <string name="all_rewards_title">All Rewards</string>
+    <string name="no_rewards_defined">No rewards defined yet.</string>
+    <string name="reward_history_desc">Reward History</string>
+
+    <!-- NEW STRINGS FOR EDIT LOYALTY FEATURE -->
+    <string name="edit_button_text">Edit</string>
+    <string name="save_button_text">Save</string>
+    <string name="loyalty_data_updated_success">Loyalty data updated successfully</string>
+    <string name="edit_loyalty_title">Edit Loyalty Data</string>
+    <string name="date_prefix_title">Date:</string>
+
+    <!-- NEW STRINGS FOR PASSWORD RESET FLOW -->
+    <string name="verify_account_button_text">Verify Account</string>
+    <string name="verification_email_sent_toast">A verification link has been sent to your email. Please check your inbox.</string>
+    <string name="new_password_title">NEW\nPASSWORD</string>
+    <string name="confirm_new_password_label">Confirm New Password</string>
+    <string name="enter_confirm_new_password_hint">Re-enter Your New Password</string>
+    <string name="password_mismatch_error">New passwords do not match.</string>
 </resources>

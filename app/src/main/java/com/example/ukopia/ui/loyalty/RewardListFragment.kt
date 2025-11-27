@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.ukopia.MainActivity
+import com.example.ukopia.MainActivity // Pastikan MainActivity ini diimpor
 import com.example.ukopia.R
 import com.example.ukopia.data.ALL_LOYALTY_REWARDS
 import com.example.ukopia.data.LoyaltyUserStatus
@@ -27,8 +27,9 @@ class RewardListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Pastikan bottom navigation terlihat jika diperlukan
-        (requireActivity() as MainActivity).setBottomNavVisibility(View.VISIBLE)
+        // Sembunyikan bottom navigation bar saat fragment ini aktif
+        // Memastikan requireActivity() adalah MainActivity sebelum casting
+        (requireActivity() as MainActivity).setBottomNavVisibility(View.GONE)
 
         setupRecyclerView()
         observeLoyaltyStatus()
@@ -37,6 +38,13 @@ class RewardListFragment : Fragment() {
         binding.btnBackRewards.setOnClickListener {
             (activity as? MainActivity)?.onBackPressedDispatcher?.onBackPressed()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // Pastikan bottom navigation bar kembali terlihat saat fragment ini dihancurkan
+        // atau saat kembali ke fragment lain yang memerlukannya
+        (requireActivity() as MainActivity).setBottomNavVisibility(View.VISIBLE)
     }
 
     private fun setupRecyclerView() {

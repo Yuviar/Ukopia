@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/rounded_bg_white"
+    android:layout_marginHorizontal="24dp"
+    android:gravity="center_horizontal">
+
+<TextView
+android:id="@+id/textViewDialogTitle"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_marginBottom="16dp"
+android:textAlignment="center"
+android:textColor="@color/black"
+android:textSize="20sp"
+android:textStyle="bold"
+tools:text="Verifikasi Email Dikirim" />
+
+<TextView
+android:id="@+id/textViewDialogMessage"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_marginBottom="24dp"
+android:textAlignment="center"
+android:textColor="@color/black"
+android:textSize="16sp"
+tools:text="Link verifikasi telah dikirim ke email Anda. Silakan cek email Anda." />
+
+<com.google.android.material.button.MaterialButton
+android:id="@+id/buttonDialogOk"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:text="@string/ok_button_text"
+android:backgroundTint="@color/black"
+android:textColor="@color/white"
+app:cornerRadius="8dp" />
+
+    </LinearLayout>

@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
-    private const val BASE_URL = "http://192.168.0.107/SI-ukopia/BackOffice/api/"
+    private const val BASE_URL = "http://192.168.1.7/SI-ukopia/BackOffice/api/"
 
     val instance: ApiService by lazy {
 

@@ -31,6 +31,9 @@
     <string name="no_account_prefix">Don\'t Have an Account? </string>
     <string name="create_account_clickable_part">Create an Account Here</string>
 
+    <string name="verification_dialog_title">Email Verification</string>
+    <string name="ok_button_text">OK</string>
+
     <string name="my_account_title">MY\nACCOUNT</string>
     <string name="profile_photo_desc">Profile Photo</string>
     <string name="name_not_found">Name not found</string>
@@ -64,6 +67,7 @@
     <string name="password_change_success">Password changed successfully!</string>
     <string name="no_app_to_open_url">No app found to open this URL.</string>
     <string name="empty_email_password_error">Email and password cannot be empty!</string>
+    <string name="error_email_empty">Email cannot be empty!</string>
     <string name="login_success_toast">Login successful!</string>
     <string name="user_not_found_error">User not found.</string>
     <string name="failed_retrieve_user_data_error">Failed to retrieve user data: </string>
@@ -271,7 +275,6 @@
     <string name="non_coffee_item_name_label">Non-Coffee Item Name</string>
 
     <string name="add_loyalty_title">ADD NEW LOYALTY</string>
-    <!-- MENGHAPUS DUPLIKASI, MENJAGA VERSI DENGAN KOLON -->
     <string name="notes_label">Notes</string>
     <string name="notes_hint_optional">Notes (Optional)</string>
     <string name="add_button_text">Add</string>
@@ -393,7 +396,14 @@
     <string name="edit_button_text">Edit</string>
     <string name="save_button_text">Save</string>
     <string name="loyalty_data_updated_success">Loyalty data updated successfully</string>
-    <string name="edit_loyalty_title">EDIT LOYALTY DATA</string>
+    <string name="edit_loyalty_title">Edit Loyalty Data</string>
     <string name="date_prefix_title">Date:</string>
 
+    <!-- NEW STRINGS FOR PASSWORD RESET FLOW -->
+    <string name="verify_account_button_text">Verify Account</string>
+    <string name="verification_email_sent_toast">A verification link has been sent to your email. Please check your inbox.</string>
+    <string name="new_password_title">NEW\nPASSWORD</string>
+    <string name="confirm_new_password_label">Confirm New Password</string>
+    <string name="enter_confirm_new_password_hint">Re-enter Your New Password</string>
+    <string name="password_mismatch_error">New passwords do not match.</string>
 </resources>

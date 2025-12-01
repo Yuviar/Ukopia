@@ -413,4 +413,9 @@
     <string name="acidity_format">Acidity: %d</string>
     <string name="bitterness_format">Bitterness: %d</string>
     <string name="body_format">Body: %d</string>
+
+    <string name="reward_icon_desc">Reward Icon</string>
+    <string name="stamp_background_desc">Stamp Background</string>
+    <string name="stamp_checkmark_desc">Stamp Checkmark</string>
+
 </resources>

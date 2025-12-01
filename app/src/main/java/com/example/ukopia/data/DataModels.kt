@@ -34,3 +34,19 @@ data class LoyaltyNilai(
     @SerializedName("kekentalan") val kekentalan: Int,
     @SerializedName("catatan") val catatan: String?
 ) : Parcelable
+
+data class RewardHistoryResponse(
+    @SerializedName("success") val success: Boolean,
+    @SerializedName("message") val message: String?,
+    @SerializedName("data") val data: List<RewardHistoryItem>? // Pakai tanda tanya (?)
+)
+
+@Parcelize
+data class RewardHistoryItem(
+    @SerializedName("id_riwayat") val idRiwayat: Int,
+    @SerializedName("nama_reward") val namaReward: String,
+    @SerializedName("deskripsi") val deskripsi: String?,
+    @SerializedName("tanggal_dapat") val tanggalDapat: String,
+    @SerializedName("status_klaim") val statusKlaim: String,
+    @SerializedName("kode_unik") val kodeUnik: String?
+) : Parcelable

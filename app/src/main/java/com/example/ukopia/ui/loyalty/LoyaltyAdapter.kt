@@ -1,3 +1,5 @@
+// File: D:/github_rama/Ukopia/app/src/main/java/com/example/ukopia/adapter/LoyaltyAdapter.kt
+
 package com.example.ukopia.adapter
 
 import android.view.LayoutInflater
@@ -18,11 +20,22 @@ class LoyaltyAdapter(
     }
 
     override fun onBindViewHolder(holder: LoyaltyViewHolder, position: Int) {
-        holder.bind(getItem(position), onItemClick)
+        holder.bind(getItem(position), onItemClick, position)
     }
 
     class LoyaltyViewHolder(private val binding: ItemLoyaltyCardBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: LoyaltyItemV2, onItemClick: (LoyaltyItemV2) -> Unit) {
+        fun bind(item: LoyaltyItemV2, onItemClick: (LoyaltyItemV2) -> Unit, position: Int) {
+            // Ambil total jumlah item dari adapter.
+            // bindingAdapter adalah referensi ke adapter yang mengikat ViewHolder ini.
+            val totalItems = bindingAdapter?.itemCount ?: 0
+
+            // Logika penomoran dibalik: totalItems - position
+            // Jika totalItems = 3:
+            // Posisi 0 (terbaru) -> #3
+            // Posisi 1 (tengah)  -> #2
+            // Posisi 2 (terlama) -> #1
+            binding.textViewLoyaltyNumber.text = "#${totalItems - position}"
+
             binding.textViewNamaMenu.text = item.namaMenu
             binding.textViewTanggal.text = item.tanggal
 
@@ -36,7 +49,6 @@ class LoyaltyAdapter(
     }
 
     class LoyaltyItemDiffCallback : DiffUtil.ItemCallback<LoyaltyItemV2>() {
-        // Perbaikan: Gunakan idLoyalty (bukan id)
         override fun areItemsTheSame(oldItem: LoyaltyItemV2, newItem: LoyaltyItemV2) = oldItem.idLoyalty == newItem.idLoyalty
         override fun areContentsTheSame(oldItem: LoyaltyItemV2, newItem: LoyaltyItemV2) = oldItem == newItem
     }

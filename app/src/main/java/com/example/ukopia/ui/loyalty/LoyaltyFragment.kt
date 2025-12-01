@@ -1,6 +1,8 @@
 package com.example.ukopia.ui.loyalty
 
 import android.os.Bundle
+import android.text.Editable // NEW: Import ini
+import android.text.TextWatcher // NEW: Import ini
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,11 +20,13 @@ import com.example.ukopia.SessionManager
 import com.example.ukopia.adapter.LoyaltyAdapter
 import com.example.ukopia.data.ALL_LOYALTY_REWARDS
 import com.example.ukopia.data.LoyaltyReward
+import com.example.ukopia.data.LoyaltyItemV2 // Pastikan ini sudah diimport
 import com.example.ukopia.data.LoyaltyUserStatus
 import com.example.ukopia.data.getStatus // Import helper status
 import com.example.ukopia.databinding.FragmentLoyaltyBinding
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
+import java.util.Locale // NEW: Import ini
 import kotlin.math.min
 
 class LoyaltyFragment : Fragment() {
@@ -44,6 +49,10 @@ class LoyaltyFragment : Fragment() {
     private val maxStamps = 100 // Jumlah stamp maksimum yang Anda miliki di XML (1-100)
     // --- Akhir State baru ---
 
+    // NEW: Variabel untuk menyimpan daftar loyalty item asli dan query pencarian
+    private var allLoyaltyItems: List<LoyaltyItemV2> = emptyList()
+    private var currentSearchQuery: String = ""
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentLoyaltyBinding.inflate(inflater, container, false)
@@ -57,6 +66,7 @@ class LoyaltyFragment : Fragment() {
         binding.textViewUserName.text = userName ?: "Guest"
 
         setupRecyclerView()
+        setupSearchBar() // NEW: Panggil fungsi setup search bar
 
         binding.btnRewardHistory.setOnClickListener {
             (activity as? MainActivity)?.navigateToFragment(RewardListFragment())
@@ -83,9 +93,8 @@ class LoyaltyFragment : Fragment() {
         }
 
         viewModel.loyaltyItems.observe(viewLifecycleOwner) { items ->
-            adapter.submitList(items)
-            binding.placeholderContainer.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
-            binding.recyclerViewLoyaltyItems.visibility = if (items.isEmpty()) View.GONE else View.VISIBLE
+            allLoyaltyItems = items // NEW: Simpan daftar asli dari ViewModel
+            displayFilteredLoyaltyItems() // NEW: Tampilkan daftar dengan filter (awalnya kosong)
         }
     }
 
@@ -98,13 +107,51 @@ class LoyaltyFragment : Fragment() {
         binding.recyclerViewLoyaltyItems.adapter = adapter
     }
 
-    // --- Reward Display Logic ---
+    // NEW: Fungsi untuk setup search bar
+    private fun setupSearchBar() {
+        binding.etSearchLoyaltyHistory.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                currentSearchQuery = s.toString()
+                // Tampilkan/sembunyikan tombol clear berdasarkan apakah ada teks
+                binding.ivClearSearchLoyaltyHistory.visibility = if (s.isNullOrBlank()) View.GONE else View.VISIBLE
+                displayFilteredLoyaltyItems() // Panggil fungsi untuk memfilter dan menampilkan daftar
+            }
+            override fun afterTextChanged(s: Editable?) { }
+        })
+
+        // Atur listener untuk tombol clear
+        binding.ivClearSearchLoyaltyHistory.setOnClickListener {
+            binding.etSearchLoyaltyHistory.text?.clear() // Hapus teks di EditText
+        }
+    }
+
+    // NEW: Fungsi untuk memfilter dan menampilkan loyalty items
+    private fun displayFilteredLoyaltyItems() {
+        var filteredList = allLoyaltyItems
+
+        if (currentSearchQuery.isNotBlank()) {
+            val lowerCaseQuery = currentSearchQuery.toLowerCase(Locale.ROOT)
+            filteredList = filteredList.filter {
+                // Filter berdasarkan namaMenu, mirip dengan MenuFragment
+                it.namaMenu.toLowerCase(Locale.ROOT).contains(lowerCaseQuery)
+            }
+        }
+
+        // Kirim daftar yang sudah difilter ke adapter
+        adapter.submitList(filteredList)
+
+        // Atur visibilitas placeholder jika daftar kosong
+        binding.placeholderContainer.visibility = if (filteredList.isEmpty()) View.VISIBLE else View.GONE
+        binding.recyclerViewLoyaltyItems.visibility = if (filteredList.isEmpty()) View.GONE else View.VISIBLE
+    }
+
+
+    // --- Reward Display Logic (TIDAK ADA PERUBAHAN DI SINI) ---
 
     private fun getRewardContainers(): List<MaterialCardView> {
         val containers = mutableListOf<MaterialCardView>()
-        // Kita hanya akan mencari reward_card_1 dan reward_card_2 karena hanya itu yang ada di XML
-        // Jika Anda ingin lebih banyak, Anda harus menambahkannya di XML
-        for (i in 1..rewardsPerPage) { // rewardsPerPage saat ini adalah 2
+        for (i in 1..rewardsPerPage) {
             val cardId = resources.getIdentifier("reward_card_$i", "id", requireContext().packageName)
             binding.root.findViewById<MaterialCardView>(cardId)?.let {
                 containers.add(it)
@@ -113,31 +160,23 @@ class LoyaltyFragment : Fragment() {
         return containers
     }
 
-    // MODIFIED: getPaginatedRewards now returns all rewards, chunked
     private fun getPaginatedRewards(): List<List<LoyaltyReward>> {
         return ALL_LOYALTY_REWARDS.chunked(rewardsPerPage)
     }
 
     private fun updateRewardDisplay(totalPoints: Int, status: LoyaltyUserStatus) {
-        val paginatedRewards = getPaginatedRewards() // Get all rewards, chunked
+        val paginatedRewards = getPaginatedRewards()
         val totalPages = paginatedRewards.size
 
         Log.d("LoyaltyFragment", "RewardDisplay: Total Points=$totalPoints, Total Pages=$totalPages, Current Page (before adjust)=$currentPageReward")
         Log.d("LoyaltyFragment", "RewardDisplay: Paginated Rewards Structure: ${paginatedRewards.joinToString { page -> page.joinToString { it.title } }}")
 
-        // --- PENTING: LOGIKA PENYESUAIAN currentPageReward HANYA DI onResume() ---
-        // Logika penyesuaian otomatis ini telah dipindahkan ke onResume()
-        // agar tidak mengganggu navigasi manual oleh pengguna.
-        // --- AKHIR PENTING ---
-
         val currentRewards = paginatedRewards.getOrNull(currentPageReward) ?: emptyList()
-        val allRewardContainers = getRewardContainers() // Ambil semua 2 container
+        val allRewardContainers = getRewardContainers()
 
         Log.d("LoyaltyFragment", "RewardDisplay: Current Page (after adjust)=$currentPageReward, Current Rewards count=${currentRewards.size}")
         Log.d("LoyaltyFragment", "RewardDisplay: Current Rewards on page $currentPageReward: ${currentRewards.joinToString { "${it.title} (${it.threshold} pts)" }}")
 
-
-        // Sembunyikan semua kontainer reward terlebih dahulu
         allRewardContainers.forEach { it.visibility = View.GONE }
 
         if (currentRewards.isEmpty()) {
@@ -149,13 +188,10 @@ class LoyaltyFragment : Fragment() {
         }
 
         currentRewards.forEachIndexed { index, reward ->
-            // Gunakan index untuk mengisi card_1 dan card_2
-            if (index < rewardsPerPage) { // Pastikan hanya mengisi 2 card per halaman
-                val cardView = allRewardContainers.getOrNull(index) // Ambil card_1 atau card_2
+            if (index < rewardsPerPage) {
+                val cardView = allRewardContainers.getOrNull(index)
                 if (cardView != null) {
                     cardView.visibility = View.VISIBLE
-
-                    // Mengambil view berdasarkan ID yang sesuai dengan card_1 atau card_2
                     val tvRewardTitle = cardView.findViewById<TextView>(resources.getIdentifier("tv_reward_title_${index + 1}", "id", requireContext().packageName))
                     val ivRewardIcon = cardView.findViewById<ImageView>(resources.getIdentifier("iv_reward_icon_${index + 1}", "id", requireContext().packageName))
                     val tvRewardPoints = cardView.findViewById<TextView>(resources.getIdentifier("tv_reward_points_${index + 1}", "id", requireContext().packageName))
@@ -163,7 +199,7 @@ class LoyaltyFragment : Fragment() {
 
                     if (tvRewardTitle == null || ivRewardIcon == null || tvRewardPoints == null || btnClaim == null) {
                         Log.e("LoyaltyFragment", "RewardDisplay: One or more views not found for reward card ${index + 1}. Check XML IDs.")
-                        return@forEachIndexed // Skip to next reward if views are missing
+                        return@forEachIndexed
                     }
 
                     tvRewardTitle.text = reward.title
@@ -192,7 +228,7 @@ class LoyaltyFragment : Fragment() {
                             backgroundColor = ContextCompat.getColor(requireContext(), R.color.black)
                             textColor = ContextCompat.getColor(requireContext(), R.color.white)
                         }
-                        else -> { // Should not happen with current getStatus logic
+                        else -> {
                             statusText = "-"
                             backgroundColor = ContextCompat.getColor(requireContext(), R.color.light_grey)
                             textColor = ContextCompat.getColor(requireContext(), R.color.black)
@@ -202,9 +238,8 @@ class LoyaltyFragment : Fragment() {
                     btnClaim.text = statusText
                     btnClaim.setBackgroundColor(backgroundColor)
                     btnClaim.setTextColor(textColor)
-
-                    btnClaim.setOnClickListener(null) // Reward buttons are currently not clickable
-                    btnClaim.isEnabled = false // Disable interaction
+                    btnClaim.setOnClickListener(null)
+                    btnClaim.isEnabled = false
                 } else {
                     Log.w("LoyaltyFragment", "RewardDisplay: Attempted to display reward at index $index, but cardView is null (card_${index+1}). Check XML for correct ID.")
                 }
@@ -214,10 +249,7 @@ class LoyaltyFragment : Fragment() {
         }
 
         binding.btnPrevReward.visibility = if (currentPageReward > 0) View.VISIBLE else View.INVISIBLE
-
-        // MODIFIED: Tombol Next Reward terlihat jika ada halaman selanjutnya DAN currentPageReward belum mencapai halaman maksimal yang bisa diakses
         val canGoNextRewardPage = (currentPageReward < totalPages - 1) && (currentPageReward < maxReachableRewardPage)
-
         binding.btnNextReward.visibility = if (canGoNextRewardPage) View.VISIBLE else View.INVISIBLE
 
         val start = currentPageReward * rewardsPerPage + 1
@@ -226,24 +258,20 @@ class LoyaltyFragment : Fragment() {
     }
 
     private fun navigateReward(next: Boolean) {
-        val paginatedRewards = getPaginatedRewards() // Get all rewards, chunked
+        val paginatedRewards = getPaginatedRewards()
         val totalPages = paginatedRewards.size
-        val totalPoints = viewModel.loyaltyUserStatus.value?.totalPoints ?: 0 // Keep totalPoints for Next logic
+        val totalPoints = viewModel.loyaltyUserStatus.value?.totalPoints ?: 0
 
         Log.d("LoyaltyFragment", "NavigateReward: current page $currentPageReward, total pages $totalPages, total points $totalPoints, maxReachablePage=$maxReachableRewardPage, next: $next")
 
         if (next) {
-            // Logika untuk tombol Next Reward
-            // Hanya izinkan navigasi Next jika ada halaman selanjutnya secara total DAN belum melewati maxReachableRewardPage
             if (currentPageReward < totalPages - 1 && currentPageReward < maxReachableRewardPage) {
                 currentPageReward++
                 Log.d("LoyaltyFragment", "NavigateReward: moved to page $currentPageReward")
             } else {
                 Log.d("LoyaltyFragment", "NavigateReward: Cannot go next. Current page: $currentPageReward, Max pages: $totalPages, Max reachable page: $maxReachableRewardPage")
             }
-        } else { // Previous
-            // Logika untuk tombol Previous
-            // Selalu izinkan navigasi Previous jika tidak di halaman pertama
+        } else {
             if (currentPageReward > 0) {
                 currentPageReward--
                 Log.d("LoyaltyFragment", "NavigateReward: moved to page $currentPageReward")
@@ -257,39 +285,20 @@ class LoyaltyFragment : Fragment() {
         }
     }
 
-    // --- MODIFIKASI FUNGSI updateStampCard ---
+    // --- MODIFIKASI FUNGSI updateStampCard (TIDAK ADA PERUBAHAN DI SINI) ---
     private fun updateStampCard(totalPoints: Int) {
         val totalStampPages = (maxStamps + stampsPerPage - 1) / stampsPerPage
 
-        // --- MODIFIKASI: Sesuaikan currentPageStamp secara otomatis ---
-        // Poin pengguna menentukan halaman maksimum yang bisa dia akses.
         val maxReachableStamp = totalPoints
         val maxReachablePage = if (maxReachableStamp > 0) (maxReachableStamp - 1) / stampsPerPage else 0
 
-        // Jika currentPageStamp saat ini melebihi halaman yang bisa diakses, kembalikan ke halaman maksimal yang bisa diakses.
-        // Ini memastikan saat user punya 11 poin, dia langsung di halaman 11-20
-        // Atau jika halaman saat ini tidak relevan dengan poin yang baru diupdate
         if (currentPageStamp > maxReachablePage || currentPageStamp >= totalStampPages) {
             currentPageStamp = maxReachablePage
             Log.d("LoyaltyFragment", "StampDisplay: currentPageStamp adjusted to: $currentPageStamp (maxReachablePage: $maxReachablePage)")
         }
-        // Pastikan juga currentPageStamp tidak keluar dari batas total halaman yang ada di XML (maxStamps)
-        // Dihapus karena sudah dicover oleh `coerceIn` dan `currentPageStamp > maxReachablePage`
-        // if (totalStampPages == 0) {
-        //     currentPageStamp = 0
-        // } else if (currentPageStamp >= totalStampPages) {
-        //     currentPageStamp = totalStampPages - 1
-        // } else if (currentPageStamp < 0) {
-        //     currentPageStamp = 0
-        // }
-        // --- AKHIR MODIFIKASI: Sesuaikan currentPageStamp secara otomatis ---
 
-        // Loop over the 10 available UI elements (indices 0 to 9, mapping to _1 to _10 in XML)
         for (i in 0 until stampsPerPage) {
-            // Calculate the actual stamp number for the current UI slot on the current page
             val stampActualNumber = currentPageStamp * stampsPerPage + i + 1
-
-            // Get resource IDs for the current UI slot (e.g., _1, _2, ..., _10)
             val bgId = resources.getIdentifier("iv_stamp_background_${i + 1}", "id", requireContext().packageName)
             val numId = resources.getIdentifier("tv_stamp_number_${i + 1}", "id", requireContext().packageName)
             val checkId = resources.getIdentifier("iv_stamp_checkmark_${i + 1}", "id", requireContext().packageName)
@@ -299,7 +308,6 @@ class LoyaltyFragment : Fragment() {
             val checkView = binding.root.findViewById<ImageView>(checkId)
 
             if (bgView != null && numView != null && checkView != null) {
-                // Only display stamps that are within the overall maxStamps limit
                 if (stampActualNumber <= maxStamps) {
                     bgView.visibility = View.VISIBLE
                     numView.visibility = View.VISIBLE
@@ -317,40 +325,29 @@ class LoyaltyFragment : Fragment() {
                         checkView.visibility = View.GONE
                     }
                 } else {
-                    // Sembunyikan stamp jika nomornya melebihi total maxStamps (misal, di halaman terakhir jika maxStamps bukan kelipatan 10)
                     bgView.visibility = View.GONE
                     numView.visibility = View.GONE
                     checkView.visibility = View.GONE
                 }
             } else {
-                // Log jika ID stamp tidak ditemukan di XML. Ini terjadi jika XML tidak lengkap (misal, hanya ada stamp 1-5)
                 Log.w("LoyaltyFragment", "StampDisplay: Stamp view with ID 'iv_stamp_background_${i + 1}' (or number/checkmark) not found in layout. Make sure to define it in XML for indices 1-10.")
             }
         }
 
-        // Update teks progress stamp
         val startDisplayStamp = currentPageStamp * stampsPerPage + 1
         val endDisplayStamp = (currentPageStamp * stampsPerPage + stampsPerPage).coerceAtMost(maxStamps)
         binding.textViewStampProgress.text = "Stamps $startDisplayStamp - $endDisplayStamp"
 
-        // --- MODIFIKASI LOGIKA VISIBILITAS TOMBOL NAVIGASI STAMP ---
-        // Tombol Prev Stamp
         binding.btnPrevStamp.visibility = if (currentPageStamp > 0) View.VISIBLE else View.INVISIBLE
-
-        // Tombol Next Stamp terlihat jika ada halaman selanjutnya SECARA TOTAL
-        // DAN jika poin pengguna telah mencapai setidaknya stempel pertama di halaman berikutnya
         val canGoNextPage = (currentPageStamp < totalStampPages - 1) && (totalPoints >= (currentPageStamp + 1) * stampsPerPage)
         binding.btnNextStamp.visibility = if (canGoNextPage) View.VISIBLE else View.INVISIBLE
-
-        // Jika hanya ada satu halaman total, sembunyikan kedua tombol navigasi
         if (totalStampPages <= 1) {
             binding.btnPrevStamp.visibility = View.INVISIBLE
             binding.btnNextStamp.visibility = View.INVISIBLE
         }
-        // --- AKHIR MODIFIKASI LOGIKA VISIBILITAS TOMBOL NAVIGASI STAMP ---
     }
 
-    // --- Tambahkan fungsi navigasi stamp baru ---
+    // --- Tambahkan fungsi navigasi stamp baru (TIDAK ADA PERUBAHAN DI SINI) ---
     private fun navigateStamp(next: Boolean) {
         val totalStampPages = (maxStamps + stampsPerPage - 1) / stampsPerPage
         val totalPoints = viewModel.loyaltyUserStatus.value?.totalPoints ?: 0
@@ -358,14 +355,13 @@ class LoyaltyFragment : Fragment() {
         Log.d("LoyaltyFragment", "NavigateStamp: current page $currentPageStamp, total pages $totalStampPages, total points $totalPoints, next: $next")
 
         if (next) {
-            // Hanya navigasi ke halaman selanjutnya jika ada DAN jika poin pengguna telah mencapai setidaknya stempel pertama di halaman berikutnya
             if (currentPageStamp < totalStampPages - 1 && totalPoints >= (currentPageStamp + 1) * stampsPerPage) {
                 currentPageStamp++
                 Log.d("LoyaltyFragment", "NavigateStamp: moved to page $currentPageStamp")
             } else {
                 Log.d("LoyaltyFragment", "NavigateStamp: Cannot go next. Current page: $currentPageStamp, Max pages: $totalStampPages, Points: $totalPoints, Required for next page: ${(currentPageStamp + 1) * stampsPerPage}")
             }
-        } else { // Previous
+        } else {
             if (currentPageStamp > 0) {
                 currentPageStamp--
                 Log.d("LoyaltyFragment", "NavigateStamp: moved to page $currentPageStamp")
@@ -378,7 +374,6 @@ class LoyaltyFragment : Fragment() {
             updateStampCard(status.totalPoints)
         }
     }
-    // --- Akhir fungsi navigasi stamp baru ---
 
     override fun onResume() {
         super.onResume()

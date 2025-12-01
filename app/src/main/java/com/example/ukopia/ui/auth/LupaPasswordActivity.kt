@@ -29,7 +29,7 @@ class LupaPasswordActivity : AppCompatActivity() {
         setContentView(R.layout.activity_lupa_password)
 
         val editEmail = findViewById<EditText>(R.id.editEmail)
-        btnVerifikasiAkun = findViewById(R.id.btnVerifikasiAkun)
+        btnVerifikasiAkun = findViewById(R.id.btnVerifikasiKode)
 
         // Verifikasi apakah elemen UI ditemukan
         if (editEmail == null) {
@@ -39,7 +39,7 @@ class LupaPasswordActivity : AppCompatActivity() {
             return
         }
         if (btnVerifikasiAkun == null) {
-            Log.e("LupaPasswordActivity", "Button with ID R.id.btnVerifikasiAkun not found!")
+            Log.e("LupaPasswordActivity", "Button with ID R.id.btnVerifikasiKode not found!")
             Toast.makeText(this, "Error: btnVerifikasiAkun not found", Toast.LENGTH_LONG).show()
             finish()
             return

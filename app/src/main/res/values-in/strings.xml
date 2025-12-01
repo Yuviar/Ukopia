@@ -16,10 +16,14 @@
     <string name="change_password_title">GANTI\nKATA SANDI</string>
     <string name="email_label">Email</string>
     <string name="name_label">Nama</string>
+    <string name="fullname_label">Nama Lengkap</string>
+    <string name="username_label">Username</string>
     <string name="password_label">Kata Sandi</string>
     <string name="new_password_label">Kata Sandi Baru</string>
     <string name="enter_email_hint">Masukkan Email Anda</string>
     <string name="enter_name_hint">Masukkan Nama Anda</string>
+    <string name="enter_username_hint">Masukkan Username Anda</string>
+    <string name="enter_fullname_hint">Masukkan Nama Lengkap Anda</string>
     <string name="enter_password_hint">Masukkan Kata Sandi Anda</string>
     <string name="enter_new_password_hint">Masukkan Kata Sandi Baru Anda</string>
     <string name="forgot_password_button_text">Lupa Kata Sandi?</string>

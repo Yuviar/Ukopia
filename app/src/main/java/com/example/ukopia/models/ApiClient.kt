@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit // Tambahkan import ini jika belum ada
 
 object ApiClient {
 
-    private const val BASE_URL = "http://192.168.18.140/SI-ukopia/BackOffice/api/" // Pastikan ini URL yang benar
+    private const val BASE_URL = "http://192.168.18.11/SI-ukopia/BackOffice/api/" // Pastikan ini URL yang benar
 
     // Interceptor untuk logging
     private val loggingInterceptor = HttpLoggingInterceptor().apply {

@@ -10,6 +10,7 @@ import com.example.ukopia.data.SubEquipmentItem
 import com.example.ukopia.data.LoyaltyListResponse
 import com.example.ukopia.data.LoyaltyUserStatus
 import com.example.ukopia.data.LoyaltyStatusResponse
+import com.example.ukopia.ui.auth.AuthViewModel
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -30,6 +31,13 @@ interface ApiService {
     suspend fun loginUser(
         @Body requestBody: LoginRequest
     ): Response<LoginResponse>
+
+    // Tambahkan di interface ApiService
+
+    @POST("auth/forgot.php")
+    suspend fun forgotPassword(
+        @Body request: ForgotPasswordRequest
+    ): Response<GenericResponse>
 
     // --- ENDPOINT MENU & ULASAN ---
 

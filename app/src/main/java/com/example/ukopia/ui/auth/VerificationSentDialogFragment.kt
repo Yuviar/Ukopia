@@ -2,11 +2,11 @@ package com.example.ukopia.ui.auth
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.Gravity // Import Gravity
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window // Import Window
+import android.view.Window
 import androidx.fragment.app.DialogFragment
 import com.example.ukopia.R
 import com.example.ukopia.databinding.FragmentVerificationSentDialogBinding
@@ -16,6 +16,9 @@ class VerificationSentDialogFragment : DialogFragment() {
     private var _binding: FragmentVerificationSentDialogBinding? = null
     private val binding get() = _binding!!
 
+    // [BARU] Variable untuk menampung aksi klik
+    var onOkClickListener: (() -> Unit)? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -24,7 +27,6 @@ class VerificationSentDialogFragment : DialogFragment() {
         return binding.root
     }
 
-    // NEW: Tambahkan onCreateDialog untuk menghapus title bar default dan mengatur background transparan
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.window?.requestFeature(Window.FEATURE_NO_TITLE)
@@ -41,8 +43,10 @@ class VerificationSentDialogFragment : DialogFragment() {
         binding.textViewDialogTitle.text = title
         binding.textViewDialogMessage.text = message
 
+        // [UBAH] Saat tombol OK ditekan
         binding.buttonDialogOk.setOnClickListener {
-            dismiss()
+            dismiss() // Tutup dialog
+            onOkClickListener?.invoke() // Jalankan aksi pindah halaman (jika ada)
         }
     }
 
@@ -51,23 +55,18 @@ class VerificationSentDialogFragment : DialogFragment() {
         _binding = null
     }
 
-    // MODIFIED: Sesuaikan ukuran dan gravitasi dialog agar mirip LanguageChooserDialogFragment
     override fun onStart() {
         super.onStart()
         dialog?.window?.let { window ->
             val displayMetrics = resources.displayMetrics
             val screenWidth = displayMetrics.widthPixels
-
-            val horizontalMarginDp = 24 // Sama dengan yang di fragment_logout_confirmation_dialog.xml
-            val horizontalMarginPx = (horizontalMarginDp * displayMetrics.density).toInt() * 2 // dikali 2 karena margin kanan dan kiri
-
+            val horizontalMarginDp = 24
+            val horizontalMarginPx = (horizontalMarginDp * displayMetrics.density).toInt() * 2
             val dialogWidth = screenWidth - horizontalMarginPx
-
             window.setLayout(dialogWidth, ViewGroup.LayoutParams.WRAP_CONTENT)
-            window.setGravity(Gravity.CENTER_HORIZONTAL) // Set dialog ke tengah horizontal
+            window.setGravity(Gravity.CENTER_HORIZONTAL)
         }
     }
-
 
     companion object {
         private const val ARG_MESSAGE = "message"

@@ -6,70 +6,162 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ukopia.models.ApiClient
+import com.example.ukopia.models.ForgotPasswordRequest
 import com.example.ukopia.models.LoginRequest
 import com.example.ukopia.models.LoginResponse
 import com.example.ukopia.models.RegisterRequest
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 class AuthViewModel : ViewModel() {
 
-    // Untuk pesan umum (registrasi, error)
-    private val _message = MutableLiveData<String>()
-    val message: LiveData<String> = _message
-
-    // KHUSUS untuk data login yang sukses
-    private val _loginResult = MutableLiveData<LoginResponse?>()
-    val loginResult: LiveData<LoginResponse?> = _loginResult
-
-    // Untuk status loading
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
+    private val _message = MutableLiveData<String>()
+    val message: LiveData<String> = _message
+
+    // LiveData khusus untuk Login Sukses
+    private val _loginSuccess = MutableLiveData<LoginResponse?>()
+    val loginSuccess: LiveData<LoginResponse?> = _loginSuccess
+
+    // LiveData khusus untuk Register Sukses (Trigger Popup)
+    private val _registerSuccess = MutableLiveData<Boolean>()
+    val registerSuccess: LiveData<Boolean> = _registerSuccess
+
+    // LiveData untuk hasil Lupa Password
+    private val _forgotPasswordState = MutableLiveData<String?>() // "otp_sent", "otp_verified", "password_reset"
+    val forgotPasswordState: LiveData<String?> = _forgotPasswordState
+
     fun register(request: RegisterRequest) {
-        _isLoading.postValue(true)
+        _isLoading.value = true
+        _registerSuccess.value = false // Reset state
+
         viewModelScope.launch {
             try {
                 val response = ApiClient.instance.registerUser(request)
-                if (response.isSuccessful) {
-                    _message.postValue(response.body()?.message ?: "Registrasi berhasil!")
+
+                if (response.isSuccessful && response.body()?.success == true) {
+                    // SUKSES
+                    _message.value = response.body()?.message
+                    _registerSuccess.value = true // Trigger Popup di Activity
                 } else {
-                    _message.postValue("Error ${response.code()}: Gagal mendaftar.")
+                    // GAGAL (Server merespon, tapi success=false)
+                    // Coba baca error body jika ada, atau pakai message dari JSON
+                    val errorMsg = response.body()?.message
+                        ?: parseError(response.errorBody()?.string())
+                        ?: "Gagal mendaftar"
+                    _message.value = errorMsg
                 }
             } catch (e: Exception) {
-                // Catat error ke Logcat agar mudah di-debug
-                Log.e("AuthViewModel", "Register failed with exception", e)
-                _message.postValue("Gagal terhubung ke server: ${e.message}")
+                Log.e("AUTH_API", "Error Register: ${e.message}")
+                _message.value = "Terjadi kesalahan koneksi"
             } finally {
-                _isLoading.postValue(false)
+                _isLoading.value = false
             }
         }
     }
 
     fun login(request: LoginRequest) {
-        _isLoading.postValue(true)
-        _loginResult.postValue(null) // Reset state dari login sebelumnya
+        _isLoading.value = true
+        _loginSuccess.value = null // Reset state
 
         viewModelScope.launch {
             try {
                 val response = ApiClient.instance.loginUser(request)
-                if (response.isSuccessful && response.body() != null) {
-                    // Kirim seluruh response object agar Activity bisa ambil data user
-                    _loginResult.postValue(response.body())
+
+                if (response.isSuccessful && response.body()?.success == true) {
+                    // LOGIN SUKSES
+                    _loginSuccess.value = response.body()
                 } else {
-                    // Coba baca pesan error dari server jika ada
-                    val errorBody = response.errorBody()?.string()
-                    Log.w("AuthViewModel", "Login failed. Code: ${response.code()}, Error Body: $errorBody")
-                    _message.postValue("Gagal Login. " + (errorBody ?: "Pastikan email dan password benar."))
+                    // LOGIN GAGAL
+                    val errorMsg = response.body()?.message
+                        ?: parseError(response.errorBody()?.string())
+                        ?: "Login gagal"
+                    _message.value = errorMsg
                 }
             } catch (e: Exception) {
-                // INI BAGIAN PALING PENTING UNTUK DEBUGGING
-                // Mencatat exception lengkap ke Logcat dengan level Error
-                Log.e("AuthViewModel", "Exception during login API call", e)
-                _message.postValue("Gagal terhubung ke server. Periksa koneksi internet Anda.")
+                Log.e("AUTH_API", "Error Login: ${e.message}")
+                _message.value = "Terjadi kesalahan koneksi"
             } finally {
-                // Pastikan loading selalu berhenti, baik sukses maupun gagal
+                _isLoading.value = false
+            }
+        }
+    }
+
+    // Helper untuk parsing error JSON manual jika response code != 200
+    private fun parseError(json: String?): String? {
+        return try {
+            val obj = JSONObject(json ?: "")
+            obj.getString("message")
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    fun sendOtp(email: String) {
+        _isLoading.postValue(true)
+        viewModelScope.launch {
+            try {
+                val request = ForgotPasswordRequest(action = "send_code", email = email)
+                val response = ApiClient.instance.forgotPassword(request)
+                if (response.isSuccessful && response.body()?.success == true) {
+                    _message.postValue(response.body()?.message)
+                    _forgotPasswordState.postValue("otp_sent")
+                } else {
+                    _message.postValue(response.body()?.message ?: "Gagal mengirim kode")
+                }
+            } catch (e: Exception) {
+                _message.postValue("Error: ${e.message}")
+            } finally {
                 _isLoading.postValue(false)
             }
         }
     }
+
+    fun verifyOtp(email: String, code: String) {
+        _isLoading.postValue(true)
+        viewModelScope.launch {
+            try {
+                val request = ForgotPasswordRequest(action = "verify_code", email = email, code = code)
+                val response = ApiClient.instance.forgotPassword(request)
+                if (response.isSuccessful && response.body()?.success == true) {
+                    _message.postValue("Kode valid!")
+                    _forgotPasswordState.postValue("otp_verified")
+                } else {
+                    _message.postValue(response.body()?.message ?: "Kode salah")
+                }
+            } catch (e: Exception) {
+                _message.postValue("Error: ${e.message}")
+            } finally {
+                _isLoading.postValue(false)
+            }
+        }
+    }
+
+    fun resetPassword(email: String, code: String, newPass: String) {
+        _isLoading.postValue(true)
+        viewModelScope.launch {
+            try {
+                val request = ForgotPasswordRequest(
+                    action = "reset_password",
+                    email = email,
+                    code = code,
+                    new_password = newPass
+                )
+                val response = ApiClient.instance.forgotPassword(request)
+                if (response.isSuccessful && response.body()?.success == true) {
+                    _message.postValue("Password berhasil diubah")
+                    _forgotPasswordState.postValue("password_reset")
+                } else {
+                    _message.postValue(response.body()?.message ?: "Gagal mereset password")
+                }
+            } catch (e: Exception) {
+                _message.postValue("Error: ${e.message}")
+            } finally {
+                _isLoading.postValue(false)
+            }
+        }
+    }
+
 }

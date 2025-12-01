@@ -25,15 +25,6 @@
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/slogan_text"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:textFontWeight="800"
-            android:fontFamily="@font/montserrat_extrabold"/>
     </LinearLayout>
 
     <!-- Bagian formulir register di dalam MaterialCardView (Latar belakang putih dengan rounded top corners) -->
@@ -70,30 +61,52 @@
                 android:textFontWeight="800"
                 android:fontFamily="@font/montserrat_extrabold"
                 android:gravity="center"
-                android:layout_marginBottom="40dp"
+                android:layout_marginBottom="20dp"
                 android:textColor="@color/black"/>
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/name_label"
+                android:text="@string/fullname_label"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="4dp"
                 android:textColor="@color/black"/>
 
             <EditText
-                android:id="@+id/editNama"
+                android:id="@+id/editNamaLengkap"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/edit_text_border"
-                android:hint="@string/enter_name_hint"
+                android:hint="@string/enter_fullname_hint"
                 android:textColorHint="@color/light_grey"
                 android:inputType="textPersonName"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:padding="10dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/username_label"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp"
+
+                android:textColor="@color/black"/>
+
+            <EditText
+                android:id="@+id/editUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/edit_text_border"
+                android:hint="@string/enter_username_hint"
+                android:textColorHint="@color/light_grey"
+                android:inputType="textPersonName"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:padding="10dp"/>
+
 
             <TextView
                 android:layout_width="match_parent"
@@ -101,14 +114,14 @@
                 android:text="@string/email_label"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="4dp"
                 android:textColor="@color/black"/>
 
             <EditText
                 android:id="@+id/editEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/edit_text_border"
                 android:hint="@string/enter_email_hint"
                 android:textColorHint="@color/light_grey"
@@ -123,7 +136,7 @@
                 android:text="@string/password_label"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="4dp"
                 android:textColor="@color/black"/>
 
             <RelativeLayout

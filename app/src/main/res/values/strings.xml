@@ -417,4 +417,5 @@
     <string name="acidity_format">Acidity: %d</string>
     <string name="bitterness_format">Bitterness: %d</string>
     <string name="body_format">Body: %d</string>
+
 </resources>

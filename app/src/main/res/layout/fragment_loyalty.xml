@@ -206,6 +206,7 @@
                                     <ImageView android:id="@+id/iv_stamp_checkmark_10" style="@style/LoyaltyStampCheckmark" />
                                 </FrameLayout>
                             </LinearLayout>
+
                         </LinearLayout>
 
                         <ImageButton

@@ -417,4 +417,5 @@
     <string name="acidity_format">Keasaman: %d</string>
     <string name="bitterness_format">Kepahitan: %d</string>
     <string name="body_format">Kekentalan: %d</string>
+
 </resources>

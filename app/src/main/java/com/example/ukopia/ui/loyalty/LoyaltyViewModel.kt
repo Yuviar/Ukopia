@@ -1,5 +1,4 @@
 // File: D:/github_rama/Ukopia/app/src/main/java/com/example/ukopia/ui/loyalty/LoyaltyViewModel.kt
-
 package com.example.ukopia.ui.loyalty
 
 import android.app.Application
@@ -17,8 +16,9 @@ import kotlinx.coroutines.launch
 
 class LoyaltyViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _pendingItems = MutableLiveData<List<LoyaltyItemV2>>()
-    val pendingItems: LiveData<List<LoyaltyItemV2>> = _pendingItems
+    // Ganti nama LiveData agar lebih sesuai, karena sekarang akan menyimpan semua item
+    private val _loyaltyItems = MutableLiveData<List<LoyaltyItemV2>>()
+    val loyaltyItems: LiveData<List<LoyaltyItemV2>> = _loyaltyItems // Ganti _pendingItems menjadi _loyaltyItems
 
     private val _loyaltyUserStatus = MutableLiveData<LoyaltyUserStatus>()
     val loyaltyUserStatus: LiveData<LoyaltyUserStatus> = _loyaltyUserStatus
@@ -36,9 +36,6 @@ class LoyaltyViewModel(application: Application) : AndroidViewModel(application)
         _loyaltyUserStatus.value = SessionManager.getLoyaltyUserStatus(context)
     }
 
-    /**
-     * Fungsi helper untuk menyimpan dan memperbarui status loyalty ke SessionManager dan LiveData.
-     */
     private fun updateLoyaltyStatus(newStatus: LoyaltyUserStatus) {
         val context = getApplication<Application>()
         SessionManager.saveLoyaltyUserStatus(context, newStatus)
@@ -60,26 +57,41 @@ class LoyaltyViewModel(application: Application) : AndroidViewModel(application)
         _isLoading.value = true
         viewModelScope.launch {
             try {
-                // Panggil API secara paralel: list dan status
+                // Panggil API secara paralel: list pending, list history, dan status
                 val pendingDef = async { ApiClient.instance.getLoyaltyList(uid, "pending") }
+                val historyDef = async { ApiClient.instance.getLoyaltyList(uid, "history") } // Panggil untuk history
                 val statusDef = async { ApiClient.instance.getLoyaltyStatus(uid) }
 
                 val pendingRes = pendingDef.await()
+                val historyRes = historyDef.await() // Ambil hasil history
                 val statusRes = statusDef.await()
 
-                // 1. Update List Pending
+                // 1. Gabungkan List Pending dan History
+                val allLoyaltyItems = mutableListOf<LoyaltyItemV2>()
+
                 if (pendingRes.isSuccessful) {
                     val items = pendingRes.body()?.data ?: emptyList()
-                    _pendingItems.value = items
-                    Log.d("LoyaltyViewModel", "Pending/History items fetched: ${items.size}")
+                    allLoyaltyItems.addAll(items)
+                    Log.d("LoyaltyViewModel", "Pending items fetched: ${items.size}")
                 } else {
-                    Log.e("LoyaltyViewModel", "Failed to fetch pending/history items: ${pendingRes.errorBody()?.string()}")
+                    Log.e("LoyaltyViewModel", "Failed to fetch pending items: ${pendingRes.errorBody()?.string()}")
                 }
+
+                if (historyRes.isSuccessful) {
+                    val items = historyRes.body()?.data ?: emptyList()
+                    allLoyaltyItems.addAll(items)
+                    Log.d("LoyaltyViewModel", "History items fetched: ${items.size}")
+                } else {
+                    Log.e("LoyaltyViewModel", "Failed to fetch history items: ${historyRes.errorBody()?.string()}")
+                }
+
+                // Sortir berdasarkan tanggal terbaru agar item yang baru selesai muncul di atas
+                _loyaltyItems.value = allLoyaltyItems.sortedByDescending { it.tanggal } // Ganti _pendingItems menjadi _loyaltyItems
 
                 // 2. Update Status User (Poin & Klaim Reward)
                 if (statusRes.isSuccessful) {
                     statusRes.body()?.data?.let { newStatus ->
-                        updateLoyaltyStatus(newStatus) // <--- MENGGUNAKAN FUNGSI HELPER
+                        updateLoyaltyStatus(newStatus)
                     } ?: Log.e("LoyaltyViewModel", "Loyalty status data is null in response.")
                 } else {
                     Log.e("LoyaltyViewModel", "Failed to fetch loyalty status: ${statusRes.errorBody()?.string()}")
@@ -126,21 +138,21 @@ class LoyaltyViewModel(application: Application) : AndroidViewModel(application)
 
         viewModelScope.launch {
             try {
-                // response kini mengembalikan LoyaltyStatusResponse
                 val response = ApiClient.instance.updateLoyaltyReview(params)
                 if (response.isSuccessful && response.body()?.success == true) {
                     Log.d("LoyaltyViewModel", "Review berhasil disimpan untuk id_loyalty: ${item.idLoyalty}")
 
-                    // Gunakan response dari update untuk memperbarui status agar lebih cepat (optional)
                     response.body()?.data?.let { newStatus ->
                         updateLoyaltyStatus(newStatus)
                     }
 
-                    refreshLoyaltyData() // Panggil untuk update list item (Pending -> History)
+                    refreshLoyaltyData() // Panggil untuk update list item
                     onSuccess()
                 } else {
-                    val errorMessage = response.body()?.message ?: response.errorBody()?.string() ?: "Gagal menyimpan review"
+                    val errorBodyString = response.errorBody()?.string() // Dapatkan error body sebagai string
+                    val errorMessage = response.body()?.message ?: errorBodyString ?: "Gagal menyimpan review"
                     Log.e("LoyaltyViewModel", "API Error saat submitReview (HTTP ${response.code()}): $errorMessage")
+                    Log.e("LoyaltyViewModel", "Raw Response Body (HTTP ${response.code()}): $errorBodyString")
                     onError(errorMessage)
                 }
             } catch (e: Exception) {

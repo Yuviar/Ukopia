@@ -5,12 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.ukopia.MainActivity
 import com.example.ukopia.data.LoyaltyItemV2
-import com.example.ukopia.databinding.FragmentEditLoyaltyBinding // Pastikan package ini benar
+import com.example.ukopia.databinding.FragmentEditLoyaltyBinding
 
 class EditLoyaltyFragment : Fragment() {
 
@@ -42,8 +44,14 @@ class EditLoyaltyFragment : Fragment() {
 
         (activity as? MainActivity)?.setBottomNavVisibility(View.GONE)
 
-        item = arguments?.getParcelable("item_edit") ?: return
+        item = arguments?.getParcelable("item_edit") ?: run {
+            Toast.makeText(context, "Item loyalty tidak ditemukan.", Toast.LENGTH_SHORT).show()
+            parentFragmentManager.popBackStack()
+            return
+        }
+
         setupUI()
+        setupSeekbarListeners()
 
         binding.btnSave.setOnClickListener {
             saveChanges()
@@ -72,21 +80,54 @@ class EditLoyaltyFragment : Fragment() {
             binding.textViewCoffeeBeanValue.text = item.namaBeans
             binding.textViewCoffeeBeanValue.isEnabled = false
 
-            // Set Slider Values (Default 0 jika null)
+            // Set initial SeekBar values
             binding.seekBarAroma.progress = nilai?.aroma ?: 0
             binding.seekBarSweetness.progress = nilai?.kemanisan ?: 0
             binding.seekBarAcidity.progress = nilai?.keasaman ?: 0
             binding.seekBarBitterness.progress = nilai?.kepahitan ?: 0
             binding.seekBarBody.progress = nilai?.kekentalan ?: 0
+
+            // Set initial TextView values for seekbars to reflect current progress
+            binding.textViewAromaValue.text = (nilai?.aroma ?: 0).toString()
+            binding.textViewSweetnessValue.text = (nilai?.kemanisan ?: 0).toString()
+            binding.textViewAcidityValue.text = (nilai?.keasaman ?: 0).toString()
+            binding.textViewBitternessValue.text = (nilai?.kepahitan ?: 0).toString()
+            binding.textViewBodyValue.text = (nilai?.kekentalan ?: 0).toString()
+
         } else {
             binding.linearLayoutCoffeeDetails.visibility = View.GONE
             binding.linearLayoutNonCoffeeDetails.visibility = View.VISIBLE
             binding.textViewNonCoffeeItemValue.text = item.namaMenu
             binding.textViewNonCoffeeItemValue.isEnabled = false
+            // Baris ini dihapus karena textViewTasteProfil tidak ada di layout ini
         }
 
         // Catatan
         binding.editTextCatatan.setText(nilai?.catatan ?: "")
+    }
+
+    private fun setupSeekbarListeners() {
+        setupSingleSeekbarListener(binding.seekBarAroma, binding.textViewAromaValue)
+        setupSingleSeekbarListener(binding.seekBarSweetness, binding.textViewSweetnessValue)
+        setupSingleSeekbarListener(binding.seekBarAcidity, binding.textViewAcidityValue)
+        setupSingleSeekbarListener(binding.seekBarBitterness, binding.textViewBitternessValue)
+        setupSingleSeekbarListener(binding.seekBarBody, binding.textViewBodyValue)
+    }
+
+    private fun setupSingleSeekbarListener(seekBar: SeekBar, textView: TextView) {
+        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                textView.text = progress.toString()
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                // Tidak perlu implementasi spesifik di sini
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                // Tidak perlu implementasi spesifik di sini
+            }
+        })
     }
 
     private fun saveChanges() {

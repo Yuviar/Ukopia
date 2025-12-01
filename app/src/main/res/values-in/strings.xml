@@ -61,6 +61,7 @@
     <string name="logout_option">Keluar</string>
     <string name="arrow_forward_desc">Panah Maju</string>
 
+    <!-- NEW/UPDATED: Language Chooser Strings -->
     <string name="select_language">Pilih Bahasa</string>
     <string name="language_english">Inggris</string>
     <string name="language_indonesian">Indonesia</string>
@@ -241,7 +242,7 @@
     <string name="step_brew">Seduh</string>
     <string name="desc_brew">Biarkan kopi diseduh selama durasi yang ditentukan.</string>
 
-    <string name="loyalty_card_title">Kartu Loyalitas Maya</string>
+    <string name="loyalty_card_title">Kartu Loyalitas</string>
     <string name="no_loyalty_data_placeholder">Belum ada data loyalitas yang ditambahkan.</string>
     <string name="loyalty_item_name_placeholder">Kopi Ijen cm</string>
     <string name="loyalty_date_placeholder">Tanggal: 23/09/2025</string>
@@ -313,7 +314,7 @@
     <string name="loyalty_reward_claim_free_serve">Klaim GRATIS 1 PORSI</string>
     <string name="loyalty_reward_claim_free_tshirt">Klaim GRATIS KAOS</string>
 
-    <!-- String baru dan dimodifikasi untuk UI dan Toast -->
+    <!-- UI dan Toast strings -->
     <string name="loyalty_reward_10_percent_discount_short">DISKON 10%</string>
     <string name="loyalty_reward_free_serve_short">GRATIS 1 PORSI</string>
     <string name="loyalty_reward_free_tshirt_short">GRATIS KAOS</string>
@@ -386,6 +387,7 @@
     <string name="collect_stamps_for_rewards">Kumpulkan Stempel untuk Hadiah!</string>
     <string name="todays_promo">Promo Hari Ini!</string>
     <string name="promo_description_halloween">Hadiri acara Halloween di Ukopia Brew Sauce!\nKlik untuk detail lebih lanjut..</string>
+    <string name="best_seller_title">Menu Terlaris</string> <!-- NEW STRING -->
 
     <!-- NEW STRINGS for RewardListFragment and Reward Status Display -->
     <string name="reward_status_not_yet_claimed">Belum Diklaim</string>
@@ -395,6 +397,12 @@
     <string name="all_rewards_title">Semua Rewards</string>
     <string name="no_rewards_defined">Belum ada rewards yang didefinisikan.</string>
     <string name="reward_history_desc">Riwayat Reward</string>
+    <string name="show_code_instruction">Tunjukkan kode ini kepada kasir:</string> <!-- NEW STRING -->
+    <string name="copy_code_button_text">Salin Kode</string> <!-- NEW STRING -->
+    <string name="code_copied_toast">Kode disalin!</string> <!-- NEW STRING -->
+    <string name="show_code_to_staff_instruction">Silakan tunjukkan kode ini kepada staf untuk diklaim.</string> <!-- NEW STRING -->
+    <string name="loyalty_rewards_title">Rewards</string> <!-- NEW STRING -->
+
 
     <!-- NEW STRINGS FOR EDIT LOYALTY FEATURE -->
     <string name="edit_button_text">Edit</string>
@@ -413,9 +421,19 @@
 
     <string name="no_notes_available">Tidak ada catatan</string>
     <string name="aroma_format">Aroma: %d</string>
-    <string name="sweetness_format">Kemanisa: %d</string>
+    <string name="sweetness_format">Kemanisan: %d</string>
     <string name="acidity_format">Keasaman: %d</string>
     <string name="bitterness_format">Kepahitan: %d</string>
     <string name="body_format">Kekentalan: %d</string>
+
+    <!-- NEW: Strings for Login Required Dialog -->
+    <string name="login_required_dialog_title">Perlu Login</string>
+    <string name="login_required_dialog_message">Anda harus login untuk mengakses fitur loyalitas.</string>
+    <string name="login_dialog_button_text">Login</string>
+    <string name="cancel_dialog_button_text">Batal</string>
+
+    <string name="clipboard_reward_label">Kode Reward</string>
+    <string name="reward_code_prefix">Kode: </string>
+    <string name="rewards_available_status">Hadiah Tersedia</string>
 
 </resources>

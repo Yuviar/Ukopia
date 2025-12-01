@@ -1,5 +1,6 @@
 package com.example.ukopia
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -10,9 +11,10 @@ import androidx.fragment.app.Fragment
 import com.example.ukopia.databinding.ActivityMainBinding
 import com.example.ukopia.databinding.DialogLoginRequiredBinding
 import com.example.ukopia.ui.akun.AkunFragment
-import com.example.ukopia.ui.auth.LoginActivity
+import com.example.ukopia.ui.akun.LocaleHelper
 import com.example.ukopia.ui.home.HomeFragment
 import com.example.ukopia.ui.loyalty.LoyaltyFragment
+import com.example.ukopia.ui.auth.LoginActivity
 import com.example.ukopia.ui.menu.MenuFragment
 import com.example.ukopia.ui.recipe.RecipeFragment
 
@@ -20,13 +22,20 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    // Launcher Login: Jika user login sukses, langsung arahkan ke Loyalty
     private val loyaltyLoginLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (SessionManager.isLoggedIn(this)) {
             loadFragment(LoyaltyFragment())
             binding.bottomNavigationView.selectedItemId = R.id.itemLoyalty
+        }
+    }
+
+    override fun attachBaseContext(newBase: Context?) {
+        if (newBase != null) {
+            super.attachBaseContext(LocaleHelper.onAttach(newBase))
+        } else {
+            super.attachBaseContext(newBase)
         }
     }
 
@@ -49,7 +58,6 @@ class MainActivity : AppCompatActivity() {
                     loadFragment(MenuFragment())
                     true
                 }
-                // --- LOGIC: Cek Login sebelum buka Loyalty ---
                 R.id.itemLoyalty -> {
                     if (SessionManager.isLoggedIn(this)) {
                         loadFragment(LoyaltyFragment())
@@ -78,7 +86,6 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
-    // Menampilkan Dialog dari XML `dialog_login_required.xml`
     private fun showLoginRequiredDialog() {
         val dialogBinding = DialogLoginRequiredBinding.inflate(layoutInflater)
         val dialog = AlertDialog.Builder(this)
@@ -86,6 +93,13 @@ class MainActivity : AppCompatActivity() {
             .create()
 
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        // Menggunakan string resource yang baru ditambahkan
+        dialogBinding.tvDialogLoginTitle.text = getString(R.string.login_required_dialog_title)
+        dialogBinding.tvDialogLoginMessage.text = getString(R.string.login_required_dialog_message)
+        dialogBinding.buttonDialogLogin.text = getString(R.string.login_dialog_button_text)
+        dialogBinding.buttonDialogCancel.text = getString(R.string.cancel_dialog_button_text)
+
 
         dialogBinding.buttonDialogLogin.setOnClickListener {
             dialog.dismiss()
@@ -100,12 +114,10 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    // Helper untuk menyembunyikan bottom nav (dipakai di EditLoyaltyFragment)
     fun setBottomNavVisibility(visibility: Int) {
         binding.bottomNavigationView.visibility = visibility
     }
 
-    // Helper navigasi antar fragment
     fun navigateToFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, fragment)

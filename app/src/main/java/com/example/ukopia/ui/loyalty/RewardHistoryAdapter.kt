@@ -25,12 +25,28 @@ class RewardHistoryAdapter(
 
     inner class ViewHolder(private val binding: ItemRewardListBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: RewardHistoryItem) {
-            binding.tvRewardName.text = item.namaReward
+            val context = itemView.context
 
-            // Icon Mapping Sederhana
+            // MODIFIKASI DIMULAI DI SINI (Pemetaan Nama Reward dari Backend ke String Resource Lokal)
+            val localizedRewardName = when {
+                item.namaReward.contains("Diskon 10%", ignoreCase = true) || item.namaReward.contains("Discount 10%", ignoreCase = true) -> context.getString(R.string.loyalty_reward_10_percent_discount_title)
+                // Menambahkan kondisi untuk "Free Manual Brew" agar dipetakan ke "Free 1 Serve"
+                item.namaReward.contains("Free 1 Serve", ignoreCase = true) ||
+                        item.namaReward.contains("GRATIS 1 PORSI", ignoreCase = true) ||
+                        item.namaReward.contains("Free Manual Brew", ignoreCase = true) -> context.getString(R.string.loyalty_reward_free_serve_title)
+                item.namaReward.contains("T-Shirt", ignoreCase = true) || item.namaReward.contains("KAOS", ignoreCase = true) -> context.getString(R.string.loyalty_reward_free_tshirt_title)
+                else -> item.namaReward // Jika tidak cocok, gunakan nama asli dari backend
+            }
+            binding.tvRewardName.text = localizedRewardName
+            // MODIFIKASI BERAKHIR DI SINI
+
+            // Icon Mapping Sederhana (tetap menggunakan item.namaReward asli untuk logika mapping icon)
+            // Menambahkan kondisi untuk "Free Manual Brew" agar mendapatkan ikon yang sama
             val iconResId = when {
-                item.namaReward.contains("T-Shirt", ignoreCase = true) -> R.drawable.ic_tshirt
-                item.namaReward.contains("Serve", ignoreCase = true) -> R.drawable.ic_coffee_cup
+                item.namaReward.contains("T-Shirt", ignoreCase = true) || item.namaReward.contains("KAOS", ignoreCase = true) -> R.drawable.ic_tshirt
+                item.namaReward.contains("Serve", ignoreCase = true) ||
+                        item.namaReward.contains("PORSI", ignoreCase = true) ||
+                        item.namaReward.contains("Free Manual Brew", ignoreCase = true) -> R.drawable.ic_coffee_cup
                 else -> R.drawable.ic_discount
             }
             binding.ivRewardIcon.setImageResource(iconResId)
@@ -43,17 +59,17 @@ class RewardHistoryAdapter(
             }
 
             // Cek Status Klaim
-            val isUsed = item.statusKlaim.equals("Claimed", ignoreCase = true)
+            // Logika ini sudah benar karena statusKlaim dari backend adalah "Sudah Dipakai" atau "Claimed"
+            val isUsed = item.statusKlaim.equals("Claimed", ignoreCase = true) || item.statusKlaim.equals("Sudah Dipakai", ignoreCase = true)
 
             if (isUsed) {
                 // STATUS: SUDAH DIPAKAI (DISABLE)
-                // Kotak status hanya berisi teks status
-                binding.tvRewardStatus.text = "CLAIMED"
+                binding.tvRewardStatus.text = context.getString(R.string.reward_claimed_status).uppercase()
                 binding.tvRewardStatus.setBackgroundColor(Color.DKGRAY)
                 binding.tvRewardStatus.setTextColor(Color.WHITE)
 
-                // Tanggal ditaruh di bawah kode (menggunakan \n)
-                binding.tvPointsRequired.text = "Code: ${item.kodeUnik}\n$tanggalDisplay"
+                // Menggunakan string resource untuk "Code: "
+                binding.tvPointsRequired.text = "${context.getString(R.string.reward_code_prefix)}${item.kodeUnik}\n$tanggalDisplay"
 
                 // Efek visual disable
                 binding.root.alpha = 0.6f
@@ -61,13 +77,12 @@ class RewardHistoryAdapter(
                 binding.root.setOnClickListener(null)
             } else {
                 // STATUS: BELUM DIPAKAI (ENABLE)
-                // Kotak status hanya berisi teks status
-                binding.tvRewardStatus.text = "TAP TO USE"
+                binding.tvRewardStatus.text = context.getString(R.string.loyalty_reward_claim_action).uppercase()
                 binding.tvRewardStatus.setBackgroundColor(Color.parseColor("#4CAF50")) // Hijau
                 binding.tvRewardStatus.setTextColor(Color.WHITE)
 
-                // Tanggal ditaruh di bawah keterangan
-                binding.tvPointsRequired.text = "Rewards Available\n$tanggalDisplay"
+                // Menggunakan string resource untuk "Rewards Available"
+                binding.tvPointsRequired.text = "${context.getString(R.string.rewards_available_status)}\n$tanggalDisplay"
 
                 // Efek visual enable
                 binding.root.alpha = 1.0f

@@ -1,481 +1,466 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/secondary"
+    android:background="#F5F5F5"
     tools:context=".ui.loyalty.LoyaltyFragment">
 
-    <!-- Hanya ada satu NestedScrollView yang mencakup seluruh layar -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollViewLoyaltyContent"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:fillViewport="true"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/header_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="8dp" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:background="@drawable/rounded_bottom_bg_black"
+                android:elevation="0dp"
+                android:layout_marginBottom="8dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/textViewUserName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="Rama Ganteng"
+                        android:textColor="@color/white"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textViewLoyaltyPoints"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        tools:text="@string/loyalty_points_format" /> <!-- USING STRING RESOURCE -->
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/btn_reward_history"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_reward"
+                    app:tint="@color/white"
+                    android:contentDescription="@string/reward_history_desc" />
+
+            </LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp">
 
-            <!-- HEADER CONTAINER (SEKARANG BERADA DI DALAM SCROLLVIEW) -->
-            <LinearLayout
-                android:id="@+id/header_container"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/loyalty_card_title"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/collect_stamps_for_rewards"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/stampCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="8dp" >
+                android:layout_marginTop="8dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:strokeColor="#1A000000"
+                app:strokeWidth="1dp">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="90dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:background="@drawable/rounded_bottom_bg_black"
-                    android:elevation="0dp"
-                    android:layout_marginBottom="8dp">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-                        <TextView
-                            android:id="@+id/textViewUserName"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            tools:text="Rama Ganteng"
-                            android:textColor="@color/white"
-                            android:textSize="24sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/textViewLoyaltyPoints"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/white"
-                            android:textSize="16sp"
-                            tools:text="Points: 20" />
-                    </LinearLayout>
-
-                    <ImageButton
-                        android:id="@+id/btn_reward_history"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:src="@drawable/ic_reward"
-                        app:tint="@color/white"
-                        android:contentDescription="@string/reward_history_desc" />
-
-                </LinearLayout>
-            </LinearLayout>
-            <!-- AKHIR HEADER CONTAINER -->
-
-            <!-- Sisa Konten Loyalitas (Stamp Card, Rewards, Loyalty History) -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingHorizontal="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Stamp Card"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    tools:ignore="HardcodedText" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Collect stamps for more rewards"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    tools:ignore="HardcodedText" />
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/stampCardView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp"
-                    app:strokeColor="#1A000000"
-                    app:strokeWidth="1dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingTop="12dp"
-                        android:paddingBottom="8dp">
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <ImageButton
-                                android:id="@+id/btn_prev_stamp"
-                                android:layout_width="40dp"
-                                android:layout_height="wrap_content"
-                                android:minHeight="48dp"
-                                android:background="?attr/selectableItemBackgroundBorderless"
-                                android:contentDescription="Previous Stamps"
-                                android:src="@drawable/ic_arrow_left"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:tint="@color/black" />
-
-                            <LinearLayout
-                                android:id="@+id/stamps_grid_container"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                app:layout_constraintEnd_toStartOf="@+id/btn_next_stamp"
-                                app:layout_constraintStart_toEndOf="@+id/btn_prev_stamp"
-                                app:layout_constraintTop_toTopOf="parent">
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal"
-                                    android:weightSum="5"
-                                    android:gravity="center">
-                                    <FrameLayout style="@style/StampCell" tools:tag="stamp_1">
-                                        <ImageView android:id="@+id/iv_stamp_background_1" style="@style/LoyaltyStampImageView" />
-                                        <TextView android:id="@+id/tv_stamp_number_1" style="@style/LoyaltyStampNumber" tools:text="1" />
-                                        <ImageView android:id="@+id/iv_stamp_checkmark_1" style="@style/LoyaltyStampCheckmark" />
-                                    </FrameLayout>
-                                    <FrameLayout style="@style/StampCell" tools:tag="stamp_2">
-                                        <ImageView android:id="@+id/iv_stamp_background_2" style="@style/LoyaltyStampImageView" />
-                                        <TextView android:id="@+id/tv_stamp_number_2" style="@style/LoyaltyStampNumber" tools:text="2" />
-                                        <ImageView android:id="@+id/iv_stamp_checkmark_2" style="@style/LoyaltyStampCheckmark" />
-                                    </FrameLayout>
-                                    <FrameLayout style="@style/StampCell" tools:tag="stamp_3">
-                                        <ImageView android:id="@+id/iv_stamp_background_3" style="@style/LoyaltyStampImageView" />
-                                        <TextView android:id="@+id/tv_stamp_number_3" style="@style/LoyaltyStampNumber" tools:text="3" />
-                                        <ImageView android:id="@+id/iv_stamp_checkmark_3" style="@style/LoyaltyStampCheckmark" />
-                                    </FrameLayout>
-                                    <FrameLayout style="@style/StampCell" tools:tag="stamp_4">
-                                        <ImageView android:id="@+id/iv_stamp_background_4" style="@style/LoyaltyStampImageView" />
-                                        <TextView android:id="@+id/tv_stamp_number_4" style="@style/LoyaltyStampNumber" tools:text="4" />
-                                        <ImageView android:id="@+id/iv_stamp_checkmark_4" style="@style/LoyaltyStampCheckmark" />
-                                    </FrameLayout>
-                                    <FrameLayout style="@style/StampCell" tools:tag="stamp_5">
-                                        <ImageView android:id="@+id/iv_stamp_background_5" style="@style/LoyaltyStampImageView" />
-                                        <TextView android:id="@+id/tv_stamp_number_5" style="@style/LoyaltyStampNumber" tools:text="5" />
-                                        <ImageView android:id="@+id/iv_stamp_checkmark_5" style="@style/LoyaltyStampCheckmark" />
-                                    </FrameLayout>
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal"
-                                    android:weightSum="5"
-                                    android:gravity="center"
-                                    android:layout_marginTop="8dp">
-                                    <FrameLayout style="@style/StampCell" tools:tag="stamp_6">
-                                        <ImageView android:id="@+id/iv_stamp_background_6" style="@style/LoyaltyStampImageView" />
-                                        <TextView android:id="@+id/tv_stamp_number_6" style="@style/LoyaltyStampNumber" tools:text="6" />
-                                        <ImageView android:id="@+id/iv_stamp_checkmark_6" style="@style/LoyaltyStampCheckmark" />
-                                    </FrameLayout>
-                                    <FrameLayout style="@style/StampCell" tools:tag="stamp_7">
-                                        <ImageView android:id="@+id/iv_stamp_background_7" style="@style/LoyaltyStampImageView" />
-                                        <TextView android:id="@+id/tv_stamp_number_7" style="@style/LoyaltyStampNumber" tools:text="7" />
-                                        <ImageView android:id="@+id/iv_stamp_checkmark_7" style="@style/LoyaltyStampCheckmark" />
-                                    </FrameLayout>
-                                    <FrameLayout style="@style/StampCell" tools:tag="stamp_8">
-                                        <ImageView android:id="@+id/iv_stamp_background_8" style="@style/LoyaltyStampImageView" />
-                                        <TextView android:id="@+id/tv_stamp_number_8" style="@style/LoyaltyStampNumber" tools:text="8" />
-                                        <ImageView android:id="@+id/iv_stamp_checkmark_8" style="@style/LoyaltyStampCheckmark" />
-                                    </FrameLayout>
-                                    <FrameLayout style="@style/StampCell" tools:tag="stamp_9">
-                                        <ImageView android:id="@+id/iv_stamp_background_9" style="@style/LoyaltyStampImageView" />
-                                        <TextView android:id="@+id/tv_stamp_number_9" style="@style/LoyaltyStampNumber" tools:text="9" />
-                                        <ImageView android:id="@+id/iv_stamp_checkmark_9" style="@style/LoyaltyStampCheckmark" />
-                                    </FrameLayout>
-                                    <FrameLayout style="@style/StampCell" tools:tag="stamp_10">
-                                        <ImageView android:id="@+id/iv_stamp_background_10" style="@style/LoyaltyStampImageView" />
-                                        <TextView android:id="@+id/tv_stamp_number_10" style="@style/LoyaltyStampNumber" tools:text="10" />
-                                        <ImageView android:id="@+id/iv_stamp_checkmark_10" style="@style/LoyaltyStampCheckmark" />
-                                    </FrameLayout>
-                                </LinearLayout>
-
-                            </LinearLayout>
-
-                            <ImageButton
-                                android:id="@+id/btn_next_stamp"
-                                android:layout_width="40dp"
-                                android:layout_height="wrap_content"
-                                android:minHeight="48dp"
-                                android:background="?attr/selectableItemBackgroundBorderless"
-                                android:contentDescription="Next Stamps"
-                                android:src="@drawable/ic_arrow_right"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:tint="@color/black" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <TextView
-                            android:id="@+id/textViewStampProgress"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="8dp"
-                            android:textColor="@color/grey"
-                            android:textSize="12sp"
-                            tools:text="Stamps 1 - 10" />
-
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <TextView
-                    android:id="@+id/textViewRewardsHeader"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Rewards"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="24dp"
-                    tools:ignore="HardcodedText" />
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/rewardCardView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp"
-                    app:strokeColor="#1A000000"
-                    app:strokeWidth="1dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingTop="12dp"
-                        android:paddingBottom="8dp">
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <ImageButton
-                                android:id="@+id/btn_prev_reward"
-                                android:layout_width="40dp"
-                                android:layout_height="wrap_content"
-                                android:minHeight="48dp"
-                                android:background="?attr/selectableItemBackgroundBorderless"
-                                android:contentDescription="Previous Rewards"
-                                android:src="@drawable/ic_arrow_left"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:tint="@color/black" />
-
-                            <LinearLayout
-                                android:id="@+id/rewards_container"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:paddingHorizontal="2dp"
-                                android:gravity="center"
-                                android:weightSum="2"
-                                app:layout_constraintEnd_toStartOf="@+id/btn_next_reward"
-                                app:layout_constraintStart_toEndOf="@+id/btn_prev_reward"
-                                app:layout_constraintTop_toTopOf="parent">
-
-                                <com.google.android.material.card.MaterialCardView
-                                    android:id="@+id/reward_card_1"
-                                    style="@style/RewardCard"
-                                    android:layout_weight="1"
-                                    android:layout_marginEnd="4dp">
-                                    <LinearLayout style="@style/RewardCard.LinearLayout">
-                                        <ImageView
-                                            android:id="@+id/iv_reward_icon_1"
-                                            style="@style/RewardCard.Icon"
-                                            android:contentDescription="Reward Icon 1"/>
-                                        <TextView
-                                            android:id="@+id/tv_reward_title_1"
-                                            style="@style/RewardCard.Title"
-                                            tools:text="Discount 10%"/>
-                                        <TextView
-                                            android:id="@+id/tv_reward_points_1"
-                                            style="@style/RewardCard.Points"
-                                            tools:text="5 Points"/>
-                                        <com.google.android.material.button.MaterialButton
-                                            android:id="@+id/btn_claim_status_1"
-                                            style="@style/RewardCard.Button"
-                                            tools:text="STATUS"/>
-
-                                    </LinearLayout>
-                                </com.google.android.material.card.MaterialCardView>
-
-                                <com.google.android.material.card.MaterialCardView
-                                    android:id="@+id/reward_card_2"
-                                    style="@style/RewardCard"
-                                    android:layout_weight="1"
-                                    android:layout_marginStart="4dp">
-                                    <LinearLayout style="@style/RewardCard.LinearLayout">
-                                        <ImageView
-                                            android:id="@+id/iv_reward_icon_2"
-                                            style="@style/RewardCard.Icon"
-                                            android:contentDescription="Reward Icon 2"/>
-                                        <TextView
-                                            android:id="@+id/tv_reward_title_2"
-                                            style="@style/RewardCard.Title"
-                                            tools:text="Free Serve"/>
-                                        <TextView
-                                            android:id="@+id/tv_reward_points_2"
-                                            style="@style/RewardCard.Points"
-                                            tools:text="10 Points"/>
-                                        <com.google.android.material.button.MaterialButton
-                                            android:id="@+id/btn_claim_status_2"
-                                            style="@style/RewardCard.Button"
-                                            tools:text="STATUS"/>
-                                    </LinearLayout>
-                                </com.google.android.material.card.MaterialCardView>
-
-                            </LinearLayout>
-
-                            <ImageButton
-                                android:id="@+id/btn_next_reward"
-                                android:layout_width="40dp"
-                                android:layout_height="wrap_content"
-                                android:minHeight="48dp"
-                                android:background="?attr/selectableItemBackgroundBorderless"
-                                android:contentDescription="Next Rewards"
-                                android:src="@drawable/ic_arrow_right"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:tint="@color/black" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <TextView
-                            android:id="@+id/textViewRewardProgress"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="8dp"
-                            android:textColor="@color/grey"
-                            android:textSize="12sp"
-                            tools:text="Rewards 1 - 2" />
-
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <TextView
-                    android:id="@+id/textViewLoyaltyHistoryHeader"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/loyalty_history_title"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginBottom="8dp" />
-
-                <!-- NEW: Search Bar untuk Order History -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:cardBackgroundColor="@color/black"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="0dp"
-
-                    >
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="12dp"
-                        android:background="@drawable/rounded_bg_white"
-                        android:elevation="0dp"
-
-                        >
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_search"
-                            app:tint="@color/black"
-                            android:contentDescription="@string/search_icon"/>
-                        <EditText
-                            android:id="@+id/et_search_loyalty_history"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="8dp"
-                            android:background="@android:color/transparent"
-                            android:hint="@string/search_hint"
-                            android:textColorHint="@color/black"
-                            android:textColor="@color/black"
-                            android:textSize="16sp"
-                            android:inputType="text"
-                            android:maxLines="1"
-                            android:importantForAutofill="no"/>
-
-                        <ImageView
-                            android:id="@+id/iv_clear_search_loyalty_history"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginStart="8dp"
-                            android:src="@drawable/ic_close"
-                            app:tint="@color/black"
-                            android:contentDescription="Clear search text"
-                            android:visibility="gone" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-                <!-- END NEW: Search Bar untuk Order History -->
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewLoyaltyItems"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/item_loyalty_card" />
-
-                <LinearLayout
-                    android:id="@+id/placeholderContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:gravity="center"
-                    android:paddingVertical="32dp"
-                    android:visibility="gone">
+                    android:paddingTop="12dp"
+                    android:paddingBottom="8dp">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageButton
+                            android:id="@+id/btn_prev_stamp"
+                            android:layout_width="40dp"
+                            android:layout_height="wrap_content"
+                            android:minHeight="48dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/loyalty_stamp_desc"
+                            android:src="@drawable/ic_arrow_left"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/black" />
+
+                        <LinearLayout
+                            android:id="@+id/stamps_grid_container"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:layout_constraintEnd_toStartOf="@+id/btn_next_stamp"
+                            app:layout_constraintStart_toEndOf="@+id/btn_prev_stamp"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="5"
+                                android:gravity="center">
+                                <FrameLayout style="@style/StampCell" tools:tag="stamp_1">
+                                    <ImageView android:id="@+id/iv_stamp_background_1" style="@style/LoyaltyStampImageView" />
+                                    <TextView android:id="@+id/tv_stamp_number_1" style="@style/LoyaltyStampNumber" tools:text="1" />
+                                    <ImageView android:id="@+id/iv_stamp_checkmark_1" style="@style/LoyaltyStampCheckmark" />
+                                </FrameLayout>
+                                <FrameLayout style="@style/StampCell" tools:tag="stamp_2">
+                                    <ImageView android:id="@+id/iv_stamp_background_2" style="@style/LoyaltyStampImageView" />
+                                    <TextView android:id="@+id/tv_stamp_number_2" style="@style/LoyaltyStampNumber" tools:text="2" />
+                                    <ImageView android:id="@+id/iv_stamp_checkmark_2" style="@style/LoyaltyStampCheckmark" />
+                                </FrameLayout>
+                                <FrameLayout style="@style/StampCell" tools:tag="stamp_3">
+                                    <ImageView android:id="@+id/iv_stamp_background_3" style="@style/LoyaltyStampImageView" />
+                                    <TextView android:id="@+id/tv_stamp_number_3" style="@style/LoyaltyStampNumber" tools:text="3" />
+                                    <ImageView android:id="@+id/iv_stamp_checkmark_3" style="@style/LoyaltyStampCheckmark" />
+                                </FrameLayout>
+                                <FrameLayout style="@style/StampCell" tools:tag="stamp_4">
+                                    <ImageView android:id="@+id/iv_stamp_background_4" style="@style/LoyaltyStampImageView" />
+                                    <TextView android:id="@+id/tv_stamp_number_4" style="@style/LoyaltyStampNumber" tools:text="4" />
+                                    <ImageView android:id="@+id/iv_stamp_checkmark_4" style="@style/LoyaltyStampCheckmark" />
+                                </FrameLayout>
+                                <FrameLayout style="@style/StampCell" tools:tag="stamp_5">
+                                    <ImageView android:id="@+id/iv_stamp_background_5" style="@style/LoyaltyStampImageView" />
+                                    <TextView android:id="@+id/tv_stamp_number_5" style="@style/LoyaltyStampNumber" tools:text="5" />
+                                    <ImageView android:id="@+id/iv_stamp_checkmark_5" style="@style/LoyaltyStampCheckmark" />
+                                </FrameLayout>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="5"
+                                android:gravity="center"
+                                android:layout_marginTop="8dp">
+                                <FrameLayout style="@style/StampCell" tools:tag="stamp_6">
+                                    <ImageView android:id="@+id/iv_stamp_background_6" style="@style/LoyaltyStampImageView" />
+                                    <TextView android:id="@+id/tv_stamp_number_6" style="@style/LoyaltyStampNumber" tools:text="6" />
+                                    <ImageView android:id="@+id/iv_stamp_checkmark_6" style="@style/LoyaltyStampCheckmark" />
+                                </FrameLayout>
+                                <FrameLayout style="@style/StampCell" tools:tag="stamp_7">
+                                    <ImageView android:id="@+id/iv_stamp_background_7" style="@style/LoyaltyStampImageView" />
+                                    <TextView android:id="@+id/tv_stamp_number_7" style="@style/LoyaltyStampNumber" tools:text="7" />
+                                    <ImageView android:id="@+id/iv_stamp_checkmark_7" style="@style/LoyaltyStampCheckmark" />
+                                </FrameLayout>
+                                <FrameLayout style="@style/StampCell" tools:tag="stamp_8">
+                                    <ImageView android:id="@+id/iv_stamp_background_8" style="@style/LoyaltyStampImageView" />
+                                    <TextView android:id="@+id/tv_stamp_number_8" style="@style/LoyaltyStampNumber" tools:text="8" />
+                                    <ImageView android:id="@+id/iv_stamp_checkmark_8" style="@style/LoyaltyStampCheckmark" />
+                                </FrameLayout>
+                                <FrameLayout style="@style/StampCell" tools:tag="stamp_9">
+                                    <ImageView android:id="@+id/iv_stamp_background_9" style="@style/LoyaltyStampImageView" />
+                                    <TextView android:id="@+id/tv_stamp_number_9" style="@style/LoyaltyStampNumber" tools:text="9" />
+                                    <ImageView android:id="@+id/iv_stamp_checkmark_9" style="@style/LoyaltyStampCheckmark" />
+                                </FrameLayout>
+                                <FrameLayout style="@style/StampCell" tools:tag="stamp_10">
+                                    <ImageView android:id="@+id/iv_stamp_background_10" style="@style/LoyaltyStampImageView" />
+                                    <TextView android:id="@+id/tv_stamp_number_10" style="@style/LoyaltyStampNumber" tools:text="10" />
+                                    <ImageView android:id="@+id/iv_stamp_checkmark_10" style="@style/LoyaltyStampCheckmark" />
+                                </FrameLayout>
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <ImageButton
+                            android:id="@+id/btn_next_stamp"
+                            android:layout_width="40dp"
+                            android:layout_height="wrap_content"
+                            android:minHeight="48dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/loyalty_stamp_desc"
+                            android:src="@drawable/ic_arrow_right"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/black" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <TextView
-                        android:id="@+id/textViewPlaceholder"
+                        android:id="@+id/textViewStampProgress"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/no_loyalty_data_placeholder"
-                        android:textColor="@color/secondary"
-                        android:textSize="18sp" />
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"
+                        android:textColor="@color/grey"
+                        android:textSize="12sp"
+                        tools:text="@string/loyalty_stamp_progress_format" /> <!-- USING STRING RESOURCE -->
+
                 </LinearLayout>
 
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/textViewRewardsHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/loyalty_rewards_title"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginTop="24dp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/rewardCardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:strokeColor="#1A000000"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="8dp">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageButton
+                            android:id="@+id/btn_prev_reward"
+                            android:layout_width="40dp"
+                            android:layout_height="wrap_content"
+                            android:minHeight="48dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/reward_history_desc"
+                            android:src="@drawable/ic_arrow_left"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/black" />
+
+                        <LinearLayout
+                            android:id="@+id/rewards_container"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="2dp"
+                            android:gravity="center"
+                            android:weightSum="2"
+                            app:layout_constraintEnd_toStartOf="@+id/btn_next_reward"
+                            app:layout_constraintStart_toEndOf="@+id/btn_prev_reward"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/reward_card_1"
+                                style="@style/RewardCard"
+                                android:layout_weight="1"
+                                android:layout_marginEnd="4dp">
+                                <LinearLayout style="@style/RewardCard.LinearLayout">
+                                    <ImageView
+                                        android:id="@+id/iv_reward_icon_1"
+                                        style="@style/RewardCard.Icon"
+                                        android:contentDescription="@string/reward_history_desc"/> <!-- USING STRING RESOURCE -->
+                                    <TextView
+                                        android:id="@+id/tv_reward_title_1"
+                                        style="@style/RewardCard.Title"
+                                        tools:text="@string/loyalty_reward_10_percent_discount_title"/> <!-- USING STRING RESOURCE -->
+                                    <TextView
+                                        android:id="@+id/tv_reward_points_1"
+                                        style="@style/RewardCard.Points"
+                                        tools:text="@string/loyalty_points_needed_format"/> <!-- USING STRING RESOURCE -->
+                                    <com.google.android.material.button.MaterialButton
+                                        android:id="@+id/btn_claim_status_1"
+                                        style="@style/RewardCard.Button"
+                                        tools:text="@string/loyalty_reward_claim_action"/> <!-- USING STRING RESOURCE -->
+
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/reward_card_2"
+                                style="@style/RewardCard"
+                                android:layout_weight="1"
+                                android:layout_marginStart="4dp">
+                                <LinearLayout style="@style/RewardCard.LinearLayout">
+                                    <ImageView
+                                        android:id="@+id/iv_reward_icon_2"
+                                        style="@style/RewardCard.Icon"
+                                        android:contentDescription="@string/reward_history_desc"/> <!-- USING STRING RESOURCE -->
+                                    <TextView
+                                        android:id="@+id/tv_reward_title_2"
+                                        style="@style/RewardCard.Title"
+                                        tools:text="@string/loyalty_reward_free_serve_title"/> <!-- USING STRING RESOURCE -->
+                                    <TextView
+                                        android:id="@+id/tv_reward_points_2"
+                                        style="@style/RewardCard.Points"
+                                        tools:text="@string/loyalty_points_needed_format"/> <!-- USING STRING RESOURCE -->
+                                    <com.google.android.material.button.MaterialButton
+                                        android:id="@+id/btn_claim_status_2"
+                                        style="@style/RewardCard.Button"
+                                        tools:text="@string/loyalty_reward_claim_action"/> <!-- USING STRING RESOURCE -->
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+
+                        </LinearLayout>
+
+                        <ImageButton
+                            android:id="@+id/btn_next_reward"
+                            android:layout_width="40dp"
+                            android:layout_height="wrap_content"
+                            android:minHeight="48dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/reward_history_desc"
+                            android:src="@drawable/ic_arrow_right"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/black" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <TextView
+                        android:id="@+id/textViewRewardProgress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"
+                        android:textColor="@color/grey"
+                        android:textSize="12sp"
+                        tools:text="@string/loyalty_rewards_progress_range_format" /> <!-- USING STRING RESOURCE -->
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/textViewLoyaltyHistoryHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/loyalty_history_title"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/black"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="12dp"
+                    android:background="@drawable/rounded_bg_white"
+                    android:elevation="0dp">
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_search"
+                        app:tint="@color/black"
+                        android:contentDescription="@string/search_icon"/>
+                    <EditText
+                        android:id="@+id/et_search_loyalty_history"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        android:background="@android:color/transparent"
+                        android:hint="@string/search_hint"
+                        android:textColorHint="@color/black"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:importantForAutofill="no"/>
+
+                    <ImageView
+                        android:id="@+id/iv_clear_search_loyalty_history"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="8dp"
+                        android:src="@drawable/ic_close"
+                        app:tint="@color/black"
+                        android:contentDescription="@string/close_button_text"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewLoyaltyItems"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_loyalty_card" />
+
+            <LinearLayout
+                android:id="@+id/placeholderContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingVertical="32dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/textViewPlaceholder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no_loyalty_data_placeholder"
+                    android:textColor="@color/secondary"
+                    android:textSize="18sp" />
             </LinearLayout>
+
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>

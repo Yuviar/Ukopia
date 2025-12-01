@@ -1,4 +1,3 @@
-// File: D:/github_rama/Ukopia/app/src/main/java/com/example/ukopia/ui/loyalty/EditLoyaltyFragment.kt
 package com.example.ukopia.ui.loyalty
 
 import android.os.Bundle
@@ -11,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.ukopia.MainActivity
+import com.example.ukopia.R
 import com.example.ukopia.data.LoyaltyItemV2
 import com.example.ukopia.databinding.FragmentEditLoyaltyBinding
 
@@ -45,7 +45,7 @@ class EditLoyaltyFragment : Fragment() {
         (activity as? MainActivity)?.setBottomNavVisibility(View.GONE)
 
         item = arguments?.getParcelable("item_edit") ?: run {
-            Toast.makeText(context, "Item loyalty tidak ditemukan.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Item loyalty tidak ditemukan.", Toast.LENGTH_SHORT).show() // String ini bisa jadi string resource
             parentFragmentManager.popBackStack()
             return
         }
@@ -63,31 +63,44 @@ class EditLoyaltyFragment : Fragment() {
     }
 
     private fun setupUI() {
-        // --- FIELD READ-ONLY (LOCKED) ---
-        binding.textViewMenuNameValue.text = item.namaMenu
-        binding.textViewDateValue.text = item.tanggal
+        binding.tvHeaderTitle.text = getString(R.string.edit_loyalty_title) // Menggunakan string resource
 
+        binding.textViewMenuNameLabel.text = getString(R.string.menu_name_label)
+        binding.textViewMenuNameValue.text = item.namaMenu
         binding.textViewMenuNameValue.isEnabled = false
+
+        binding.textViewDateLabel.text = getString(R.string.date_prefix_title)
+        binding.textViewDateValue.text = item.tanggal
         binding.textViewDateValue.isEnabled = false
 
-        // Ambil nilai lama (jika ada)
+        binding.textViewCatatan.text = getString(R.string.notes_label) // Menggunakan string resource
+        binding.editTextCatatan.hint = getString(R.string.notes_hint_optional) // Menggunakan string resource
+
+
         val nilai = item.nilai
 
         if (item.isCoffee) {
             binding.linearLayoutCoffeeDetails.visibility = View.VISIBLE
             binding.linearLayoutNonCoffeeDetails.visibility = View.GONE
 
+            binding.textViewCoffeeBeanLabel.text = getString(R.string.coffee_bean_name_label)
             binding.textViewCoffeeBeanValue.text = item.namaBeans
             binding.textViewCoffeeBeanValue.isEnabled = false
 
-            // Set initial SeekBar values
+            // Labels for Seekbars
+            binding.layoutAroma.findViewById<TextView>(R.id.label_aroma_seekbar).text = getString(R.string.aroma_label) // Perlu ID label di XML
+            binding.layoutSweetness.findViewById<TextView>(R.id.label_sweetness_seekbar).text = getString(R.string.sweetness_label)
+            binding.layoutAcidity.findViewById<TextView>(R.id.label_acidity_seekbar).text = getString(R.string.acidity_label)
+            binding.layoutBitterness.findViewById<TextView>(R.id.label_bitterness_seekbar).text = getString(R.string.bitterness_label)
+            binding.layoutBody.findViewById<TextView>(R.id.label_body_seekbar).text = getString(R.string.body_label)
+
+
             binding.seekBarAroma.progress = nilai?.aroma ?: 0
             binding.seekBarSweetness.progress = nilai?.kemanisan ?: 0
             binding.seekBarAcidity.progress = nilai?.keasaman ?: 0
             binding.seekBarBitterness.progress = nilai?.kepahitan ?: 0
             binding.seekBarBody.progress = nilai?.kekentalan ?: 0
 
-            // Set initial TextView values for seekbars to reflect current progress
             binding.textViewAromaValue.text = (nilai?.aroma ?: 0).toString()
             binding.textViewSweetnessValue.text = (nilai?.kemanisan ?: 0).toString()
             binding.textViewAcidityValue.text = (nilai?.keasaman ?: 0).toString()
@@ -97,12 +110,11 @@ class EditLoyaltyFragment : Fragment() {
         } else {
             binding.linearLayoutCoffeeDetails.visibility = View.GONE
             binding.linearLayoutNonCoffeeDetails.visibility = View.VISIBLE
+            binding.textViewNonCoffeeItemLabel.text = getString(R.string.non_coffee_item_name_label)
             binding.textViewNonCoffeeItemValue.text = item.namaMenu
             binding.textViewNonCoffeeItemValue.isEnabled = false
-            // Baris ini dihapus karena textViewTasteProfil tidak ada di layout ini
         }
 
-        // Catatan
         binding.editTextCatatan.setText(nilai?.catatan ?: "")
     }
 
@@ -119,14 +131,8 @@ class EditLoyaltyFragment : Fragment() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 textView.text = progress.toString()
             }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                // Tidak perlu implementasi spesifik di sini
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                // Tidak perlu implementasi spesifik di sini
-            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
     }
 
@@ -140,7 +146,7 @@ class EditLoyaltyFragment : Fragment() {
             bitterness = binding.seekBarBitterness.progress,
             body = binding.seekBarBody.progress,
             onSuccess = {
-                Toast.makeText(context, "Review Disimpan!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.loyalty_data_updated_success), Toast.LENGTH_SHORT).show() // Menggunakan string resource
                 parentFragmentManager.popBackStack()
             },
             onError = { msg ->

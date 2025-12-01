@@ -61,6 +61,7 @@
     <string name="logout_option">Logout</string>
     <string name="arrow_forward_desc">Arrow Forward</string>
 
+    <!-- NEW/UPDATED: Language Chooser Strings -->
     <string name="select_language">Select Language</string>
     <string name="language_english">English</string>
     <string name="language_indonesian">Indonesian</string>
@@ -241,7 +242,7 @@
     <string name="step_brew">Brew</string>
     <string name="desc_brew">Allow the coffee to brew for the specified duration.</string>
 
-    <string name="loyalty_card_title">Virtual Loyalty Card</string>
+    <string name="loyalty_card_title">Loyalty Card</string>
     <string name="no_loyalty_data_placeholder">No loyalty data has been added yet.</string>
     <string name="loyalty_item_name_placeholder">Kopi Ijen cm</string>
     <string name="loyalty_date_placeholder">Date: 23/09/2025</string>
@@ -386,6 +387,7 @@
     <string name="collect_stamps_for_rewards">Collect Stamps for Rewards!</string>
     <string name="todays_promo">Today\'s Promo!</string>
     <string name="promo_description_halloween">Attend the Halloween event at Ukopia Brew Sauce!\nClick for more details..</string>
+    <string name="best_seller_title">Best Seller Menu</string> <!-- NEW STRING -->
 
     <!-- NEW STRINGS for RewardListFragment and Reward Status Display -->
     <string name="reward_status_not_yet_claimed">Not Yet Claimed</string>
@@ -395,6 +397,12 @@
     <string name="all_rewards_title">All Rewards</string>
     <string name="no_rewards_defined">No rewards defined yet.</string>
     <string name="reward_history_desc">Reward History</string>
+    <string name="show_code_instruction">Show this code to the cashier:</string> <!-- NEW STRING -->
+    <string name="copy_code_button_text">Copy Code</string> <!-- NEW STRING -->
+    <string name="code_copied_toast">Code copied!</string> <!-- NEW STRING -->
+    <string name="show_code_to_staff_instruction">Please show this code to the staff to claim.</string> <!-- NEW STRING -->
+    <string name="loyalty_rewards_title">Rewards</string> <!-- NEW STRING -->
+
 
     <!-- NEW STRINGS FOR EDIT LOYALTY FEATURE -->
     <string name="edit_button_text">Edit</string>
@@ -417,5 +425,15 @@
     <string name="acidity_format">Acidity: %d</string>
     <string name="bitterness_format">Bitterness: %d</string>
     <string name="body_format">Body: %d</string>
+
+    <!-- NEW: Strings for Login Required Dialog -->
+    <string name="login_required_dialog_title">Login Required</string>
+    <string name="login_required_dialog_message">You need to log in to access loyalty features.</string>
+    <string name="login_dialog_button_text">Log In</string>
+    <string name="cancel_dialog_button_text">Cancel</string>
+
+    <string name="clipboard_reward_label">Reward Code</string>
+    <string name="reward_code_prefix">Code: </string>
+    <string name="rewards_available_status">Rewards Available</string>
 
 </resources>

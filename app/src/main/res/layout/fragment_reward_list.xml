@@ -7,7 +7,6 @@
     android:background="@color/secondary"
     tools:context=".ui.loyalty.RewardListFragment">
 
-    <!-- Header Section (Mirip fragment_add_recipe.xml) -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header_reward_list"
         android:layout_width="match_parent"
@@ -38,13 +37,13 @@
             android:gravity="left"
             android:paddingVertical="16dp"
             android:text="@string/all_rewards_title"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_back_rewards"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/btn_back_rewards"
-            app:layout_constraintTop_toTopOf="@+id/btn_back_rewards" />
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_back_rewards"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_back_rewards"
+        app:layout_constraintTop_toTopOf="@+id/btn_back_rewards" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -56,23 +55,22 @@
         android:clipToPadding="false"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toBottomOf="@+id/header_reward_list"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    tools:listitem="@layout/item_reward_list" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/item_reward_list" />
 
     <TextView
         android:id="@+id/empty_state_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/no_rewards_defined"
-        android:visibility="gone"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header_reward_list"
-    tools:visibility="visible"/> <!-- Hapus tools:visibility untuk produksi -->
-
+    android:visibility="gone"
+    android:textColor="@color/black"
+    android:textSize="16sp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/header_reward_list"
+    tools:visibility="visible"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

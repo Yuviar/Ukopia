@@ -9,7 +9,6 @@
     android:padding="24dp"
     android:layout_marginHorizontal="24dp">
 
-    <!-- Judul Reward -->
     <TextView
         android:id="@+id/tv_dialog_title"
         android:layout_width="match_parent"
@@ -21,17 +20,16 @@
         tools:text="Discount 10%"
         android:gravity="center" />
 
-    <!-- Instruksi -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textColor="@color/grey"
-        android:layout_marginBottom="16dp"
-        android:text="Show this code to the cashier:"
-        android:gravity="center" />
+        android:id="@+id/tv_dialog_instruction"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textSize="14sp"
+    android:textColor="@color/grey"
+    android:layout_marginBottom="16dp"
+    android:text="@string/show_code_instruction"
+    android:gravity="center" />
 
-    <!-- Wadah Kode (Agar terlihat menonjol) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,14 +53,12 @@
             android:textIsSelectable="true"/>
     </LinearLayout>
 
-    <!-- Tombol Aksi -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="2">
 
-        <!-- Tombol Tutup (Style Putih/Outline) -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_dialog_close"
             android:layout_width="0dp"
@@ -70,13 +66,12 @@
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
             android:backgroundTint="@color/white"
-            android:text="Close"
-            android:textColor="@color/black"
-            app:cornerRadius="8dp"
-            app:strokeColor="@color/black"
-            app:strokeWidth="1dp"/>
+            android:text="@string/close_button_text"
+        android:textColor="@color/black"
+        app:cornerRadius="8dp"
+        app:strokeColor="@color/black"
+        app:strokeWidth="1dp"/>
 
-        <!-- Tombol Salin (Style Hitam) -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_dialog_copy"
             android:layout_width="0dp"
@@ -84,10 +79,9 @@
             android:layout_weight="1"
             android:layout_marginStart="8dp"
             android:backgroundTint="@color/black"
-            android:text="Copy Code"
-            android:textColor="@color/white"
-            app:cornerRadius="8dp"
-            />
+            android:text="@string/copy_code_button_text"
+        android:textColor="@color/white"
+        app:cornerRadius="8dp"
+        />
     </LinearLayout>
-
 </LinearLayout>

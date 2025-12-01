@@ -1,14 +1,12 @@
 package com.example.ukopia.ui.home
 
 import android.os.Bundle
-import android.util.Log // Import Log untuk debugging
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -42,12 +40,12 @@ class HomeFragment : Fragment() {
 
     private var currentStampPage = 0
     private val stampsPerPage = 10
+    private val maxStamps = 100
 
     private val stampBackgrounds = mutableListOf<ImageView>()
     private val stampNumbers = mutableListOf<TextView>()
     private val stampCheckmarks = mutableListOf<ImageView>()
 
-    // Tag untuk Logcat
     private val TAG = "HomeFragment"
 
     override fun onCreateView(
@@ -93,7 +91,7 @@ class HomeFragment : Fragment() {
             if (isLoggedIn && !userName.isNullOrEmpty()) {
                 binding.textViewUserName.text = getString(R.string.welcome_format, userName)
             } else {
-                binding.textViewUserName.text = "Welcome!"
+                binding.textViewUserName.text = getString(R.string.greeting_salutation_default) // Menggunakan "Hi!" dari strings.xml
             }
 
             // 2. Set visibility of loyalty elements
@@ -105,7 +103,9 @@ class HomeFragment : Fragment() {
 
                 // Update Loyalty Points & Stamp Card Display
                 binding.textViewLoyaltyPoints.text = getString(R.string.loyalty_points_format, status.totalPoints)
+                binding.tvHomeStampCardTitle.text = getString(R.string.collect_stamps_for_rewards) // Menggunakan string resource
                 updateStampCardDisplay(status.totalPoints)
+                updateStampNavigationIndicator(status.totalPoints)
             } else {
                 // Jika belum login: sembunyikan semua elemen loyalty
                 binding.textViewLoyaltyPoints.visibility = View.GONE
@@ -122,7 +122,7 @@ class HomeFragment : Fragment() {
 
     private fun setupStampCardSection() {
         Log.d(TAG, "setupStampCardSection called.")
-        initializeStampViews() // Panggil inisialisasi view stempel
+        initializeStampViews()
 
         binding.btnNextStamp.setOnClickListener {
             val totalPoints = loyaltyViewModel.loyaltyUserStatus.value?.totalPoints ?: 0
@@ -131,6 +131,7 @@ class HomeFragment : Fragment() {
             if (currentStampPage < maxStampPageBasedOnPoints) {
                 currentStampPage++
                 updateStampCardDisplay(totalPoints)
+                updateStampNavigationIndicator(totalPoints)
             }
         }
 
@@ -138,11 +139,9 @@ class HomeFragment : Fragment() {
             if (currentStampPage > 0) {
                 currentStampPage--
                 updateStampCardDisplay(loyaltyViewModel.loyaltyUserStatus.value?.totalPoints ?: 0)
+                updateStampNavigationIndicator(loyaltyViewModel.loyaltyUserStatus.value?.totalPoints ?: 0)
             }
         }
-
-        // Panggilan awal untuk memperbarui tampilan stempel
-        updateStampCardDisplay(loyaltyViewModel.loyaltyUserStatus.value?.totalPoints ?: 0)
     }
 
     private fun initializeStampViews() {
@@ -156,7 +155,6 @@ class HomeFragment : Fragment() {
             val numberId = resources.getIdentifier("tv_stamp_number_$i", "id", requireContext().packageName)
             val checkmarkId = resources.getIdentifier("iv_stamp_checkmark_$i", "id", requireContext().packageName)
 
-            // Log ID yang dicari
             Log.d(TAG, "Searching for: iv_stamp_background_$i (ID=$backgroundId), tv_stamp_number_$i (ID=$numberId), iv_stamp_checkmark_$i (ID=$checkmarkId)")
 
             val bg = binding.root.findViewById<ImageView>(backgroundId)
@@ -186,7 +184,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun updateStampCardDisplay(totalPoints: Int) {
-        Log.d(TAG, "updateStampCardDisplay called with totalPoints: $totalPoints")
+        Log.d(TAG, "updateStampCardDisplay called with totalPoints: $totalPoints, currentPage: $currentStampPage")
         val startIndex = currentStampPage * stampsPerPage
 
         if (stampBackgrounds.isEmpty() || stampNumbers.isEmpty() || stampCheckmarks.isEmpty()) {
@@ -198,42 +196,69 @@ class HomeFragment : Fragment() {
 
         for (i in 0 until stampsPerPage) {
             val stampActualNumber = startIndex + i + 1
-            Log.d(TAG, "Processing stamp index $i, actual number $stampActualNumber")
+            if (stampActualNumber <= maxStamps) {
+                if (i < stampBackgrounds.size) {
+                    stampBackgrounds[i].visibility = View.VISIBLE
+                    stampNumbers[i].text = stampActualNumber.toString()
 
-            if (i < stampBackgrounds.size) {
-                stampBackgrounds[i].visibility = View.VISIBLE
-                stampNumbers[i].text = stampActualNumber.toString()
-
-                if (stampActualNumber <= totalPoints) {
-                    stampBackgrounds[i].background = ContextCompat.getDrawable(requireContext(), R.drawable.circle_background_white_stroke_black_fill)
-                    stampNumbers[i].visibility = View.GONE
-                    stampCheckmarks[i].visibility = View.VISIBLE
-                    Log.d(TAG, "Stamp $stampActualNumber: FILLED")
+                    if (stampActualNumber <= totalPoints) {
+                        stampBackgrounds[i].background = ContextCompat.getDrawable(requireContext(), R.drawable.circle_background_white_stroke_black_fill)
+                        stampNumbers[i].visibility = View.GONE
+                        stampCheckmarks[i].visibility = View.VISIBLE
+                        Log.d(TAG, "Stamp $stampActualNumber: FILLED")
+                    } else {
+                        stampBackgrounds[i].background = ContextCompat.getDrawable(requireContext(), R.drawable.reward_circle_background_default)
+                        stampNumbers[i].visibility = View.VISIBLE
+                        stampNumbers[i].setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                        stampCheckmarks[i].visibility = View.GONE
+                        Log.d(TAG, "Stamp $stampActualNumber: EMPTY")
+                    }
                 } else {
-                    stampBackgrounds[i].background = ContextCompat.getDrawable(requireContext(), R.drawable.reward_circle_background_default)
-                    stampNumbers[i].visibility = View.VISIBLE
-                    stampNumbers[i].setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-                    stampCheckmarks[i].visibility = View.GONE
-                    Log.d(TAG, "Stamp $stampActualNumber: EMPTY")
+                    Log.w(TAG, "Skipping stamp index $i because stampBackgrounds.size (${stampBackgrounds.size}) is too small.")
                 }
             } else {
-                Log.w(TAG, "Skipping stamp index $i because stampBackgrounds.size (${stampBackgrounds.size}) is too small.")
+                if (i < stampBackgrounds.size) {
+                    stampBackgrounds[i].visibility = View.GONE
+                    stampNumbers[i].visibility = View.GONE
+                    stampCheckmarks[i].visibility = View.GONE
+                }
             }
         }
-        updateStampNavigationIndicator(totalPoints)
     }
 
     private fun updateStampNavigationIndicator(totalPoints: Int) {
         val startStamp = currentStampPage * stampsPerPage + 1
-        val endStamp = (currentStampPage + 1) * stampsPerPage
+        val endStamp = (currentStampPage * stampsPerPage + stampsPerPage).coerceAtMost(maxStamps)
 
+        val totalStampPages = (maxStamps + stampsPerPage - 1) / stampsPerPage
         val maxPageForNextButton = if (totalPoints == 0) 0 else (totalPoints - 1) / stampsPerPage
 
         binding.textViewStampProgress.text = getString(R.string.loyalty_stamp_progress_format, startStamp, endStamp)
 
         binding.btnPrevStamp.visibility = if (currentStampPage == 0) View.INVISIBLE else View.VISIBLE
-        binding.btnNextStamp.visibility = if (currentStampPage >= maxPageForNextButton) View.INVISIBLE else View.VISIBLE
-        Log.d(TAG, "Navigation indicator updated: Current Page $currentStampPage, Max Page $maxPageForNextButton. Prev:${binding.btnPrevStamp.visibility}, Next:${binding.btnNextStamp.visibility}")
+
+        val canGoNextPage = (currentStampPage < totalStampPages - 1) && (currentStampPage < maxPageForNextButton)
+        binding.btnNextStamp.visibility = if (canGoNextPage) View.VISIBLE else View.INVISIBLE
+
+        if (totalStampPages <= 1) {
+            binding.btnPrevStamp.visibility = View.INVISIBLE
+            binding.btnNextStamp.visibility = View.INVISIBLE
+        }
+
+        Log.d(TAG, "Navigation indicator updated: Current Page $currentStampPage, Max Reachable Page $maxPageForNextButton, Total Stamp Pages $totalStampPages. Prev:${binding.btnPrevStamp.visibility}, Next:${binding.btnNextStamp.visibility}")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val totalPoints = loyaltyViewModel.loyaltyUserStatus.value?.totalPoints ?: 0
+        val totalStampPages = (maxStamps + stampsPerPage - 1) / stampsPerPage
+        val maxReachablePage = if (totalPoints > 0) (totalPoints - 1) / stampsPerPage else 0
+
+        currentStampPage = maxReachablePage.coerceIn(0, if (totalStampPages > 0) totalStampPages - 1 else 0)
+
+        Log.d(TAG, "onResume: Initial currentStampPage set to $currentStampPage for totalPoints $totalPoints")
+
+        loyaltyViewModel.refreshLoyaltyData()
     }
 
     override fun onDestroyView() {

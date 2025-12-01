@@ -17,7 +17,6 @@
             android:layout_height="wrap_content"
             android:paddingBottom="16dp">
 
-            <!-- NEW: User Info Header -->
             <LinearLayout
                 android:id="@+id/home_user_info_header"
                 android:layout_width="0dp"
@@ -36,10 +35,10 @@
                     android:id="@+id/textViewUserName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="Welcome! Guest"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    tools:text="@string/welcome_format"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textViewLoyaltyPoints"
@@ -51,11 +50,10 @@
                     android:gravity="center_vertical"
                     android:textColor="@color/black"
                     android:textSize="16sp"
-                    tools:text="Points: 0"
-                    app:drawableTint="@color/black"/>
+                    tools:text="@string/loyalty_points_format"
+                app:drawableTint="@color/black"/>
             </LinearLayout>
 
-            <!-- START: Loyalty Section Container -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/loyaltySectionContainer"
                 android:layout_width="0dp"
@@ -65,21 +63,18 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="16dp">
 
-                <!-- Loyalty Title (hanya terlihat jika login) -->
                 <TextView
                     android:id="@+id/tv_home_stamp_card_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Collect Stamps for Rewards!"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_marginStart="16dp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    tools:ignore="HardcodedText" />
+                    android:text="@string/collect_stamps_for_rewards"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginStart="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
-                <!-- Stamp Card (hanya terlihat jika login) -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/stampCardView"
                     android:layout_width="0dp"
@@ -113,12 +108,12 @@
                                 android:layout_height="wrap_content"
                                 android:minHeight="48dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
-                                android:contentDescription="Previous Stamps"
-                                android:src="@drawable/ic_arrow_left"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:tint="@color/black" />
+                                android:contentDescription="@string/loyalty_stamp_desc"
+                            android:src="@drawable/ic_arrow_left"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/black" />
 
                             <LinearLayout
                                 android:id="@+id/stamps_grid_container"
@@ -136,7 +131,6 @@
                                     android:orientation="horizontal"
                                     android:weightSum="5"
                                     android:gravity="center">
-                                    <!-- Setiap FrameLayout memiliki 3 elemen: background ImageView, TextView angka, dan checkmark ImageView -->
                                     <FrameLayout style="@style/StampCell" tools:tag="stamp_1">
                                         <ImageView android:id="@+id/iv_stamp_background_1" style="@style/LoyaltyStampImageView" />
                                         <TextView android:id="@+id/tv_stamp_number_1" style="@style/LoyaltyStampNumber" tools:text="1" />
@@ -206,16 +200,15 @@
                                 android:layout_height="wrap_content"
                                 android:minHeight="48dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
-                                android:contentDescription="Next Stamps"
-                                android:src="@drawable/ic_arrow_right"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:tint="@color/black" />
+                                android:contentDescription="@string/loyalty_stamp_desc"
+                            android:src="@drawable/ic_arrow_right"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/black" />
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
-                        <!-- Indikator progres stempel -->
                         <TextView
                             android:id="@+id/textViewStampProgress"
                             android:layout_width="wrap_content"
@@ -224,7 +217,7 @@
                             android:layout_marginTop="8dp"
                             android:textColor="@color/grey"
                             android:textSize="12sp"
-                            tools:text="Stamps 1 - 10" />
+                            tools:text="@string/loyalty_stamp_progress_format" /> <!-- USING STRING RESOURCE -->
 
                     </LinearLayout>
 
@@ -232,10 +225,8 @@
                 </com.google.android.material.card.MaterialCardView>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-            <!-- END: Loyalty Section Container -->
 
 
-            <!-- NEW: Promo Card Section (judul dihapus) -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/promoCardView"
                 android:layout_width="0dp"
@@ -243,72 +234,70 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="24dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp"
-            app:strokeColor="#1A000000"
-            app:strokeWidth="1dp"
-            app:layout_constraintTop_toBottomOf="@id/loyaltySectionContainer"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:strokeColor="#1A000000"
+                app:strokeWidth="1dp"
+                app:layout_constraintTop_toBottomOf="@id/loyaltySectionContainer"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/promo_image"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/sample_coffee"
-                    tools:ignore="ContentDescription" />
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/promo_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:padding="12dp"
-                    android:background="@drawable/gradient_bottom_black"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:text="Attend the Halloween event at Ukopia Brew Sauce!\nClick for more details.."
-                    tools:ignore="HardcodedText" />
-            </FrameLayout>
-        </com.google.android.material.card.MaterialCardView>
-        <!-- END: Promo Card Section -->
+                    <ImageView
+                        android:id="@+id/promo_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="180dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/sample_coffee"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/promo_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:padding="12dp"
+                        android:background="@drawable/gradient_bottom_black"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        android:text="@string/promo_description_halloween"
+                    />
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
 
 
-        <!-- Bagian "Best Seller Menu" -->
-        <TextView
-            android:id="@+id/tv_best_seller_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Best Seller Menu"
+            <TextView
+                android:id="@+id/tv_best_seller_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/best_seller_title"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginTop="24dp"
             android:layout_marginStart="16dp"
             app:layout_constraintTop_toBottomOf="@id/promoCardView"
-        app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/best_seller_recycler_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:clipToPadding="false"
-            android:paddingBottom="16dp"
-            app:layout_constraintTop_toBottomOf="@id/tv_best_seller_title"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/layout_menu_item" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/best_seller_recycler_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:clipToPadding="false"
+                android:paddingBottom="16dp"
+                app:layout_constraintTop_toBottomOf="@id/tv_best_seller_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/layout_menu_item" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -16,10 +16,14 @@
     <string name="change_password_title">CHANGE\nPASSWORD</string>
     <string name="email_label">Email</string>
     <string name="name_label">Name</string>
+    <string name="fullname_label">Full Name</string>
+    <string name="username_label">Username</string>
     <string name="password_label">Password</string>
     <string name="new_password_label">New Password</string>
     <string name="enter_email_hint">Enter Your Email</string>
     <string name="enter_name_hint">Enter Your Name</string>
+    <string name="enter_username_hint">Enter Your Username</string>
+    <string name="enter_fullname_hint">Enter Your Full Name</string>
     <string name="enter_password_hint">Enter Your Password</string>
     <string name="enter_new_password_hint">Enter Your New Password</string>
     <string name="forgot_password_button_text">Forgot Password?</string>
@@ -401,7 +405,7 @@
 
     <!-- NEW STRINGS FOR PASSWORD RESET FLOW -->
     <string name="verify_account_button_text">Verify Account</string>
-    <string name="verification_email_sent_toast">A verification link has been sent to your email. Please check your inbox.</string>
+    <string name="verification_email_sent_toast">A verification link has been sent to your email. Please check your Email.</string>
     <string name="new_password_title">NEW\nPASSWORD</string>
     <string name="confirm_new_password_label">Confirm New Password</string>
     <string name="enter_confirm_new_password_hint">Re-enter Your New Password</string>

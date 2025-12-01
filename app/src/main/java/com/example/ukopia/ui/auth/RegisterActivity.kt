@@ -12,29 +12,20 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
 import com.example.ukopia.R
-import com.example.ukopia.databinding.ActivityRegisterBinding // TAMBAH: Import ViewBinding
+import com.example.ukopia.databinding.ActivityRegisterBinding
 import com.example.ukopia.models.RegisterRequest
 
 class RegisterActivity : AppCompatActivity() {
     private var isPasswordVisible = false
-    private lateinit var binding: ActivityRegisterBinding // TAMBAH: ViewBinding
-    private lateinit var authViewModel: AuthViewModel // TAMBAH: ViewModel
-
-    // HAPUS: Variabel lama
-    // private lateinit var btnDaftar: Button
-    // private lateinit var auth: FirebaseAuth
-    // private lateinit var db: FirebaseFirestore
-    // private lateinit var progressBar: ProgressBar
+    private lateinit var binding: ActivityRegisterBinding
+    private lateinit var authViewModel: AuthViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // TAMBAH: Setup ViewBinding
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // TAMBAH: Inisialisasi ViewModel
         authViewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
 
         setupUIListeners()
@@ -76,39 +67,62 @@ class RegisterActivity : AppCompatActivity() {
             binding.btnDaftar.setTextColor(targetTextColor)
 
             // --- Logika Asli Klik ---
-            val nama = binding.editNama.text.toString().trim()
+            val nama = binding.editNamaLengkap.text.toString().trim() // Sesuaikan ID dengan XML (editNamaLengkap)
+            val username = binding.editUsername.text.toString().trim()
             val email = binding.editEmail.text.toString().trim()
             val password = binding.editPassword.text.toString().trim()
 
-            if (nama.isEmpty() || email.isEmpty() || password.isEmpty()) {
+            if (nama.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, getString(R.string.all_fields_required_error), Toast.LENGTH_SHORT).show()
                 return@postDelayed
             }
 
             // Panggil ViewModel untuk register
-            authViewModel.register(RegisterRequest(nama, email, password))
+            authViewModel.register(RegisterRequest(nama, username, email, password))
 
         }, 150)
     }
 
     private fun setupObservers() {
-        authViewModel.message.observe(this) { message ->
-            if (message.isNullOrEmpty()) return@observe
-
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-
-            // Jika registrasi berhasil, kembali ke halaman Login
-            if (message.contains("berhasil", ignoreCase = true)) {
-                val intent = Intent(this, LoginActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                finish()
-            }
-        }
-
+        // 1. Observer Loading
         authViewModel.isLoading.observe(this) { isLoading ->
             showLoading(isLoading)
         }
+
+        // 2. Observer Pesan (Toast Error / Info Server)
+        authViewModel.message.observe(this) { message ->
+            if (!message.isNullOrEmpty()) {
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+            }
+        }
+
+        // 3. [TAMBAHAN] Observer Register Success -> Tampilkan Popup Verifikasi
+        authViewModel.registerSuccess.observe(this) { isSuccess ->
+            if (isSuccess) {
+                showVerificationDialog()
+            }
+        }
+    }
+
+    // [TAMBAHAN] Fungsi Menampilkan Dialog Verifikasi
+    // [UPDATE] Fungsi Menampilkan Dialog Verifikasi
+    private fun showVerificationDialog() {
+        val dialog = VerificationSentDialogFragment.newInstance(
+            getString(R.string.verification_email_sent_toast),
+            "Registrasi Berhasil!"
+        )
+
+        // [BARU] Set aksi saat tombol OK di dialog ditekan
+        dialog.onOkClickListener = {
+            // Pindah ke Login Activity
+            val intent = Intent(this, LoginActivity::class.java)
+            // Bersihkan stack agar user tidak bisa back ke halaman register
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+            finish() // Tutup RegisterActivity
+        }
+
+        dialog.show(supportFragmentManager, "VerifikasiDialog")
     }
 
     private fun showLoading(isLoading: Boolean) {

@@ -414,7 +414,4 @@
     <string name="bitterness_format">Kepahitan: %d</string>
     <string name="body_format">Kekentalan: %d</string>
 
-    <string name="reward_icon_desc">Ikon Hadiah</string>
-    <string name="stamp_background_desc">Latar Stempel</string>
-    <string name="stamp_checkmark_desc">Centang Stempel</string>
 </resources>

@@ -15,99 +15,88 @@ import org.json.JSONObject
 
 class AuthViewModel : ViewModel() {
 
+    // Loading State
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
+    // Pesan Error/Sukses Umum
     private val _message = MutableLiveData<String>()
     val message: LiveData<String> = _message
 
-    // LiveData khusus untuk Login Sukses
+    // LiveData khusus Login
     private val _loginSuccess = MutableLiveData<LoginResponse?>()
     val loginSuccess: LiveData<LoginResponse?> = _loginSuccess
 
-    // LiveData khusus untuk Register Sukses (Trigger Popup)
+    // LiveData khusus Register
     private val _registerSuccess = MutableLiveData<Boolean>()
     val registerSuccess: LiveData<Boolean> = _registerSuccess
 
-    // LiveData untuk hasil Lupa Password
-    private val _forgotPasswordState = MutableLiveData<String?>() // "otp_sent", "otp_verified", "password_reset"
+    // LiveData khusus Lupa Password (otp_sent, otp_verified, password_reset)
+    private val _forgotPasswordState = MutableLiveData<String?>()
     val forgotPasswordState: LiveData<String?> = _forgotPasswordState
 
+    // --- REGISTER ---
     fun register(request: RegisterRequest) {
-        _isLoading.value = true
-        _registerSuccess.value = false // Reset state
+        _isLoading.postValue(true)
+        _registerSuccess.postValue(false)
 
         viewModelScope.launch {
             try {
                 val response = ApiClient.instance.registerUser(request)
-
                 if (response.isSuccessful && response.body()?.success == true) {
-                    // SUKSES
-                    _message.value = response.body()?.message
-                    _registerSuccess.value = true // Trigger Popup di Activity
+                    _message.postValue(response.body()?.message ?: "Registrasi berhasil")
+                    _registerSuccess.postValue(true)
                 } else {
-                    // GAGAL (Server merespon, tapi success=false)
-                    // Coba baca error body jika ada, atau pakai message dari JSON
                     val errorMsg = response.body()?.message
                         ?: parseError(response.errorBody()?.string())
                         ?: "Gagal mendaftar"
-                    _message.value = errorMsg
+                    _message.postValue(errorMsg)
                 }
             } catch (e: Exception) {
-                Log.e("AUTH_API", "Error Register: ${e.message}")
-                _message.value = "Terjadi kesalahan koneksi"
+                Log.e("AuthViewModel", "Register Error", e)
+                _message.postValue("Gagal terhubung ke server")
             } finally {
-                _isLoading.value = false
+                _isLoading.postValue(false)
             }
         }
     }
 
+    // --- LOGIN ---
     fun login(request: LoginRequest) {
-        _isLoading.value = true
-        _loginSuccess.value = null // Reset state
+        _isLoading.postValue(true)
+        _loginSuccess.postValue(null)
 
         viewModelScope.launch {
             try {
                 val response = ApiClient.instance.loginUser(request)
-
                 if (response.isSuccessful && response.body()?.success == true) {
-                    // LOGIN SUKSES
-                    _loginSuccess.value = response.body()
+                    _loginSuccess.postValue(response.body())
                 } else {
-                    // LOGIN GAGAL
                     val errorMsg = response.body()?.message
                         ?: parseError(response.errorBody()?.string())
                         ?: "Login gagal"
-                    _message.value = errorMsg
+                    _message.postValue(errorMsg)
                 }
             } catch (e: Exception) {
-                Log.e("AUTH_API", "Error Login: ${e.message}")
-                _message.value = "Terjadi kesalahan koneksi"
+                Log.e("AuthViewModel", "Login Error", e)
+                _message.postValue("Gagal terhubung ke server")
             } finally {
-                _isLoading.value = false
+                _isLoading.postValue(false)
             }
         }
     }
 
-    // Helper untuk parsing error JSON manual jika response code != 200
-    private fun parseError(json: String?): String? {
-        return try {
-            val obj = JSONObject(json ?: "")
-            obj.getString("message")
-        } catch (e: Exception) {
-            null
-        }
-    }
-
+    // --- LUPA PASSWORD: 1. KIRIM KODE ---
     fun sendOtp(email: String) {
         _isLoading.postValue(true)
+        _forgotPasswordState.postValue(null)
         viewModelScope.launch {
             try {
                 val request = ForgotPasswordRequest(action = "send_code", email = email)
                 val response = ApiClient.instance.forgotPassword(request)
                 if (response.isSuccessful && response.body()?.success == true) {
-                    _message.postValue(response.body()?.message)
                     _forgotPasswordState.postValue("otp_sent")
+                    _message.postValue(response.body()?.message)
                 } else {
                     _message.postValue(response.body()?.message ?: "Gagal mengirim kode")
                 }
@@ -119,6 +108,7 @@ class AuthViewModel : ViewModel() {
         }
     }
 
+    // --- LUPA PASSWORD: 2. VERIFIKASI KODE ---
     fun verifyOtp(email: String, code: String) {
         _isLoading.postValue(true)
         viewModelScope.launch {
@@ -126,7 +116,7 @@ class AuthViewModel : ViewModel() {
                 val request = ForgotPasswordRequest(action = "verify_code", email = email, code = code)
                 val response = ApiClient.instance.forgotPassword(request)
                 if (response.isSuccessful && response.body()?.success == true) {
-                    _message.postValue("Kode valid!")
+                    // Sukses verifikasi -> ubah state
                     _forgotPasswordState.postValue("otp_verified")
                 } else {
                     _message.postValue(response.body()?.message ?: "Kode salah")
@@ -139,6 +129,7 @@ class AuthViewModel : ViewModel() {
         }
     }
 
+    // --- LUPA PASSWORD: 3. RESET PASSWORD (INI YANG KAMU CARI) ---
     fun resetPassword(email: String, code: String, newPass: String) {
         _isLoading.postValue(true)
         viewModelScope.launch {
@@ -150,11 +141,12 @@ class AuthViewModel : ViewModel() {
                     new_password = newPass
                 )
                 val response = ApiClient.instance.forgotPassword(request)
+
                 if (response.isSuccessful && response.body()?.success == true) {
                     _message.postValue("Password berhasil diubah")
                     _forgotPasswordState.postValue("password_reset")
                 } else {
-                    _message.postValue(response.body()?.message ?: "Gagal mereset password")
+                    _message.postValue(response.body()?.message ?: "Gagal mengubah password")
                 }
             } catch (e: Exception) {
                 _message.postValue("Error: ${e.message}")
@@ -164,4 +156,14 @@ class AuthViewModel : ViewModel() {
         }
     }
 
+    // Helper Parsing Error JSON
+    private fun parseError(jsonString: String?): String? {
+        if (jsonString.isNullOrEmpty()) return null
+        return try {
+            val jsonObject = JSONObject(jsonString)
+            jsonObject.getString("message")
+        } catch (e: Exception) {
+            null
+        }
+    }
 }

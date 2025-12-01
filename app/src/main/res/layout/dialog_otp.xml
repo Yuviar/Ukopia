@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/rounded_bg_white"
+    android:layout_marginHorizontal="24dp"
+    android:gravity="center_horizontal"
+    >
+
+    <TextView
+        android:id="@+id/textViewDialogTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="Masukkan Kode OTP"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewDialogMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:text="Kode OTP telah dikirimkan ke email Anda. Silakan masukkan kode di bawah ini."
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:id="@+id/otp_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <EditText
+            android:id="@+id/otp_edit_text_1"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="4dp"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:autofillHints="oneTimeCode"
+            android:textSize="20sp"
+            tools:ignore="LabelFor" />
+
+        <EditText
+            android:id="@+id/otp_edit_text_2"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="4dp"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:autofillHints="oneTimeCode"
+            android:textSize="20sp"
+            tools:ignore="LabelFor" />
+
+        <EditText
+            android:id="@+id/otp_edit_text_3"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="4dp"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:autofillHints="oneTimeCode"
+            android:textSize="20sp"
+            tools:ignore="LabelFor" />
+
+        <EditText
+            android:id="@+id/otp_edit_text_4"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="4dp"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:autofillHints="oneTimeCode"
+            android:textSize="20sp"
+            tools:ignore="LabelFor" />
+
+        <EditText
+            android:id="@+id/otp_edit_text_5"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="4dp"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:autofillHints="oneTimeCode"
+            android:textSize="20sp"
+            tools:ignore="LabelFor" />
+
+        <EditText
+            android:id="@+id/otp_edit_text_6"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="4dp"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:autofillHints="oneTimeCode"
+            android:textSize="20sp"
+            tools:ignore="LabelFor" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewResendOtp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kirim ulang OTP"
+        android:textColor="@color/black"
+        android:layout_marginBottom="24dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonDialogVerify"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Verifikasi"
+        android:backgroundTint="@color/black"
+        android:textColor="@color/white"
+        app:cornerRadius="8dp" />
+
+</LinearLayout>

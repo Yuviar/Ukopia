@@ -44,6 +44,9 @@
         <activity
             android:name="com.example.ukopia.ui.auth.LupaPasswordActivity"
             android:exported="false" />
+        <!-- ADD THIS LINE -->
+        <activity android:name=".ui.auth.SetNewPasswordActivity" />
+
 
     </application>
 

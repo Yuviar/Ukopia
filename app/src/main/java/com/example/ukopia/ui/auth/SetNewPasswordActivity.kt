@@ -1,116 +1,68 @@
 package com.example.ukopia.ui.auth
 
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.text.method.HideReturnsTransformationMethod
-import android.text.method.PasswordTransformationMethod
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import com.example.ukopia.R
+import androidx.lifecycle.ViewModelProvider
+import com.example.ukopia.databinding.ActivitySetNewPasswordBinding
 
 class SetNewPasswordActivity : AppCompatActivity() {
-    private var isNewPasswordVisible = false
-    private var isConfirmPasswordVisible = false
-    private lateinit var btnGanti: Button // Changed name to reflect new function
+
+    private lateinit var binding: ActivitySetNewPasswordBinding
+    private lateinit var authViewModel: AuthViewModel
+    private var email: String? = null
+    private var code: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_set_new_password) // Use the new layout
+        binding = ActivitySetNewPasswordBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val editNewPassword = findViewById<EditText>(R.id.editNewPassword)
-        val toggleNewPassword = findViewById<ImageView>(R.id.btnToggleNewPassword)
-        val editConfirmPassword = findViewById<EditText>(R.id.editConfirmPassword)
-        val toggleConfirmPassword = findViewById<ImageView>(R.id.btnToggleConfirmPassword)
-        btnGanti = findViewById(R.id.btnGanti)
+        // Ambil data dari LupaPasswordActivity
+        email = intent.getStringExtra("EMAIL")
+        code = intent.getStringExtra("CODE")
 
-        // Input validation for UI elements
-        if (editNewPassword == null || toggleNewPassword == null ||
-            editConfirmPassword == null || toggleConfirmPassword == null ||
-            btnGanti == null) {
-            Toast.makeText(this, "Error: UI elements not found in SetNewPasswordActivity", Toast.LENGTH_LONG).show()
+        // Validasi data
+        if (email == null || code == null) {
+            Toast.makeText(this, "Terjadi kesalahan data session", Toast.LENGTH_SHORT).show()
             finish()
             return
         }
 
-        // Toggle visibility for New Password field
-        toggleNewPassword.setOnClickListener {
-            if (isNewPasswordVisible) {
-                editNewPassword.transformationMethod = PasswordTransformationMethod.getInstance()
-                toggleNewPassword.setImageResource(R.drawable.ic_eye)
-                isNewPasswordVisible = false
-            } else {
-                editNewPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
-                toggleNewPassword.setImageResource(R.drawable.ic_eye_off)
-                isNewPasswordVisible = true
+        authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+
+        binding.btnGanti.setOnClickListener {
+            val newPass = binding.editNewPassword.text.toString().trim()
+            val confirmPass = binding.editConfirmPassword.text.toString().trim()
+
+            if (newPass.isEmpty() || newPass.length < 8) {
+                binding.editNewPassword.error = "Minimal 8 karakter"
+                return@setOnClickListener
             }
-            editNewPassword.setSelection(editNewPassword.text.length)
-        }
-
-        // Toggle visibility for Confirm New Password field
-        toggleConfirmPassword.setOnClickListener {
-            if (isConfirmPasswordVisible) {
-                editConfirmPassword.transformationMethod = PasswordTransformationMethod.getInstance()
-                toggleConfirmPassword.setImageResource(R.drawable.ic_eye)
-                isConfirmPasswordVisible = false
-            } else {
-                editConfirmPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
-                toggleConfirmPassword.setImageResource(R.drawable.ic_eye_off)
-                isConfirmPasswordVisible = true
-            }
-            editConfirmPassword.setSelection(editConfirmPassword.text.length)
-        }
-
-        btnGanti.setOnClickListener {
-            val newPassword = editNewPassword.text.toString().trim()
-            val confirmPassword = editConfirmPassword.text.toString().trim()
-
-            if (newPassword.isEmpty() || confirmPassword.isEmpty()) {
-                Toast.makeText(this, getString(R.string.all_fields_required_error), Toast.LENGTH_SHORT).show()
+            if (newPass != confirmPass) {
+                binding.editConfirmPassword.error = "Password tidak cocok"
                 return@setOnClickListener
             }
 
-            if (newPassword != confirmPassword) {
-                editConfirmPassword.error = getString(R.string.password_mismatch_error) // New string needed
-                Toast.makeText(this, getString(R.string.password_mismatch_error), Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+            // Panggil API Reset Password dengan Email, Kode, dan Password Baru
+            authViewModel.resetPassword(email!!, code!!, newPass)
+        }
 
-            // --- Animasi Flash Putih ---
-            val targetBackgroundTint = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
-            val targetTextColor = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white))
-            val flashColorBackground = ContextCompat.getColor(this, R.color.white)
-            val flashColorText = ContextCompat.getColor(this, R.color.black)
-
-            btnGanti.backgroundTintList = ColorStateList.valueOf(flashColorBackground)
-            btnGanti.setTextColor(flashColorText)
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                btnGanti.backgroundTintList = targetBackgroundTint
-                btnGanti.setTextColor(targetTextColor)
-
-                // Simulate password change success
-                Toast.makeText(this, getString(R.string.password_change_success), Toast.LENGTH_SHORT).show()
-
-                // Navigate to LoginActivity
+        // Observer Hasil Reset
+        authViewModel.forgotPasswordState.observe(this) { state ->
+            if (state == "password_reset") {
+                Toast.makeText(this, "Password Berhasil Diubah! Silakan Login.", Toast.LENGTH_LONG).show()
                 val intent = Intent(this, LoginActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
-                finish() // Finish SetNewPasswordActivity
-            }, 150) // Flash duration
+                finish()
+            }
         }
-    }
 
-    override fun onResume() {
-        super.onResume()
-        // Ensure button color is correct if activity is resumed
-        btnGanti.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
-        btnGanti.setTextColor(ContextCompat.getColor(this, R.color.white))
+        // Observer Error
+        authViewModel.message.observe(this) { msg ->
+            if (!msg.isNullOrEmpty()) Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+        }
     }
 }

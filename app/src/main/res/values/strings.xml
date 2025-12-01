@@ -406,4 +406,11 @@
     <string name="confirm_new_password_label">Confirm New Password</string>
     <string name="enter_confirm_new_password_hint">Re-enter Your New Password</string>
     <string name="password_mismatch_error">New passwords do not match.</string>
+
+    <string name="no_notes_available">No Records</string>
+    <string name="aroma_format">Aroma: %d</string>
+    <string name="sweetness_format">Sweetness: %d</string>
+    <string name="acidity_format">Acidity: %d</string>
+    <string name="bitterness_format">Bitterness: %d</string>
+    <string name="body_format">Body: %d</string>
 </resources>

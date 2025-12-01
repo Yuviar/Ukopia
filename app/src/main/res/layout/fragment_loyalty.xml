@@ -7,7 +7,6 @@
     android:background="@color/secondary"
     tools:context=".ui.loyalty.LoyaltyFragment">
 
-    <!-- Fixed Header Section (User Info, background) -->
     <LinearLayout
         android:id="@+id/header_container"
         android:layout_width="match_parent"
@@ -27,7 +26,6 @@
             android:elevation="0dp"
             android:layout_marginBottom="8dp">
 
-            <!-- User Info Section -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -51,7 +49,6 @@
                     tools:text="Points: 20" />
             </LinearLayout>
 
-            <!-- NEW: Reward History Icon -->
             <ImageButton
                 android:id="@+id/btn_reward_history"
                 android:layout_width="48dp"
@@ -66,7 +63,6 @@
     </LinearLayout>
 
 
-    <!-- Scrollable Content Section (NestedScrollView) -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollViewLoyaltyContent"
         android:layout_width="0dp"
@@ -83,7 +79,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Stamp Card Section (STATIC 2x5 GRID with Navigation) -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -145,14 +140,12 @@
                             app:layout_constraintStart_toEndOf="@+id/btn_prev_stamp"
                             app:layout_constraintTop_toTopOf="parent">
 
-                            <!-- Row 1: Stamps 1-5 (atau sesuai halaman) -->
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
                                 android:weightSum="5"
                                 android:gravity="center">
-                                <!-- Setiap FrameLayout memiliki 3 elemen: background ImageView, TextView angka, dan checkmark ImageView -->
                                 <FrameLayout style="@style/StampCell" tools:tag="stamp_1">
                                     <ImageView android:id="@+id/iv_stamp_background_1" style="@style/LoyaltyStampImageView" />
                                     <TextView android:id="@+id/tv_stamp_number_1" style="@style/LoyaltyStampNumber" tools:text="1" />
@@ -180,7 +173,6 @@
                                 </FrameLayout>
                             </LinearLayout>
 
-                            <!-- Row 2: Stamps 6-10 (atau sesuai halaman) -->
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -231,7 +223,6 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <!-- Indikator progres stempel -->
                     <TextView
                         android:id="@+id/textViewStampProgress"
                         android:layout_width="wrap_content"
@@ -246,7 +237,6 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Rewards Section -->
             <TextView
                 android:id="@+id/textViewRewardsHeader"
                 android:layout_width="match_parent"
@@ -258,7 +248,6 @@
                 android:layout_marginTop="24dp"
                 tools:ignore="HardcodedText" />
 
-            <!-- Reward Card Pagination Container (NEW) -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/rewardCardView"
                 android:layout_width="match_parent"
@@ -301,292 +290,59 @@
                             android:orientation="horizontal"
                             android:paddingHorizontal="2dp"
                             android:gravity="center"
+                            android:weightSum="2"
                             app:layout_constraintEnd_toStartOf="@+id/btn_next_reward"
                             app:layout_constraintStart_toEndOf="@+id/btn_prev_reward"
                             app:layout_constraintTop_toTopOf="parent">
 
-                            <!-- Reward Card: 10% Discount (5 Points) -->
                             <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/card_reward_disc_10"
-                                style="@style/RewardCard">
+                                android:id="@+id/reward_card_1"
+                                style="@style/RewardCard"
+                                android:layout_weight="1"
+                                android:layout_marginEnd="4dp">
                                 <LinearLayout style="@style/RewardCard.LinearLayout">
-                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Discount Icon"/>
-                                    <TextView style="@style/RewardCard.Title" android:text="Discount 10%"/>
-                                    <TextView android:id="@+id/tv_reward_points_disc_10" style="@style/RewardCard.Points" tools:text="5 Points"/>
+                                    <ImageView
+                                        android:id="@+id/iv_reward_icon_1"
+                                        style="@style/RewardCard.Icon"
+                                        android:contentDescription="Reward Icon 1"/>
+                                    <TextView
+                                        android:id="@+id/tv_reward_title_1"
+                                        style="@style/RewardCard.Title"
+                                        tools:text="Discount 10%"/>
+                                    <TextView
+                                        android:id="@+id/tv_reward_points_1"
+                                        style="@style/RewardCard.Points"
+                                        tools:text="5 Points"/>
                                     <com.google.android.material.button.MaterialButton
-                                        android:id="@+id/btn_claim_disc_10"
+                                        android:id="@+id/btn_claim_status_1"
                                         style="@style/RewardCard.Button"
-                                        tools:text="KLAIM"/>
+                                        tools:text="STATUS"/>
+
                                 </LinearLayout>
                             </com.google.android.material.card.MaterialCardView>
 
-                            <!-- Reward Card: Free Serve (10 Points) -->
                             <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/card_reward_free_serve"
-                                style="@style/RewardCard">
+                                android:id="@+id/reward_card_2"
+                                style="@style/RewardCard"
+                                android:layout_weight="1"
+                                android:layout_marginStart="4dp">
                                 <LinearLayout style="@style/RewardCard.LinearLayout">
-                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Free Serve Icon"/>
-                                    <TextView style="@style/RewardCard.Title" android:text="Free Serve"/>
-                                    <TextView android:id="@+id/tv_reward_points_free_serve" style="@style/RewardCard.Points" tools:text="10 Points"/>
+                                    <ImageView
+                                        android:id="@+id/iv_reward_icon_2"
+                                        style="@style/RewardCard.Icon"
+                                        android:contentDescription="Reward Icon 2"/>
+                                    <TextView
+                                        android:id="@+id/tv_reward_title_2"
+                                        style="@style/RewardCard.Title"
+                                        tools:text="Free Serve"/>
+                                    <TextView
+                                        android:id="@+id/tv_reward_points_2"
+                                        style="@style/RewardCard.Points"
+                                        tools:text="10 Points"/>
                                     <com.google.android.material.button.MaterialButton
-                                        android:id="@+id/btn_claim_free_serve"
+                                        android:id="@+id/btn_claim_status_2"
                                         style="@style/RewardCard.Button"
-                                        tools:text="KLAIM"/>
-                                </LinearLayout>
-                            </com.google.android.material.card.MaterialCardView>
-
-                            <!-- Reward Card: 10% Discount (15 Points) -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/card_reward_disc_10_2"
-                                style="@style/RewardCard">
-                                <LinearLayout style="@style/RewardCard.LinearLayout">
-                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Discount Icon"/>
-                                    <TextView style="@style/RewardCard.Title" android:text="Discount 10%"/>
-                                    <TextView android:id="@+id/tv_reward_points_disc_10_2" style="@style/RewardCard.Points" tools:text="15 Points"/>
-                                    <com.google.android.material.button.MaterialButton
-                                        android:id="@+id/btn_claim_disc_10_2"
-                                        style="@style/RewardCard.Button"
-                                        tools:text="KLAIM"/>
-                                </LinearLayout>
-                            </com.google.android.material.card.MaterialCardView>
-
-                            <!-- Reward Card: Free T-Shirt (20 Points) - ONLY T-SHIRT REWARD -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/card_reward_tshirt"
-                                style="@style/RewardCard">
-                                <LinearLayout style="@style/RewardCard.LinearLayout">
-                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_tshirt" android:contentDescription="T-shirt Icon"/>
-                                    <TextView style="@style/RewardCard.Title" android:text="Free T-Shirt"/>
-                                    <TextView android:id="@+id/tv_reward_points_tshirt" style="@style/RewardCard.Points" tools:text="20 Points"/>
-                                    <com.google.android.material.button.MaterialButton
-                                        android:id="@+id/btn_claim_tshirt"
-                                        style="@style/RewardCard.Button"
-                                        tools:text="KLAIM"/>
-                                </LinearLayout>
-                            </com.google.android.material.card.MaterialCardView>
-
-                            <!-- Reward Card: Discount 10% (25 Points) -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/card_reward_disc_10_25"
-                                style="@style/RewardCard">
-                                <LinearLayout style="@style/RewardCard.LinearLayout">
-                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Discount Icon"/>
-                                    <TextView style="@style/RewardCard.Title" android:text="Discount 10%"/>
-                                    <TextView android:id="@+id/tv_reward_points_disc_10_25" style="@style/RewardCard.Points" tools:text="25 Points"/>
-                                    <com.google.android.material.button.MaterialButton
-                                        android:id="@+id/btn_claim_disc_10_25"
-                                        style="@style/RewardCard.Button"
-                                        tools:text="KLAIM"/>
-                                </LinearLayout>
-                            </com.google.android.material.card.MaterialCardView>
-
-                            <!-- Reward Card: Free Serve (30 Points) -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/card_reward_free_serve_30"
-                                style="@style/RewardCard">
-                                <LinearLayout style="@style/RewardCard.LinearLayout">
-                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Free Serve Icon"/>
-                                    <TextView style="@style/RewardCard.Title" android:text="Free Serve"/>
-                                    <TextView android:id="@+id/tv_reward_points_free_serve_30" style="@style/RewardCard.Points" tools:text="30 Points"/>
-                                    <com.google.android.material.button.MaterialButton
-                                        android:id="@+id/btn_claim_free_serve_30"
-                                        style="@style/RewardCard.Button"
-                                        tools:text="KLAIM"/>
-                                </LinearLayout>
-                            </com.google.android.material.card.MaterialCardView>
-
-                            <!-- Reward Card: Discount 10% (35 Points) -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/card_reward_disc_10_35"
-                                style="@style/RewardCard">
-                                <LinearLayout style="@style/RewardCard.LinearLayout">
-                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Discount Icon"/>
-                                    <TextView style="@style/RewardCard.Title" android:text="Discount 10%"/>
-                                    <TextView android:id="@+id/tv_reward_points_disc_10_35" style="@style/RewardCard.Points" tools:text="35 Points"/>
-                                    <com.google.android.material.button.MaterialButton
-                                        android:id="@+id/btn_claim_disc_10_35"
-                                        style="@style/RewardCard.Button"
-                                        tools:text="KLAIM"/>
-                                </LinearLayout>
-                            </com.google.android.material.card.MaterialCardView>
-
-                            <!-- Reward Card: Free Serve (40 Points) -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/card_reward_free_serve_40"
-                                style="@style/RewardCard">
-                                <LinearLayout style="@style/RewardCard.LinearLayout">
-                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Free Serve Icon"/>
-                                    <TextView style="@style/RewardCard.Title" android:text="Free Serve"/>
-                                    <TextView android:id="@+id/tv_reward_points_free_serve_40" style="@style/RewardCard.Points" tools:text="40 Points"/>
-                                    <com.google.android.material.button.MaterialButton
-                                        android:id="@+id/btn_claim_free_serve_40"
-                                        style="@style/RewardCard.Button"
-                                        tools:text="KLAIM"/>
-                                </LinearLayout>
-                            </com.google.android.material.card.MaterialCardView>
-
-                            <!-- NEW: Reward Card: Discount 10% (45 Points) -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/card_reward_disc_10_45"
-                                style="@style/RewardCard">
-                                <LinearLayout style="@style/RewardCard.LinearLayout">
-                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Discount Icon"/>
-                                    <TextView style="@style/RewardCard.Title" android:text="Discount 10%"/>
-                                    <TextView android:id="@+id/tv_reward_points_disc_10_45" style="@style/RewardCard.Points" tools:text="45 Points"/>
-                                    <com.google.android.material.button.MaterialButton
-                                        android:id="@+id/btn_claim_disc_10_45"
-                                        style="@style/RewardCard.Button"
-                                        tools:text="KLAIM"/>
-                                </LinearLayout>
-                            </com.google.android.material.card.MaterialCardView>
-
-                            <!-- NEW: Reward Card: Free Serve (50 Points) -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/card_reward_free_serve_50"
-                                style="@style/RewardCard">
-                                <LinearLayout style="@style/RewardCard.LinearLayout">
-                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Free Serve Icon"/>
-                                    <TextView style="@style/RewardCard.Title" android:text="Free Serve"/>
-                                    <TextView android:id="@+id/tv_reward_points_free_serve_50" style="@style/RewardCard.Points" tools:text="50 Points"/>
-                                    <com.google.android.material.button.MaterialButton
-                                        android:id="@+id/btn_claim_free_serve_50"
-                                        style="@style/RewardCard.Button"
-                                        tools:text="KLAIM"/>
-                                </LinearLayout>
-                            </com.google.android.material.card.MaterialCardView>
-
-                            <!-- NEW: Reward Card: Discount 10% (55 Points) -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/card_reward_disc_10_55"
-                                style="@style/RewardCard">
-                                <LinearLayout style="@style/RewardCard.LinearLayout">
-                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Discount Icon"/>
-                                    <TextView style="@style/RewardCard.Title" android:text="Discount 10%"/>
-                                    <TextView android:id="@+id/tv_reward_points_disc_10_55" style="@style/RewardCard.Points" tools:text="55 Points"/>
-                                    <com.google.android.material.button.MaterialButton
-                                        android:id="@+id/btn_claim_disc_10_55"
-                                        style="@style/RewardCard.Button"
-                                        tools:text="KLAIM"/>
-                                </LinearLayout>
-                            </com.google.android.material.card.MaterialCardView>
-
-                            <!-- NEW: Reward Card: Free Serve (60 Points) - Replaced T-shirt -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/card_reward_free_serve_60"
-                                style="@style/RewardCard">
-                                <LinearLayout style="@style/RewardCard.LinearLayout">
-                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Free Serve Icon"/>
-                                    <TextView style="@style/RewardCard.Title" android:text="Free Serve"/>
-                                    <TextView android:id="@+id/tv_reward_points_free_serve_60" style="@style/RewardCard.Points" tools:text="60 Points"/>
-                                    <com.google.android.material.button.MaterialButton
-                                        android:id="@+id/btn_claim_free_serve_60"
-                                        style="@style/RewardCard.Button"
-                                        tools:text="KLAIM"/>
-                                </LinearLayout>
-                            </com.google.android.material.card.MaterialCardView>
-
-                            <!-- NEW: Reward Card: Discount 10% (65 Points) -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/card_reward_disc_10_65"
-                                style="@style/RewardCard">
-                                <LinearLayout style="@style/RewardCard.LinearLayout">
-                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Discount Icon"/>
-                                    <TextView style="@style/RewardCard.Title" android:text="Discount 10%"/>
-                                    <TextView android:id="@+id/tv_reward_points_disc_10_65" style="@style/RewardCard.Points" tools:text="65 Points"/>
-                                    <com.google.android.material.button.MaterialButton
-                                        android:id="@+id/btn_claim_disc_10_65"
-                                        style="@style/RewardCard.Button"
-                                        tools:text="KLAIM"/>
-                                </LinearLayout>
-                            </com.google.android.material.card.MaterialCardView>
-
-                            <!-- NEW: Reward Card: Free Serve (70 Points) -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/card_reward_free_serve_70"
-                                style="@style/RewardCard">
-                                <LinearLayout style="@style/RewardCard.LinearLayout">
-                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Free Serve Icon"/>
-                                    <TextView style="@style/RewardCard.Title" android:text="Free Serve"/>
-                                    <TextView android:id="@+id/tv_reward_points_free_serve_70" style="@style/RewardCard.Points" tools:text="70 Points"/>
-                                    <com.google.android.material.button.MaterialButton
-                                        android:id="@+id/btn_claim_free_serve_70"
-                                        style="@style/RewardCard.Button"
-                                        tools:text="KLAIM"/>
-                                </LinearLayout>
-                            </com.google.android.material.card.MaterialCardView>
-
-                            <!-- NEW: Reward Card: Discount 10% (75 Points) -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/card_reward_disc_10_75"
-                                style="@style/RewardCard">
-                                <LinearLayout style="@style/RewardCard.LinearLayout">
-                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Discount Icon"/>
-                                    <TextView style="@style/RewardCard.Title" android:text="Discount 10%"/>
-                                    <TextView android:id="@+id/tv_reward_points_disc_10_75" style="@style/RewardCard.Points" tools:text="75 Points"/>
-                                    <com.google.android.material.button.MaterialButton
-                                        android:id="@+id/btn_claim_disc_10_75"
-                                        style="@style/RewardCard.Button"
-                                        tools:text="KLAIM"/>
-                                </LinearLayout>
-                            </com.google.android.material.card.MaterialCardView>
-
-                            <!-- NEW: Reward Card: Free Serve (80 Points) -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/card_reward_free_serve_80"
-                                style="@style/RewardCard">
-                                <LinearLayout style="@style/RewardCard.LinearLayout">
-                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Free Serve Icon"/>
-                                    <TextView style="@style/RewardCard.Title" android:text="Free Serve"/>
-                                    <TextView android:id="@+id/tv_reward_points_free_serve_80" style="@style/RewardCard.Points" tools:text="80 Points"/>
-                                    <com.google.android.material.button.MaterialButton
-                                        android:id="@+id/btn_claim_free_serve_80"
-                                        style="@style/RewardCard.Button"
-                                        tools:text="KLAIM"/>
-                                </LinearLayout>
-                            </com.google.android.material.card.MaterialCardView>
-
-                            <!-- NEW: Reward Card: Discount 10% (85 Points) -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/card_reward_disc_10_85"
-                                style="@style/RewardCard">
-                                <LinearLayout style="@style/RewardCard.LinearLayout">
-                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Discount Icon"/>
-                                    <TextView style="@style/RewardCard.Title" android:text="Discount 10%"/>
-                                    <TextView android:id="@+id/tv_reward_points_disc_10_85" style="@style/RewardCard.Points" tools:text="85 Points"/>
-                                    <com.google.android.material.button.MaterialButton
-                                        android:id="@+id/btn_claim_disc_10_85"
-                                        style="@style/RewardCard.Button"
-                                        tools:text="KLAIM"/>
-                                </LinearLayout>
-                            </com.google.android.material.card.MaterialCardView>
-
-                            <!-- NEW: Reward Card: Free Serve (90 Points) -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/card_reward_free_serve_90"
-                                style="@style/RewardCard">
-                                <LinearLayout style="@style/RewardCard.LinearLayout">
-                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Free Serve Icon"/>
-                                    <TextView style="@style/RewardCard.Title" android:text="Free Serve"/>
-                                    <TextView android:id="@+id/tv_reward_points_free_serve_90" style="@style/RewardCard.Points" tools:text="90 Points"/>
-                                    <com.google.android.material.button.MaterialButton
-                                        android:id="@+id/btn_claim_free_serve_90"
-                                        style="@style/RewardCard.Button"
-                                        tools:text="KLAIM"/>
-                                </LinearLayout>
-                            </com.google.android.material.card.MaterialCardView>
-
-                            <!-- NEW: Reward Card: Discount 10% (95 Points) -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/card_reward_disc_10_95"
-                                style="@style/RewardCard">
-                                <LinearLayout style="@style/RewardCard.LinearLayout">
-                                    <ImageView style="@style/RewardCard.Icon" android:src="@drawable/ic_coffee_cup" android:contentDescription="Discount Icon"/>
-                                    <TextView style="@style/RewardCard.Title" android:text="Discount 10%"/>
-                                    <TextView android:id="@+id/tv_reward_points_disc_10_95" style="@style/RewardCard.Points" tools:text="95 Points"/>
-                                    <com.google.android.material.button.MaterialButton
-                                        android:id="@+id/btn_claim_disc_10_95"
-                                        style="@style/RewardCard.Button"
-                                        tools:text="KLAIM"/>
+                                        tools:text="STATUS"/>
                                 </LinearLayout>
                             </com.google.android.material.card.MaterialCardView>
 
@@ -607,7 +363,6 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <!-- Indikator progres reward -->
                     <TextView
                         android:id="@+id/textViewRewardProgress"
                         android:layout_width="wrap_content"
@@ -622,7 +377,6 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Loyalty History Section -->
             <TextView
                 android:id="@+id/textViewLoyaltyHistoryHeader"
                 android:layout_width="match_parent"

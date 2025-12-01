@@ -406,4 +406,11 @@
     <string name="confirm_new_password_label">Konfirmasi Kata Sandi Baru</string>
     <string name="enter_confirm_new_password_hint">Masukkan Kata Sandi Baru Lagi</string>
     <string name="password_mismatch_error">Kata sandi baru tidak cocok.</string>
+
+    <string name="no_notes_available">Tidak ada catatan</string>
+    <string name="aroma_format">Aroma: %d</string>
+    <string name="sweetness_format">Kemanisa: %d</string>
+    <string name="acidity_format">Keasaman: %d</string>
+    <string name="bitterness_format">Kepahitan: %d</string>
+    <string name="body_format">Kekentalan: %d</string>
 </resources>

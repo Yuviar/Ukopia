@@ -1,3 +1,4 @@
+// File: D:/github_rama/Ukopia/app/src/main/java/com/example/ukopia/models/ApiServices.kt
 package com.example.ukopia.models
 
 import com.example.ukopia.data.ApiResponse
@@ -6,6 +7,9 @@ import com.example.ukopia.data.CreateRecipeRequest
 import com.example.ukopia.data.EquipmentItem
 import com.example.ukopia.data.RecipeItem
 import com.example.ukopia.data.SubEquipmentItem
+import com.example.ukopia.data.LoyaltyListResponse
+import com.example.ukopia.data.LoyaltyUserStatus
+import com.example.ukopia.data.LoyaltyStatusResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -89,4 +93,22 @@ interface ApiService {
     suspend fun deleteRecipe(
         @Body body: Map<String, Int> // Kirim {"id_resep": 123}
     ): Response<ApiResponse<Any>>
+
+    @GET("loyalty/list.php")
+    suspend fun getLoyaltyList(
+        @Query("uid") uid: Int,
+        @Query("type") type: String // 'pending' atau 'history'
+    ): Response<LoyaltyListResponse>
+
+    // 2. Update Review (Mengembalikan status lengkap)
+    @POST("loyalty/update.php")
+    suspend fun updateLoyaltyReview(
+        @Body body: Map<String, @JvmSuppressWildcards Any>
+    ): Response<LoyaltyStatusResponse> // <--- Revisi
+
+    // 3. Ambil Status Reward & Total Poin
+    @GET("loyalty/status.php")
+    suspend fun getLoyaltyStatus(
+        @Query("uid") uid: Int
+    ): Response<LoyaltyStatusResponse>
 }

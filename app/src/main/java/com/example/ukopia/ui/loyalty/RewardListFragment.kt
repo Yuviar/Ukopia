@@ -1,3 +1,4 @@
+// File: D:/github_rama/Ukopia/app/src/main/java/com/example/ukopia/ui/loyalty/RewardListFragment.kt
 package com.example.ukopia.ui.loyalty
 
 import android.os.Bundle
@@ -7,89 +8,76 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.ukopia.MainActivity // Pastikan MainActivity ini diimpor
-import com.example.ukopia.R
+import com.example.ukopia.MainActivity
 import com.example.ukopia.data.ALL_LOYALTY_REWARDS
 import com.example.ukopia.data.LoyaltyUserStatus
+import com.example.ukopia.data.getStatus // Import helper status
 import com.example.ukopia.databinding.FragmentRewardListBinding
 
 class RewardListFragment : Fragment() {
 
-    private lateinit var binding: FragmentRewardListBinding
-    private val loyaltyViewModel: LoyaltyViewModel by activityViewModels()
-    private lateinit var rewardAdapter: RewardAdapter
+    private var _binding: FragmentRewardListBinding? = null
+    private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentRewardListBinding.inflate(inflater, container, false)
+    private val viewModel: LoyaltyViewModel by activityViewModels()
+    private val adapter = RewardAdapter()
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentRewardListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as? MainActivity)?.setBottomNavVisibility(View.GONE)
 
-        // Sembunyikan bottom navigation bar saat fragment ini aktif
-        // Memastikan requireActivity() adalah MainActivity sebelum casting
-        (requireActivity() as MainActivity).setBottomNavVisibility(View.GONE)
+        binding.recyclerViewRewards.layoutManager = LinearLayoutManager(context)
+        binding.recyclerViewRewards.adapter = adapter
 
-        setupRecyclerView()
-        observeLoyaltyStatus()
-
-        // Setup tombol kembali di header baru
         binding.btnBackRewards.setOnClickListener {
-            (activity as? MainActivity)?.onBackPressedDispatcher?.onBackPressed()
+            parentFragmentManager.popBackStack()
         }
-    }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        // Pastikan bottom navigation bar kembali terlihat saat fragment ini dihancurkan
-        // atau saat kembali ke fragment lain yang memerlukannya
-        (requireActivity() as MainActivity).setBottomNavVisibility(View.VISIBLE)
-    }
-
-    private fun setupRecyclerView() {
-        rewardAdapter = RewardAdapter()
-        binding.recyclerViewRewards.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = rewardAdapter
-        }
-    }
-
-    private fun observeLoyaltyStatus() {
-        loyaltyViewModel.loyaltyUserStatus.observe(viewLifecycleOwner) { status ->
-            val rewardItems = convertLoyaltyStatusToRewardItems(status)
-            rewardAdapter.submitList(rewardItems)
-            updateEmptyState(rewardItems.isEmpty())
-        }
-    }
-
-    // Fungsi helper untuk mengkonversi daftar ALL_LOYALTY_REWARDS menjadi RewardItem
-    // dengan status klaim dari LoyaltyUserStatus
-    private fun convertLoyaltyStatusToRewardItems(status: LoyaltyUserStatus): List<RewardItem> {
-        return ALL_LOYALTY_REWARDS
-            .filter { loyaltyReward ->
-                // HANYA SERTAKAN REWARD YANG POINNYA SUDAH TERCUKUPI
-                status.totalPoints >= loyaltyReward.threshold
+        viewModel.loyaltyUserStatus.observe(viewLifecycleOwner) { status ->
+            status?.let {
+                // Filter hanya reward yang sudah tercapai (Poin >= Threshold)
+                val achievedRewards = generateAchievedRewards(it.totalPoints, it)
+                adapter.submitList(achievedRewards)
+                binding.emptyStateText.visibility = if (achievedRewards.isEmpty()) View.VISIBLE else View.GONE
             }
-            .map { loyaltyReward ->
-                // Untuk item yang sudah difilter, pointsMet PASTI true
-                val pointsMet = true
-                val claimedDate = getClaimedDateForReward(status, loyaltyReward.threshold)
+        }
+    }
+
+    /**
+     * Menggunakan daftar statis dan filter hanya reward yang poinnya sudah tercapai.
+     */
+    private fun generateAchievedRewards(points: Int, status: LoyaltyUserStatus): List<RewardItem> {
+        return ALL_LOYALTY_REWARDS
+            .filter { it.threshold <= points } // Filter hanya yang sudah tercapai
+            .map { reward ->
+                val statusText = reward.getStatus(points, status)
+
+                // Ambil tanggal klaim dari helper jika statusnya CLAIMED
+                val claimDate = if (statusText == "CLAIMED") getClaimDate(reward.threshold, status) else null
 
                 RewardItem(
-                    id = loyaltyReward.threshold, // Menggunakan threshold sebagai ID unik
-                    name = loyaltyReward.title,
-                    pointsRequired = loyaltyReward.threshold,
-                    iconResId = loyaltyReward.iconResId,
-                    pointsMet = pointsMet, // Sekarang ini akan selalu true karena sudah difilter
-                    claimedDate = claimedDate
+                    id = reward.threshold,
+                    name = reward.title,
+                    pointsRequired = reward.threshold,
+                    iconResId = reward.iconResId,
+                    pointsMet = true,
+                    claimedDate = claimDate
                 )
-            }
+            }.reversed() // Tampilkan reward terbaru di atas
     }
 
-    // Fungsi helper untuk mendapatkan tanggal klaim dari LoyaltyUserStatus
-    private fun getClaimedDateForReward(status: LoyaltyUserStatus, threshold: Int): String? {
-        return when (threshold) {
+    /**
+     * Mengambil tanggal klaim dari properti yang sesuai di LoyaltyUserStatus.
+     */
+    private fun getClaimDate(threshold: Int, status: LoyaltyUserStatus): String? {
+        return when(threshold) {
             5 -> status.discount10ClaimDate
             10 -> status.freeServeClaimDate
             15 -> status.discount10Slot15ClaimDate
@@ -113,13 +101,9 @@ class RewardListFragment : Fragment() {
         }
     }
 
-    private fun updateEmptyState(isEmpty: Boolean) {
-        if (isEmpty) {
-            binding.recyclerViewRewards.visibility = View.GONE
-            binding.emptyStateText.visibility = View.VISIBLE
-        } else {
-            binding.recyclerViewRewards.visibility = View.VISIBLE
-            binding.emptyStateText.visibility = View.GONE
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+        (activity as? MainActivity)?.setBottomNavVisibility(View.VISIBLE)
     }
 }

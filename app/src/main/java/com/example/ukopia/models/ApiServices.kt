@@ -10,6 +10,7 @@ import com.example.ukopia.data.SubEquipmentItem
 import com.example.ukopia.data.LoyaltyListResponse
 import com.example.ukopia.data.LoyaltyUserStatus
 import com.example.ukopia.data.LoyaltyStatusResponse
+import com.example.ukopia.data.PromoResponse
 import com.example.ukopia.ui.auth.AuthViewModel
 import com.example.ukopia.data.RewardHistoryResponse
 import retrofit2.Response
@@ -125,4 +126,9 @@ interface ApiService {
     suspend fun getRewardHistory(
         @Query("uid") uid: Int
     ): Response<RewardHistoryResponse>
+    // ... endpoint lainnya ...
+
+    // API PROMO
+    @GET("promo/latest.php")
+    suspend fun getLatestPromo(): Response<PromoResponse>
 }

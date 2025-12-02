@@ -41,7 +41,7 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <!-- TextView untuk Rating -->
+            <!-- TextView untuk Rating (MODIFIKASI DI SINI) -->
             <TextView
                 android:id="@+id/tv_menu_rating"
                 android:layout_width="match_parent"
@@ -49,9 +49,9 @@
                 android:layout_marginTop="4dp"
                 tools:text="4.8/5.0"
                 android:textSize="12sp"
-                android:drawableStart="@drawable/ic_star"
+                android:drawableStart="@drawable/ic_star_filled"
                 android:drawablePadding="4dp"
-                />
+                android:textColor="@color/black"/> <!-- Tambahkan textColor agar angkanya terlihat -->
 
         </LinearLayout>
     </LinearLayout>

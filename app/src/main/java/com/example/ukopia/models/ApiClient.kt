@@ -1,45 +1,39 @@
 package com.example.ukopia.models
 
-import com.google.gson.GsonBuilder // Import ini
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit // Tambahkan import ini jika belum ada
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import java.util.concurrent.TimeUnit
 
+// Interface ApiService dan data class GeneralApiResponse telah dipindahkan ke ApiServices.kt
+
+// --- Objek Singleton untuk Akses API ---
 object ApiClient {
+    private const val BASE_URL = "http://192.168.1.13/si-ukopia/backoffice/api/" // GANTI DENGAN IP ANDA
 
-    private const val BASE_URL = "http://192.168.18.140/SI-ukopia/BackOffice/api/" // Pastikan ini URL yang benar
-
-    // Interceptor untuk logging
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
+        level = HttpLoggingInterceptor.Level.BODY // Untuk log request dan response
     }
 
-    // Konfigurasi OkHttpClient dengan interceptor dan timeout
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
-        .connectTimeout(30, TimeUnit.SECONDS) // Contoh: 30 detik
-        .readTimeout(30, TimeUnit.SECONDS)    // Contoh: 30 detik
-        .writeTimeout(30, TimeUnit.SECONDS)   // Contoh: 30 detik
+        .connectTimeout(30, TimeUnit.SECONDS) // Contoh: 30 detik timeout koneksi
+        .readTimeout(30, TimeUnit.SECONDS)    // Contoh: 30 detik timeout baca
+        .writeTimeout(30, TimeUnit.SECONDS)   // Contoh: 30 detik timeout tulis
         .build()
-
-    // --- MODIFIKASI DIMULAI DI SINI ---
-    // Konfigurasi Gson agar lebih toleran terhadap JSON yang tidak standar
-    private val lenientGson = GsonBuilder()
-        .setLenient() // Membuat Gson lebih toleran
-        .create()
-    // --- MODIFIKASI BERAKHIR DI SINI ---
 
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .client(okHttpClient)
-            // --- GUNAKAN lenientGson DI SINI ---
-            .addConverterFactory(GsonConverterFactory.create(lenientGson)) // PENTING: Gunakan lenientGson
+            .client(okHttpClient) // Gunakan OkHttpClient yang sudah dibuat
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
+    // Pastikan ini mengacu pada ApiService yang didefinisikan di ApiServices.kt
+    // Karena ApiClient.kt dan ApiServices.kt berada dalam package yang sama (com.example.ukopia.models),
+    // ApiService seharusnya otomatis terlihat dan tidak perlu import eksplisit di sini.
     val instance: ApiService by lazy {
         retrofit.create(ApiService::class.java)
     }

@@ -247,6 +247,9 @@
     <string name="loyalty_item_name_placeholder">Kopi Ijen cm</string>
     <string name="loyalty_date_placeholder">Tanggal: 23/09/2025</string>
     <string name="loyalty_bean_placeholder">Biji: Arabika</string>
+    <string name="clear_search_desc">Hapus teks pencarian</string>
+    <string name="no_loyalty_orders_yet">Belum ada riwayat order.</string>
+    <string name="no_results_found">No results found</string>
 
     <string name="loyalty_detail_menu_title_placeholder">DETAIL KOPI LATTE</string>
     <string name="coffee_bean_data_title">Data Biji Kopi: </string>

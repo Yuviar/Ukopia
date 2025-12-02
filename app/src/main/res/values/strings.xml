@@ -247,6 +247,9 @@
     <string name="loyalty_item_name_placeholder">Kopi Ijen cm</string>
     <string name="loyalty_date_placeholder">Date: 23/09/2025</string>
     <string name="loyalty_bean_placeholder">Bean: Arabica</string>
+    <string name="clear_search_desc">Delete Search Text</string>
+    <string name="no_loyalty_orders_yet">No order history.</string>
+    <string name="no_results_found">Hasil tidak ditemukan</string>
 
     <string name="loyalty_detail_menu_title_placeholder">DETAIL COFFEE LATTE</string>
     <string name="coffee_bean_data_title">Coffee Bean Data: </string>

@@ -20,30 +20,29 @@ import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.example.ukopia.MainActivity
 import com.example.ukopia.R
-import com.example.ukopia.SessionManager // Menggunakan SessionManager (object) Anda
-import com.example.ukopia.UkopiaApplication // Untuk ViewModel Factory
+import com.example.ukopia.SessionManager
+import com.example.ukopia.UkopiaApplication
 import com.example.ukopia.databinding.DialogLoginRequiredBinding
 import com.example.ukopia.databinding.FragmentDetailMenuBinding
-import com.example.ukopia.models.MenuApiItem // Model BARU
-import com.example.ukopia.models.ReviewApiItem // Model BARU
+import com.example.ukopia.models.MenuApiItem
+import com.example.ukopia.models.ReviewApiItem
 import com.example.ukopia.ui.auth.LoginActivity
 import java.util.Locale
+import android.util.Log // Tambahkan import ini
 
 class DetailMenuFragment : Fragment() {
 
     private var _binding: FragmentDetailMenuBinding? = null
     private val binding get() = _binding!!
 
-    // Menggunakan model data BARU
     private var currentMenuItem: MenuApiItem? = null
-    private var currentUserReview: ReviewApiItem? = null // Untuk menyimpan ulasan user
+    private var currentUserReview: ReviewApiItem? = null
 
-    // Inisialisasi ViewModel BARU dengan Factory
     private val viewModel: MenuViewModel by viewModels {
-        MenuViewModelFactory((requireActivity().application as UkopiaApplication).repository)
+        MenuViewModelFactory((requireActivity().application as UkopiaApplication).repository) // PASTIKAN MENGGUNAKAN menuRepository
     }
 
-    private lateinit var reviewAdapter: ReviewAdapter // Adapter BARU untuk ulasan
+    private lateinit var reviewAdapter: ReviewAdapter
 
     private val averageStarImageViews: MutableList<ImageView> = mutableListOf()
     private val userStarImageViews: MutableList<ImageView> = mutableListOf()
@@ -55,80 +54,48 @@ class DetailMenuFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("DetailMenuFragment", "onViewCreated: Fragment started")
         (requireActivity() as MainActivity).setBottomNavVisibility(View.GONE)
 
         averageStarImageViews.addAll(listOf(binding.star1, binding.star2, binding.star3, binding.star4, binding.star5))
         userStarImageViews.addAll(listOf(binding.userStar1, binding.userStar2, binding.userStar3, binding.userStar4, binding.userStar5))
 
-        // Setup adapter ulasan BARU
         reviewAdapter = ReviewAdapter(emptyList())
         binding.rvReviews.adapter = reviewAdapter
 
-        // Ambil argumen dengan model BARU
-        currentMenuItem = arguments?.getParcelable(ARG_MENU_ITEM)
+        val menuId = arguments?.getParcelable<MenuApiItem>(ARG_MENU_ITEM)?.id_menu
 
-        currentMenuItem?.let { menuItem ->
-            setupInitialUI(menuItem)
-            setupListeners(menuItem)
-            setupObservers() // Panggil setupObservers BARU
-
-            // Panggil ViewModel untuk ambil detail (ulasan) dari API
-            viewModel.fetchMenuDetails(menuItem.id_menu, SessionManager.getUid(requireContext()))
-        } ?: parentFragmentManager.popBackStack()
+        if (menuId != null) {
+            Log.d("DetailMenuFragment", "onViewCreated: Menu ID found: $menuId")
+            setupListeners()
+            setupObservers()
+            setLoadingState(true) // Set loading state awal
+            viewModel.fetchMenuDetails(menuId, SessionManager.getUid(requireContext()))
+        } else {
+            Log.e("DetailMenuFragment", "onViewCreated: Menu item ID not found in arguments!")
+            Toast.makeText(requireContext(), "Menu item ID not found!", Toast.LENGTH_SHORT).show()
+            parentFragmentManager.popBackStack()
+        }
     }
 
     private fun setupInitialUI(menuItem: MenuApiItem) {
+        currentMenuItem = menuItem // Update currentMenuItem lokal
+        Log.d("DetailMenuFragment", "setupInitialUI: currentMenuItem updated to: ${menuItem.nama_menu}")
+
         binding.detailMenuTitle.text = menuItem.nama_menu
         binding.detailMenuDescription.text = menuItem.deskripsi
 
-        // Muat gambar dari URL (String) dengan Glide
         Glide.with(this)
             .load(menuItem.gambar_url)
             .placeholder(R.drawable.sample_coffee)
+            .error(R.drawable.sample_coffee) // Tambahkan ini agar ada fallback jika gambar_url kosong/error
             .into(binding.detailMenuImage)
 
-        // Ambil rating dari (Double)
         val averageRatingValue = menuItem.average_rating.toFloat()
         binding.tvAverageRatingText.text = getString(R.string.average_rating_prefix) + " " +
                 String.format(Locale.ROOT, "%.1f/5.0", averageRatingValue)
         displayStarsWithProgress(averageRatingValue, averageStarImageViews)
-    }
 
-    private fun setupListeners(menuItem: MenuApiItem) {
-        // 1. Tombol Back (Animasi tetap, Hapus sendResult)
-        binding.btnBack.setOnClickListener {
-            val targetTint = ContextCompat.getColorStateList(requireContext(), R.color.black)
-            val flashTint = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white))
-            binding.btnBack.imageTintList = flashTint
-            Handler(Looper.getMainLooper()).postDelayed({
-                binding.btnBack.imageTintList = targetTint
-                parentFragmentManager.popBackStack()
-            }, 150)
-        }
-
-        // 2. Tombol Rate
-        binding.btnRateThisMenu.setOnClickListener {
-            val targetBackgroundTint = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.black))
-            val targetTextColors = ContextCompat.getColorStateList(requireContext(), R.color.white)
-            val flashColorBackground = ContextCompat.getColor(requireContext(), R.color.white)
-            val flashColorText = ContextCompat.getColor(requireContext(), R.color.black)
-
-            binding.btnRateThisMenu.backgroundTintList = ColorStateList.valueOf(flashColorBackground)
-            binding.btnRateThisMenu.setTextColor(flashColorText)
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                binding.btnRateThisMenu.backgroundTintList = targetBackgroundTint
-                binding.btnRateThisMenu.setTextColor(targetTextColors)
-
-                if (SessionManager.isLoggedIn(requireContext())) {
-                    navigateToRatingFragment(menuItem, currentUserReview)
-                } else {
-                    showLoginRequiredDialog()
-                }
-            }, 150)
-        }
-
-        // 3. Tombol Share (Logika tidak berubah)
         binding.btnShare.setOnClickListener {
             val shareText = "Check out this menu on Ukopia: ${menuItem.nama_menu}!\n\n${menuItem.deskripsi}"
             val shareIntent = Intent().apply {
@@ -143,46 +110,116 @@ class DetailMenuFragment : Fragment() {
                 Toast.makeText(requireContext(), getString(R.string.no_app_to_share), Toast.LENGTH_SHORT).show()
             }
         }
+        setLoadingState(false) // Set loading state to false ketika data menu utama dimuat
     }
 
-    // FUNGSI BARU: Mengamati LiveData dari ViewModel
-    private fun setupObservers() {
-        // Observer untuk daftar ulasan (dari pengguna lain)
-        viewModel.reviews.observe(viewLifecycleOwner, Observer { reviews ->
+    private fun setupListeners() {
+        binding.btnBack.setOnClickListener {
+            val targetTint = ContextCompat.getColorStateList(requireContext(), R.color.black)
+            val flashTint = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white))
+            binding.btnBack.imageTintList = flashTint
+            Handler(Looper.getMainLooper()).postDelayed({
+                binding.btnBack.imageTintList = targetTint
+                parentFragmentManager.popBackStack()
+            }, 150)
+        }
 
-            // ==========================================================
-            // PERBAIKAN LOGIKA DI SINI
-            // ==========================================================
-            // HAPUS FILTER! ViewModel sudah melakukannya.
+        binding.btnRateThisMenu.setOnClickListener {
+            Log.d("DetailMenuFragment", "btnRateThisMenu clicked. currentMenuItem: $currentMenuItem")
+            val targetBackgroundTint = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.black))
+            val targetTextColors = ContextCompat.getColorStateList(requireContext(), R.color.white)
+            val flashColorBackground = ContextCompat.getColor(requireContext(), R.color.white)
+            val flashColorText = ContextCompat.getColor(requireContext(), R.color.black)
+
+            binding.btnRateThisMenu.backgroundTintList = ColorStateList.valueOf(flashColorBackground)
+            binding.btnRateThisMenu.setTextColor(flashColorText)
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                binding.btnRateThisMenu.backgroundTintList = targetBackgroundTint
+                binding.btnRateThisMenu.setTextColor(targetTextColors)
+
+                if (SessionManager.isLoggedIn(requireContext())) {
+                    currentMenuItem?.let { // Cek currentMenuItem di sini
+                        Log.d("DetailMenuFragment", "Navigating to RatingFragment for menu: ${it.nama_menu}")
+                        navigateToRatingFragment(it, currentUserReview)
+                    } ?: run {
+                        Log.w("DetailMenuFragment", "currentMenuItem is null when Rate button clicked. Button enabled: ${binding.btnRateThisMenu.isEnabled}")
+                        Toast.makeText(requireContext(), "Menu item data not loaded yet. Please wait.", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Log.d("DetailMenuFragment", "User not logged in, showing login dialog.")
+                    showLoginRequiredDialog()
+                }
+            }, 150)
+        }
+    }
+
+    private fun setupObservers() {
+        Log.d("DetailMenuFragment", "setupObservers called.")
+        viewModel.currentDetailMenuItem.observe(viewLifecycleOwner, Observer { menuItem ->
+            Log.d("DetailMenuFragment", "currentDetailMenuItem LiveData observed. Value: ${menuItem?.nama_menu ?: "null"}")
+            menuItem?.let {
+                setupInitialUI(it)
+                // setLoadingState(false) // Ini sudah dipanggil di setupInitialUI
+            } ?: run {
+                Log.w("DetailMenuFragment", "currentDetailMenuItem LiveData returned null value.")
+                setLoadingState(false)
+            }
+        })
+
+        viewModel.reviews.observe(viewLifecycleOwner, Observer { reviews ->
+            Log.d("DetailMenuFragment", "reviews LiveData observed. Count: ${reviews.size}")
             reviewAdapter.updateData(reviews)
-            // ==========================================================
         })
 
         viewModel.userReview.observe(viewLifecycleOwner, Observer { userReview ->
-            currentUserReview = userReview // Simpan ulasan user
+            Log.d("DetailMenuFragment", "userReview LiveData observed. Value: ${userReview?.rating ?: "null"}")
+            currentUserReview = userReview
             if (userReview != null) {
-                // Tampilkan jika user sudah pernah mengulas
                 showUserRating(userReview.rating.toFloat(), userReview.komentar)
             } else {
-                // Sembunyikan jika user belum mengulas
                 binding.userRatingContainer.visibility = View.GONE
                 binding.btnRateThisMenu.text = getString(R.string.rate_button_text)
             }
         })
 
         viewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
-            // Anda bisa tambahkan progress bar di sini
+            Log.d("DetailMenuFragment", "isLoading LiveData observed. Value: $isLoading")
+            setLoadingState(isLoading)
         })
+
         viewModel.errorMessage.observe(viewLifecycleOwner, Observer { error ->
             error?.let {
+                Log.e("DetailMenuFragment", "errorMessage LiveData observed. Error: $it")
                 Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
                 viewModel.clearErrorMessage()
+                setLoadingState(false)
             }
         })
     }
 
-    // Fungsi ini tidak berubah, hanya dipanggil dari observer
+    private fun setLoadingState(isLoading: Boolean) {
+        Log.d("DetailMenuFragment", "setLoadingState: isLoading=$isLoading, btnRateThisMenu.isEnabled=${!isLoading}")
+        binding.btnRateThisMenu.isEnabled = !isLoading // Nonaktifkan tombol saat loading
+
+        if (isLoading) {
+            binding.btnRateThisMenu.text = "Loading..."
+        } else {
+            // Teks tombol diatur setelah data dimuat dan currentUserReview diperbarui
+            if (currentUserReview != null) { // Jika ada ulasan pengguna, berarti bisa update
+                binding.btnRateThisMenu.text = getString(R.string.update_your_rating)
+            } else { // Jika belum ada, berarti bisa rate baru
+                binding.btnRateThisMenu.text = getString(R.string.rate_button_text)
+            }
+            // Pastikan tombol aktif jika tidak loading dan tidak ada error
+            if (viewModel.errorMessage.value == null) {
+                binding.btnRateThisMenu.isEnabled = true
+            }
+        }
+    }
+
     private fun showUserRating(rating: Float, comment: String) {
+        Log.d("DetailMenuFragment", "showUserRating: Displaying user rating $rating with comment: '$comment'")
         binding.userRatingContainer.visibility = View.VISIBLE
         displayStarsWithProgress(rating, userStarImageViews)
         if (comment.isNotBlank()) {
@@ -194,7 +231,6 @@ class DetailMenuFragment : Fragment() {
         binding.btnRateThisMenu.text = getString(R.string.update_your_rating)
     }
 
-    // Fungsi ini tidak berubah
     private fun displayStarsWithProgress(rating: Float, starViews: List<ImageView>) {
         for (i in starViews.indices) {
             val starDrawable = starViews[i].drawable as LayerDrawable
@@ -208,20 +244,17 @@ class DetailMenuFragment : Fragment() {
         }
     }
 
-    // MODIFIKASI: Kirim MenuApiItem DAN ReviewApiItem
     private fun navigateToRatingFragment(menuItem: MenuApiItem, existingReview: ReviewApiItem?) {
         val ratingFragment = RatingFragment.newInstance(menuItem, existingReview)
         (requireActivity() as MainActivity).navigateToFragment(ratingFragment)
     }
 
-    // MODIFIKASI: Hapus penggunaan ActivityResultLauncher
     private fun showLoginRequiredDialog() {
         val dialogBinding = DialogLoginRequiredBinding.inflate(layoutInflater)
         val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogBinding.root)
             .create()
         dialogBinding.buttonDialogLogin.setOnClickListener {
-            // Langsung buka LoginActivity
             startActivity(Intent(requireContext(), LoginActivity::class.java))
             dialog.dismiss()
         }
@@ -233,11 +266,11 @@ class DetailMenuFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        Log.d("DetailMenuFragment", "onDestroyView: Fragment destroyed")
     }
 
     companion object {
         const val ARG_MENU_ITEM = "menu_item"
-        // MODIFIKASI: Terima MenuApiItem
         fun newInstance(menuItem: MenuApiItem): DetailMenuFragment {
             return DetailMenuFragment().apply {
                 arguments = Bundle().apply {

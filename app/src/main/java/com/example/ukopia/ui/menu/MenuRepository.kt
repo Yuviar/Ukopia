@@ -32,4 +32,18 @@ class MenuRepository(private val menuDao: MenuDao) {
             Log.e("MenuRepository", "Gagal refresh menu: ${e.message}")
         }
     }
+    suspend fun getCategories(): List<String> {
+        return try {
+            val response = apiService.getCategories()
+            if (response.isSuccessful && response.body()?.success == true) {
+                // Ambil hanya nama kategorinya untuk filter UI
+                response.body()?.data?.map { it.name } ?: emptyList()
+            } else {
+                emptyList()
+            }
+        } catch (e: Exception) {
+            Log.e("MenuRepository", "Gagal fetch kategori: ${e.message}")
+            emptyList()
+        }
+        }
 }

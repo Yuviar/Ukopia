@@ -7,7 +7,7 @@
     android:background="@color/secondary"
     tools:context=".ui.menu.DetailMenuFragment">
 
-    <!-- Gambar Besar di Bagian Atas -->
+    <!-- ... (Bagian atas layout tetap sama) ... -->
     <ImageView
         android:id="@+id/detail_menu_image"
         android:layout_width="0dp"
@@ -43,7 +43,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- CardView untuk Nama Menu -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_menu_title"
         android:layout_width="wrap_content"
@@ -69,7 +68,6 @@
             android:elevation="0dp"/>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- ScrollView untuk Konten Bawah (Deskripsi dan Rating) -->
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -86,7 +84,6 @@
             android:paddingHorizontal="16dp"
             android:paddingVertical="24dp">
 
-            <!-- CardView untuk Deskripsi -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -121,9 +118,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- ... (Bagian atas layout tetap sama: ImageView, Back Button, Title, Description) ... -->
-
-            <!-- CardView untuk Rating Bintang (diganti total) -->
+            <!-- CardView untuk Rating Bintang (MODIFIKASI DI SINI) -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_rating_stars"
                 android:layout_width="match_parent"
@@ -132,114 +127,116 @@
                 app:cardCornerRadius="8dp"
                 app:cardElevation="0dp">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/tv_average_rating_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    tools:text="Rating: 4.8/5.0"
+                    android:layout_marginBottom="8dp"/>
+
+                <!-- Bintang Rata-rata (MODIFIKASI DI SINI) -->
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <!-- Teks untuk rating rata-rata -->
-                    <TextView
-                        android:id="@+id/tv_average_rating_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        android:textSize="16sp"
-                        tools:text="Rating: 4.8/5.0"
-                        android:layout_marginBottom="8dp"/>
-
-                    <!-- Bintang Rata-rata (Gunakan drawable baru) -->
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="16dp">
-                        <ImageView android:id="@+id/star_1" style="@style/RatingStar" android:src="@drawable/star_rating_progress" />
-                        <ImageView android:id="@+id/star_2" style="@style/RatingStar" android:src="@drawable/star_rating_progress" />
-                        <ImageView android:id="@+id/star_3" style="@style/RatingStar" android:src="@drawable/star_rating_progress" />
-                        <ImageView android:id="@+id/star_4" style="@style/RatingStar" android:src="@drawable/star_rating_progress" />
-                        <ImageView android:id="@+id/star_5" style="@style/RatingStar" android:src="@drawable/star_rating_progress" />
-                    </LinearLayout>
-
-                    <Button
-                        android:id="@+id/btn_rate_this_menu"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/rate_button_text"
-                        android:backgroundTint="@color/black"
-                        app:cornerRadius="8dp"
-                        android:textColor="@color/white"
-                        android:layout_marginBottom="16dp"/>
-
-                    <!-- Tampilan Rating dan Komentar Pengguna (Awalnya GONE) -->
-                    <LinearLayout
-                        android:id="@+id/user_rating_container"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="center_horizontal"
-                        android:visibility="gone"
-                        tools:visibility="visible">
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/light_grey"
-                            android:layout_marginBottom="16dp"/>
-
-                        <TextView
-                            android:id="@+id/tv_your_rating_label"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/your_rating_prefix"
-                            android:textColor="@color/black"
-                            android:textStyle="bold"
-                            android:textSize="16sp" />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="8dp">
-                            <ImageView android:id="@+id/user_star_1" style="@style/RatingStarSmall" android:src="@drawable/star_rating_progress" />
-                            <ImageView android:id="@+id/user_star_2" style="@style/RatingStarSmall" android:src="@drawable/star_rating_progress" />
-                            <ImageView android:id="@+id/user_star_3" style="@style/RatingStarSmall" android:src="@drawable/star_rating_progress" />
-                            <ImageView android:id="@+id/user_star_4" style="@style/RatingStarSmall" android:src="@drawable/star_rating_progress" />
-                            <ImageView android:id="@+id/user_star_5" style="@style/RatingStarSmall" android:src="@drawable/star_rating_progress" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/tv_user_comment"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:gravity="center"
-                            android:textColor="@color/black"
-                            android:textSize="14sp"
-                            tools:text="Komentar: Kopi ini luar biasa!" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-            <TextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ulasan Pengguna"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp"/>
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_reviews"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
+                android:paddingHorizontal="16dp">
+                <ImageView android:id="@+id/star_1" android:layout_width="0dp" android:layout_weight="1" android:layout_height="36dp" android:src="@drawable/star_rating_progress" />
+                <ImageView android:id="@+id/star_2" android:layout_width="0dp" android:layout_weight="1" android:layout_height="36dp" android:src="@drawable/star_rating_progress" />
+                <ImageView android:id="@+id/star_3" android:layout_width="0dp" android:layout_weight="1" android:layout_height="36dp" android:src="@drawable/star_rating_progress" />
+                <ImageView android:id="@+id/star_4" android:layout_width="0dp" android:layout_weight="1" android:layout_height="36dp" android:src="@drawable/star_rating_progress" />
+                <ImageView android:id="@+id/star_5" android:layout_width="0dp" android:layout_weight="1" android:layout_height="36dp" android:src="@drawable/star_rating_progress" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_rate_this_menu"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rate_button_text"
+                android:backgroundTint="@color/black"
+                app:cornerRadius="8dp"
+                android:textColor="@color/white"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Tampilan Rating dan Komentar Pengguna (MODIFIKASI DI SINI) -->
+            <LinearLayout
+                android:id="@+id/user_rating_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/light_grey"
+                    android:layout_marginBottom="16dp"/>
+
+                <TextView
+                    android:id="@+id/tv_your_rating_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/your_rating_prefix"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="16sp" />
+
+                <!-- Bintang Pengguna (MODIFIKASI DI SINI) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginTop="8dp"
-                android:nestedScrollingEnabled="false"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_review"
-                tools:itemCount="3"/>
+                android:paddingHorizontal="16dp">
+                <ImageView android:id="@+id/user_star_1" android:layout_width="0dp" android:layout_weight="1" android:layout_height="36dp" android:src="@drawable/star_rating_progress" />
+                <ImageView android:id="@+id/user_star_2" android:layout_width="0dp" android:layout_weight="1" android:layout_height="36dp" android:src="@drawable/star_rating_progress" />
+                <ImageView android:id="@+id/user_star_3" android:layout_width="0dp" android:layout_weight="1" android:layout_height="36dp" android:src="@drawable/star_rating_progress" />
+                <ImageView android:id="@+id/user_star_4" android:layout_width="0dp" android:layout_weight="1" android:layout_height="36dp" android:src="@drawable/star_rating_progress" />
+                <ImageView android:id="@+id/user_star_5" android:layout_width="0dp" android:layout_weight="1" android:layout_height="36dp" android:src="@drawable/star_rating_progress" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_user_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                tools:text="Komentar: Kopi ini luar biasa!" />
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
+<TextView
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Ulasan Pengguna"
+android:textColor="@color/black"
+android:textSize="18sp"
+android:textStyle="bold"
+android:layout_marginTop="16dp"/>
+<androidx.recyclerview.widget.RecyclerView
+android:id="@+id/rv_reviews"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:layout_marginTop="8dp"
+android:nestedScrollingEnabled="false"
+app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+tools:listitem="@layout/item_review"
+tools:itemCount="3"/>
     </LinearLayout>
     </ScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>

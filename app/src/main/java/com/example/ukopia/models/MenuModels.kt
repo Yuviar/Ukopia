@@ -83,3 +83,24 @@ data class ReviewDeleteRequest(
     val id_ulasan: Int,
     val uid_akun: Int
 )
+
+// Tambahkan di file models/MenuModels.kt
+
+data class CategoryApiResponse(
+    @SerializedName("success")
+    val success: Boolean,
+    @SerializedName("message")
+    val message: String,
+    @SerializedName("data")
+    val data: List<CategoryItem>
+)
+
+@Parcelize
+data class CategoryItem(
+    @SerializedName("id_kategori_menu")
+    val id: Int,
+    @SerializedName("nama_kategori")
+    val name: String,
+    @SerializedName("biji")
+    val biji: Int? = 0 // Opsional sesuai PHP Anda
+) : Parcelable

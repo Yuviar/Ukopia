@@ -13,10 +13,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ukopia.MainActivity
 import com.example.ukopia.R
-import com.example.ukopia.UkopiaApplication // IMPORT
+import com.example.ukopia.UkopiaApplication
 import com.example.ukopia.databinding.FragmentMenuBinding
-import com.example.ukopia.models.MenuApiItem // IMPORT
-import com.example.ukopia.utils.HorizontalSpaceItemDecoration
+import com.example.ukopia.models.MenuApiItem
 import java.util.Locale
 
 class MenuFragment : Fragment() {
@@ -24,7 +23,7 @@ class MenuFragment : Fragment() {
     private var _binding: FragmentMenuBinding? = null
     private val binding get() = _binding!!
 
-    // Inisialisasi ViewModel dengan Factory
+    // Inisialisasi ViewModel
     private val viewModel: MenuViewModel by viewModels {
         MenuViewModelFactory((requireActivity().application as UkopiaApplication).repository)
     }
@@ -38,7 +37,7 @@ class MenuFragment : Fragment() {
     private lateinit var currentFilterCategoryName: String
     private var currentSearchQuery: String = ""
 
-    private lateinit var filterCategories: Array<String>
+    // HAPUS: private lateinit var filterCategories: Array<String> (Sudah diganti logic dinamis)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,41 +51,29 @@ class MenuFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as MainActivity).setBottomNavVisibility(View.VISIBLE)
 
-        // Setup filter (GANTI INI SESUAI NAMA KATEGORI DI DB ANDA)
-        filterCategories = arrayOf(
-            getString(R.string.category_all),
-            "Coffe", // <-- Sesuaikan dengan 'nama_kategori' di DB Anda
-            "Milk"   // <-- Sesuaikan dengan 'nama_kategori' di DB Anda
-        )
-        currentFilterCategoryName = getString(R.string.category_all)
+        // 1. Set Kategori Default "All"
+        val categoryAllString = getString(R.string.category_all)
+        currentFilterCategoryName = categoryAllString
 
+        // 2. Setup Menu Adapter (Grid)
         menuAdapter = MenuAdapter(emptyList()) { menuItem ->
             val detailMenuFragment = DetailMenuFragment.newInstance(menuItem)
             (requireActivity() as MainActivity).navigateToFragment(detailMenuFragment)
         }
-
         binding.rvMenuItems.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvMenuItems.adapter = menuAdapter
 
-        // Logika klik filter
-        horizontalFilterAdapter = HorizontalFilterAdapter(filterCategories.toList(), currentFilterCategoryName) { selectedCategory ->
-            if (currentFilterCategoryName != selectedCategory) {
-                currentFilterCategoryName = selectedCategory
-                horizontalFilterAdapter.updateSelection(selectedCategory)
-                displayFilteredMenu() // Filter data lokal
-            }
-        }
+        // 3. Setup Filter Adapter (Horizontal) - Awalnya Kosong
         binding.rvFilterCategories.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.rvFilterCategories.adapter = horizontalFilterAdapter
-        // ... (ItemDecoration Anda tetap sama) ...
+        // Adapter akan di-set setelah data kategori dimuat dari API (di dalam Observer)
 
-        // Setup Search
+        // 4. Setup Search
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 currentSearchQuery = s.toString()
                 binding.ivClearSearch.visibility = if (s.isNullOrBlank()) View.GONE else View.VISIBLE
-                displayFilteredMenu() // Filter data lokal
+                displayFilteredMenu()
             }
             override fun afterTextChanged(s: Editable?) { }
         })
@@ -97,8 +84,9 @@ class MenuFragment : Fragment() {
 
         setupObservers()
 
-        // Panggil refresh data (akan memuat dari API ke DB)
-        viewModel.fetchMenuItems()
+        // 5. Panggil Data
+        viewModel.fetchMenuItems() // Refresh menu dari API ke DB
+        viewModel.fetchCategories(categoryAllString) // Ambil kategori dinamis dari API
     }
 
     private fun setupObservers() {
@@ -108,18 +96,31 @@ class MenuFragment : Fragment() {
             displayFilteredMenu() // Terapkan filter yang sedang aktif
         })
 
-        // (Opsional) Tampilkan loading/error
-        viewModel.isLoading.observe(viewLifecycleOwner, Observer { /* ... */ })
-        viewModel.errorMessage.observe(viewLifecycleOwner, Observer { /* ... */ })
+        // Observer Kategori (BARU) - Dari API
+        viewModel.categories.observe(viewLifecycleOwner, Observer { categoryList ->
+            // Inisialisasi adapter filter dengan data dari API
+            horizontalFilterAdapter = HorizontalFilterAdapter(categoryList, currentFilterCategoryName) { selectedCategory ->
+                if (currentFilterCategoryName != selectedCategory) {
+                    currentFilterCategoryName = selectedCategory
+                    horizontalFilterAdapter.updateSelection(selectedCategory)
+                    displayFilteredMenu() // Filter menu lokal
+                }
+            }
+            binding.rvFilterCategories.adapter = horizontalFilterAdapter
+        })
     }
 
-    // Fungsi ini sekarang memfilter daftar yang ada di HP
+    // Fungsi memfilter daftar yang ada di HP
     private fun displayFilteredMenu() {
         var filteredList = allMenuItemsFromDb
+        val categoryAllString = getString(R.string.category_all)
 
         // 1. Filter Kategori
-        if (currentFilterCategoryName != getString(R.string.category_all)) {
-            filteredList = filteredList.filter { it.nama_kategori == currentFilterCategoryName }
+        if (currentFilterCategoryName != categoryAllString) {
+            // Ignore case agar "Coffee" cocok dengan "coffee"
+            filteredList = filteredList.filter {
+                it.nama_kategori.equals(currentFilterCategoryName, ignoreCase = true)
+            }
         }
 
         // 2. Filter Pencarian

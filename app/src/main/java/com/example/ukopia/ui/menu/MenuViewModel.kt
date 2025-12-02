@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.ukopia.models.ApiClient
 import com.example.ukopia.models.MenuApiItem
@@ -14,21 +13,32 @@ import kotlinx.coroutines.launch
 
 class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
 
-    // ... (properti lain tetap sama) ...
     private val apiService = ApiClient.instance
-    val menuItems: LiveData<List<MenuApiItem>> = repository.allMenuItems
+    val menuItems: LiveData<List<MenuApiItem>> = repository.allMenuItems // Data Menu dari DB
+
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
+
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> = _errorMessage
+
     private val _reviews = MutableLiveData<List<ReviewApiItem>>()
     val reviews: LiveData<List<ReviewApiItem>> = _reviews
+
     private val _userReview = MutableLiveData<ReviewApiItem?>()
     val userReview: LiveData<ReviewApiItem?> = _userReview
+
     private val _reviewPostSuccess = MutableLiveData<Boolean>()
     val reviewPostSuccess: LiveData<Boolean> = _reviewPostSuccess
 
-    // --- FUNGSI-FUNGSI ---
+    private val _currentDetailMenuItem = MutableLiveData<MenuApiItem?>()
+    val currentDetailMenuItem: LiveData<MenuApiItem?> = _currentDetailMenuItem
+
+    // --- TAMBAHAN BARU: LiveData Kategori ---
+    private val _categories = MutableLiveData<List<String>>()
+    val categories: LiveData<List<String>> = _categories
+
+    // --- FUNGSI ---
 
     fun fetchMenuItems() {
         viewModelScope.launch {
@@ -36,46 +46,69 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
         }
     }
 
-    // Dipanggil oleh DetailMenuFragment
+    // --- TAMBAHAN BARU: Fetch Kategori ---
+    fun fetchCategories(defaultCategoryName: String) {
+        viewModelScope.launch {
+            // Memanggil fungsi getCategories() yang sudah Anda buat di Repository
+            // Pastikan MenuRepository.kt sudah diupdate!
+            val apiCategories = repository.getCategories()
+
+            // Menggabungkan "All" dengan hasil dari API
+            val fullList = mutableListOf(defaultCategoryName)
+            fullList.addAll(apiCategories)
+
+            _categories.value = fullList
+        }
+    }
+
     fun fetchMenuDetails(menuId: Int, userId: Int) {
         _isLoading.value = true
+        _errorMessage.value = null
         viewModelScope.launch {
             try {
-                val response = apiService.getMenuDetails(menuId, userId)
-                if (response.isSuccessful) {
-                    val allReviews = response.body()?.data_ulasan ?: emptyList()
-
-                    // ==========================================================
-                    // PERBAIKAN LOGIKA DI SINI
-                    // ==========================================================
-                    // _reviews sekarang HANYA berisi ulasan orang lain
+                // 1. Fetch reviews
+                val responseReviews = apiService.getMenuDetails(menuId, userId)
+                if (responseReviews.isSuccessful) {
+                    val allReviews = responseReviews.body()?.data_ulasan ?: emptyList()
                     _reviews.value = allReviews.filter { it.is_owner == 0 }
-
-                    // _userReview tetap berisi ulasan milik user
                     _userReview.value = allReviews.find { it.is_owner == 1 }
-                    // ==========================================================
-
                 } else {
-                    _errorMessage.value = "Gagal memuat detail: ${response.message()}"
+                    _errorMessage.value = "Gagal memuat ulasan: ${responseReviews.message()}"
                 }
+
+                // 2. Fetch specific menu item details
+                val responseMenuItem = apiService.getMenu(id_kategori = null, menuId = menuId)
+                if (responseMenuItem.isSuccessful) {
+                    val menuItemData = responseMenuItem.body()?.data
+                    if (menuItemData != null && menuItemData.isNotEmpty()) {
+                        _currentDetailMenuItem.value = menuItemData.firstOrNull()
+                    } else {
+                        _currentDetailMenuItem.value = null
+                    }
+                } else {
+                    _errorMessage.value = "Gagal memuat detail menu: ${responseMenuItem.message()}"
+                }
+
             } catch (e: Exception) {
                 _errorMessage.value = "Error: ${e.message}"
+                Log.e("MenuViewModel", "Error fetching menu details", e)
             } finally {
                 _isLoading.value = false
             }
         }
     }
 
-    // ... (Fungsi submitReview, clearErrorMessage, resetReviewPostStatus tetap sama) ...
     fun submitReview(request: ReviewPostRequest) {
         _isLoading.value = true
         _reviewPostSuccess.value = false
+        _errorMessage.value = null
         viewModelScope.launch {
             try {
                 val response = apiService.postReview(request)
                 if (response.isSuccessful) {
                     _reviewPostSuccess.value = true
                     fetchMenuDetails(request.id_menu, request.uid_akun)
+                    repository.refreshMenu()
                 } else {
                     _errorMessage.value = "Gagal mengirim ulasan: ${response.message()}"
                 }
@@ -93,17 +126,5 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
 
     fun resetReviewPostStatus() {
         _reviewPostSuccess.value = false
-    }
-}
-
-
-// ... (Factory tetap sama) ...
-class MenuViewModelFactory(private val repository: MenuRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MenuViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return MenuViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

@@ -10,8 +10,7 @@
         <clip
             android:clipOrientation="horizontal"
             android:gravity="start"
-            android:drawable="@drawable/ic_star"
-            android:tint="@color/black" />
+            android:drawable="@drawable/ic_star_filled" />
     </item>
 
 </layer-list>

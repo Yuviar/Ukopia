@@ -10,4 +10,5 @@
 
     <color name="white_alpha_50">#80FFFFFF</color>
 
+    <color name="star_fill_yellow">#FFC107</color>
 </resources>

@@ -1,4 +1,3 @@
-// File: D:/github_rama/Ukopia/app/src/main/java/com/example/ukopia/models/ApiServices.kt
 package com.example.ukopia.models
 
 import com.example.ukopia.data.ApiResponse
@@ -10,7 +9,6 @@ import com.example.ukopia.data.SubEquipmentItem
 import com.example.ukopia.data.LoyaltyListResponse
 import com.example.ukopia.data.LoyaltyUserStatus
 import com.example.ukopia.data.LoyaltyStatusResponse
-import com.example.ukopia.ui.auth.AuthViewModel
 import com.example.ukopia.data.RewardHistoryResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -18,58 +16,58 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Query
+import com.google.gson.annotations.SerializedName // PENTING: Pastikan ini ada
 
 interface ApiService {
 
     @Headers("Content-Type: application/json")
     @POST("auth/register.php")
     suspend fun registerUser(
-        @Body requestBody: RegisterRequest
-    ): Response<GenericResponse>
+        @Body requestBody: RegisterRequest // Pastikan RegisterRequest didefinisikan di suatu tempat
+    ): Response<GenericResponse> // Pastikan GenericResponse didefinisikan di suatu tempat
 
     @Headers("Content-Type: application/json")
     @POST("auth/login.php")
     suspend fun loginUser(
-        @Body requestBody: LoginRequest
-    ): Response<LoginResponse>
-
-    // Tambahkan di interface ApiService
+        @Body requestBody: LoginRequest // Pastikan LoginRequest didefinisikan di suatu tempat
+    ): Response<LoginResponse> // Pastikan LoginResponse didefinisikan di suatu tempat
 
     @POST("auth/forgot.php")
     suspend fun forgotPassword(
-        @Body request: ForgotPasswordRequest
+        @Body request: ForgotPasswordRequest // Pastikan ForgotPasswordRequest didefinisikan di suatu tempat
     ): Response<GenericResponse>
-
-    // --- ENDPOINT MENU & ULASAN ---
 
     @GET("menu/get_menu.php")
     suspend fun getMenu(
-        @Query("id_kategori") id_kategori: Int? = null
+        @Query("id_kategori") id_kategori: Int? = null,
+        @Query("id_menu") menuId: Int? = null
     ): Response<MenuApiResponse>
 
     @GET("menu/get_detail_menu.php")
     suspend fun getMenuDetails(
         @Query("id_menu") id_menu: Int,
-        @Query("uid_akun") uid_akun: Int // uid user yang login
-    ): Response<ReviewApiResponse>
+        @Query("uid_akun") uid_akun: Int
+    ): Response<ReviewApiResponse> // Pastikan ReviewApiResponse didefinisikan di suatu tempat
 
     @Headers("Content-Type: application/json")
-    @POST("ulasan/post_ulasan.php") // Ini akan INSERT atau UPDATE
+    @POST("ulasan/post_ulasan.php")
     suspend fun postReview(
-        @Body requestBody: ReviewPostRequest
-    ): Response<GenericResponse>
+        @Body requestBody: ReviewPostRequest // Pastikan ReviewPostRequest didefinisikan di suatu tempat
+    ): Response<GeneralApiResponse> // GeneralApiResponse sekarang didefinisikan di bawah
 
     @Headers("Content-Type: application/json")
     @POST("ulasan/update_ulasan.php")
     suspend fun updateReview(
-        @Body requestBody: ReviewUpdateRequest
+        @Body requestBody: ReviewUpdateRequest // Pastikan ReviewUpdateRequest didefinisikan di suatu tempat
     ): Response<GenericResponse>
 
     @Headers("Content-Type: application/json")
     @POST("ulasan/delete_ulasan.php")
     suspend fun deleteReview(
-        @Body requestBody: ReviewDeleteRequest
+        @Body body: Map<String, Int>
     ): Response<GenericResponse>
+
+    // ... endpoint lain seperti getBrewMethods, getEquipmentCategories, dll. ...
     @GET("resep/metode.php")
     suspend fun getBrewMethods(): Response<ApiResponse<List<BrewMethod>>>
 
@@ -84,7 +82,7 @@ interface ApiService {
     @GET("resep/by_metode.php")
     suspend fun getRecipes(
         @Query("id_metode") methodId: Int,
-        @Query("type") type: String, // 'all' atau 'my'
+        @Query("type") type: String,
         @Query("uid") uid: Int = 0
     ): Response<ApiResponse<List<RecipeItem>>>
 
@@ -100,22 +98,20 @@ interface ApiService {
 
     @POST("resep/delete.php")
     suspend fun deleteRecipe(
-        @Body body: Map<String, Int> // Kirim {"id_resep": 123}
+        @Body body: Map<String, Int>
     ): Response<ApiResponse<Any>>
 
     @GET("loyalty/list.php")
     suspend fun getLoyaltyList(
         @Query("uid") uid: Int,
-        @Query("type") type: String // 'pending' atau 'history'
+        @Query("type") type: String
     ): Response<LoyaltyListResponse>
 
-    // 2. Update Review (Mengembalikan status lengkap)
     @POST("loyalty/update.php")
     suspend fun updateLoyaltyReview(
         @Body body: Map<String, @JvmSuppressWildcards Any>
-    ): Response<LoyaltyStatusResponse> // <--- Revisi
+    ): Response<LoyaltyStatusResponse>
 
-    // 3. Ambil Status Reward & Total Poin
     @GET("loyalty/status.php")
     suspend fun getLoyaltyStatus(
         @Query("uid") uid: Int
@@ -125,4 +121,15 @@ interface ApiService {
     suspend fun getRewardHistory(
         @Query("uid") uid: Int
     ): Response<RewardHistoryResponse>
+
+    // Tambahkan di dalam interface ApiService di models/ApiServices.kt
+
+    @GET("menu/kategori.php")
+    suspend fun getCategories(): Response<CategoryApiResponse>
 }
+
+// DEFINISI GeneralApiResponse: dipindahkan ke sini
+data class GeneralApiResponse(
+    @SerializedName("status") val status: String,
+    @SerializedName("message") val message: String?
+)

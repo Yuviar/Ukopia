@@ -28,41 +28,63 @@
         android:layout_marginBottom="32dp"
         tools:text="@string/rate_for_placeholder"/>
 
-    <!-- Rating Stars Container -->
+    <!-- Rating Stars Container (MODIFIKASI DI SINI) -->
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginBottom="32dp">
-
-        <ImageView android:id="@+id/star_1" style="@style/RatingStar" android:src="@drawable/star_rating_progress"/>
-        <ImageView android:id="@+id/star_2" style="@style/RatingStar" android:src="@drawable/star_rating_progress"/>
-        <ImageView android:id="@+id/star_3" style="@style/RatingStar" android:src="@drawable/star_rating_progress"/>
-        <ImageView android:id="@+id/star_4" style="@style/RatingStar" android:src="@drawable/star_rating_progress"/>
-        <ImageView android:id="@+id/star_5" style="@style/RatingStar" android:src="@drawable/star_rating_progress"/>
-    </LinearLayout>
-
-    <EditText
-        android:id="@+id/editTextKomentar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minLines="3"
-        android:gravity="top"
-        android:hint="@string/enter_comment_hint"
-        android:padding="12dp"
-        android:textSize="16sp"
-        android:background="@drawable/edit_text_border"
-        android:textColor="@color/black"
-        android:layout_marginBottom="24dp"/>
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:layout_marginBottom="32dp"
+    android:paddingHorizontal="16dp">
 
-    <Button
-        android:id="@+id/btn_submit_rating"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/submit_rating_button_text"
-        android:backgroundTint="@color/black"
-        app:cornerRadius="8dp"
-        android:textColor="@color/white"/>
-
+    <!-- Setiap ImageView sekarang memiliki lebar 0dp dan layout_weight 1 untuk distribusi rata -->
+    <ImageView android:id="@+id/star_1"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="48dp"
+    android:src="@drawable/star_rating_progress"/>
+    <ImageView android:id="@+id/star_2"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="48dp"
+    android:src="@drawable/star_rating_progress"/>
+    <ImageView android:id="@+id/star_3"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="48dp"
+    android:src="@drawable/star_rating_progress"/>
+    <ImageView android:id="@+id/star_4"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="48dp"
+    android:src="@drawable/star_rating_progress"/>
+    <ImageView android:id="@+id/star_5"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="48dp"
+    android:src="@drawable/star_rating_progress"/>
 </LinearLayout>
+
+<EditText
+android:id="@+id/editTextKomentar"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:minLines="3"
+android:gravity="top"
+android:hint="@string/enter_comment_hint"
+android:padding="12dp"
+android:textSize="16sp"
+android:background="@drawable/edit_text_border"
+android:textColor="@color/black"
+android:layout_marginBottom="24dp"/>
+
+<Button
+android:id="@+id/btn_submit_rating"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:text="@string/submit_rating_button_text"
+android:backgroundTint="@color/black"
+app:cornerRadius="8dp"
+android:textColor="@color/white"/>
+
+    </LinearLayout>

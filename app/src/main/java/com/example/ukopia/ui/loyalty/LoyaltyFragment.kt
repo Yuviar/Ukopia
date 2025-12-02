@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,7 +35,11 @@ class LoyaltyFragment : Fragment() {
     private var _binding: FragmentLoyaltyBinding? = null
     private val binding get() = _binding!!
 
+    // Menggunakan activityViewModels karena LoyaltyViewModel mungkin perlu dibagikan antar Activity
+    // Pastikan ViewModel ini sudah benar dan diinisialisasi melalui Factory jika perlu
     private val viewModel: LoyaltyViewModel by activityViewModels()
+
+    // Menggunakan LoyaltyAdapter yang sudah ada di konteks Anda
     private lateinit var adapter: LoyaltyAdapter
 
     private var currentPageReward = 0
@@ -59,12 +64,13 @@ class LoyaltyFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val userName = SessionManager.getUserName(requireContext())
-        binding.textViewUserName.text = userName ?: getString(R.string.greeting_salutation_default) // Menggunakan string default "Hi!"
+        binding.textViewUserName.text = userName ?: getString(R.string.greeting_salutation_default)
 
         setupRecyclerView()
         setupSearchBar()
 
         binding.btnRewardHistory.setOnClickListener {
+            // Pastikan RewardListFragment Anda ada dan sudah benar
             (activity as? MainActivity)?.navigateToFragment(RewardListFragment())
         }
 
@@ -82,18 +88,19 @@ class LoyaltyFragment : Fragment() {
                 updateRewardDisplay(status.totalPoints, status)
             } else {
                 Log.w("LoyaltyFragment", "LoyaltyUserStatus is null, cannot update UI.")
-                // Opsional: tampilkan pesan atau sembunyikan elemen terkait loyalty jika tidak ada status
             }
         }
 
+        // Observer utama untuk loyalty items (riwayat order)
         viewModel.loyaltyItems.observe(viewLifecycleOwner) { items ->
-            allLoyaltyItems = items
-            displayFilteredLoyaltyItems()
+            allLoyaltyItems = items // Simpan daftar asli
+            displayFilteredLoyaltyItems() // Tampilkan dan atur visibilitas UI
         }
     }
 
     private fun setupRecyclerView() {
         adapter = LoyaltyAdapter { item ->
+            // Pastikan LoyaltyDetailDialogFragment.newInstance menerima LoyaltyItemV2
             val dialog = LoyaltyDetailDialogFragment.newInstance(item)
             dialog.show(parentFragmentManager, "LoyaltyDetailDialog")
         }
@@ -117,6 +124,7 @@ class LoyaltyFragment : Fragment() {
         }
     }
 
+    // Mengatur visibilitas search bar, placeholder, dan RecyclerView riwayat loyalty
     private fun displayFilteredLoyaltyItems() {
         var filteredList = allLoyaltyItems
 
@@ -129,10 +137,24 @@ class LoyaltyFragment : Fragment() {
 
         adapter.submitList(filteredList)
 
-        binding.placeholderContainer.visibility = if (filteredList.isEmpty()) View.VISIBLE else View.GONE
-        binding.recyclerViewLoyaltyItems.visibility = if (filteredList.isEmpty()) View.GONE else View.VISIBLE
+        // Logika untuk menampilkan/menyembunyikan search bar dan placeholder
+        if (allLoyaltyItems.isEmpty()) { // Jika daftar loyalty asli (tanpa filter) kosong
+            binding.cardSearchLoyalty.visibility = View.GONE // Menggunakan ID yang benar dari XML
+            binding.placeholderContainer.visibility = View.VISIBLE
+            binding.textViewPlaceholder.text = getString(R.string.no_loyalty_data_placeholder)
+            binding.recyclerViewLoyaltyItems.visibility = View.GONE
+        } else { // Jika ada data loyalty
+            binding.cardSearchLoyalty.visibility = View.VISIBLE // Menggunakan ID yang benar dari XML
+            if (filteredList.isEmpty()) { // Jika ada data tapi hasil filter kosong
+                binding.placeholderContainer.visibility = View.VISIBLE
+                binding.textViewPlaceholder.text = getString(R.string.no_results_found) // Pastikan string ini ada di strings.xml
+                binding.recyclerViewLoyaltyItems.visibility = View.GONE
+            } else { // Jika ada data dan hasil filter tidak kosong
+                binding.placeholderContainer.visibility = View.GONE
+                binding.recyclerViewLoyaltyItems.visibility = View.VISIBLE
+            }
+        }
     }
-
 
     private fun getRewardContainers(): List<MaterialCardView> {
         val containers = mutableListOf<MaterialCardView>()
@@ -154,19 +176,19 @@ class LoyaltyFragment : Fragment() {
         val totalPages = paginatedRewards.size
 
         Log.d("LoyaltyFragment", "RewardDisplay: Total Points=$totalPoints, Total Pages=$totalPages, Current Page (before adjust)=$currentPageReward")
-        Log.d("LoyaltyFragment", "RewardDisplay: Paginated Rewards Structure: ${paginatedRewards.joinToString { page -> page.joinToString { getString(it.titleResId) } }}") // MODIFIKASI Log
+        Log.d("LoyaltyFragment", "RewardDisplay: Paginated Rewards Structure: ${paginatedRewards.joinToString { page -> page.joinToString { getString(it.titleResId) } }}")
 
         val currentRewards = paginatedRewards.getOrNull(currentPageReward) ?: emptyList()
         val allRewardContainers = getRewardContainers()
 
         Log.d("LoyaltyFragment", "RewardDisplay: Current Page (after adjust)=$currentPageReward, Current Rewards count=${currentRewards.size}")
-        Log.d("LoyaltyFragment", "RewardDisplay: Current Rewards on page $currentPageReward: ${currentRewards.joinToString { "${getString(it.titleResId)} (${it.threshold} pts)" }}") // MODIFIKASI Log
+        Log.d("LoyaltyFragment", "RewardDisplay: Current Rewards on page $currentPageReward: ${currentRewards.joinToString { "${getString(it.titleResId)} (${it.threshold} pts)" }}")
 
         allRewardContainers.forEach { it.visibility = View.GONE }
 
         if (currentRewards.isEmpty()) {
             Log.d("LoyaltyFragment", "RewardDisplay: No rewards to display for current page. Check paginatedRewards content.")
-            binding.textViewRewardProgress.text = "0 Rewards" // Ini juga bisa dijadikan string resource
+            binding.textViewRewardProgress.text = "0 Rewards"
             binding.btnPrevReward.visibility = View.INVISIBLE
             binding.btnNextReward.visibility = View.INVISIBLE
             return
@@ -187,9 +209,9 @@ class LoyaltyFragment : Fragment() {
                         return@forEachIndexed
                     }
 
-                    tvRewardTitle.text = getString(reward.titleResId) // MODIFIKASI: Gunakan getString()
+                    tvRewardTitle.text = getString(reward.titleResId)
                     ivRewardIcon.setImageResource(reward.iconResId)
-                    tvRewardPoints.text = getString(R.string.loyalty_points_needed_format, reward.threshold) // Menggunakan string resource
+                    tvRewardPoints.text = getString(R.string.loyalty_points_needed_format, reward.threshold)
 
                     val statusReward = reward.getStatus(totalPoints, status)
 
@@ -239,7 +261,7 @@ class LoyaltyFragment : Fragment() {
 
         val start = currentPageReward * rewardsPerPage + 1
         val end = currentPageReward * rewardsPerPage + currentRewards.size
-        binding.textViewRewardProgress.text = getString(R.string.loyalty_rewards_progress_range_format, start, end) // Menggunakan string resource
+        binding.textViewRewardProgress.text = getString(R.string.loyalty_rewards_progress_range_format, start, end)
     }
 
     private fun navigateReward(next: Boolean) {

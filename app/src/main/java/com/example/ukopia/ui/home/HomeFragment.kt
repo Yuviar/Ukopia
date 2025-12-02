@@ -19,9 +19,9 @@ import com.example.ukopia.databinding.FragmentHomeBinding
 import com.example.ukopia.MainActivity
 import com.example.ukopia.models.MenuApiItem
 import com.example.ukopia.ui.menu.DetailMenuFragment
+import com.example.ukopia.ui.menu.MenuViewModelFactory
 import com.example.ukopia.UkopiaApplication
 import com.example.ukopia.ui.menu.MenuViewModel
-import com.example.ukopia.ui.menu.MenuViewModelFactory
 import com.example.ukopia.ui.loyalty.LoyaltyViewModel
 import com.example.ukopia.SessionManager
 

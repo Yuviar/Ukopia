@@ -254,18 +254,6 @@
                         android:scaleType="centerCrop"
                         android:src="@drawable/sample_coffee"
                         tools:ignore="ContentDescription" />
-
-                    <TextView
-                        android:id="@+id/promo_description"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:padding="12dp"
-                        android:background="@drawable/gradient_bottom_black"
-                        android:textColor="@color/white"
-                        android:textSize="14sp"
-                        android:text="@string/promo_description_halloween"
-                    />
                 </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
 

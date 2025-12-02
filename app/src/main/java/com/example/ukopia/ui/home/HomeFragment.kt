@@ -9,10 +9,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import coil.load
 import com.example.ukopia.R
 import com.example.ukopia.BestSellerAdapter
 import com.example.ukopia.databinding.FragmentHomeBinding
@@ -24,6 +25,8 @@ import com.example.ukopia.UkopiaApplication
 import com.example.ukopia.ui.menu.MenuViewModel
 import com.example.ukopia.ui.loyalty.LoyaltyViewModel
 import com.example.ukopia.SessionManager
+import com.example.ukopia.models.ApiClient
+import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
@@ -35,79 +38,106 @@ class HomeFragment : Fragment() {
     }
 
     private val loyaltyViewModel: LoyaltyViewModel by activityViewModels()
-
     private lateinit var bestSellerAdapter: BestSellerAdapter
 
+    // Variables for Stamp Logic
     private var currentStampPage = 0
     private val stampsPerPage = 10
     private val maxStamps = 100
-
     private val stampBackgrounds = mutableListOf<ImageView>()
     private val stampNumbers = mutableListOf<TextView>()
     private val stampCheckmarks = mutableListOf<ImageView>()
-
     private val TAG = "HomeFragment"
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         (activity as? MainActivity)?.setBottomNavVisibility(View.VISIBLE)
 
+        setupBestSellerRecyclerView()
+        setupObservers()
+        setupStampCardSection()
+
+        // [BARU] Load Promo Banner
+        loadPromoBanner()
+    }
+
+    private fun setupBestSellerRecyclerView() {
         bestSellerAdapter = BestSellerAdapter(emptyList()) { menuItem ->
             val detailMenuFragment = DetailMenuFragment.newInstance(menuItem)
             (activity as? MainActivity)?.navigateToFragment(detailMenuFragment)
         }
-
         binding.bestSellerRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.bestSellerRecyclerView.adapter = bestSellerAdapter
+    }
 
-        setupObservers()
-        setupStampCardSection()
+    // [FUNGSI BARU] Load Promo dari API
+    private fun loadPromoBanner() {
+        lifecycleScope.launch {
+            try {
+                val response = ApiClient.instance.getLatestPromo()
+                if (response.isSuccessful && response.body()?.success == true) {
+                    val promoData = response.body()
+
+                    if (promoData?.hasPromo == true && !promoData.imageUrl.isNullOrEmpty()) {
+                        // Tampilkan Card
+                        binding.promoCardView.visibility = View.VISIBLE
+
+                        // Load Gambar dengan Coil
+                        binding.promoImage.load(promoData.imageUrl) {
+                            crossfade(true)
+                            placeholder(R.drawable.sample_coffee) // Gambar placeholder
+                            error(R.drawable.ic_error) // Gambar error
+                        }
+                    } else {
+                        // Sembunyikan jika tidak ada promo
+                        binding.promoCardView.visibility = View.GONE
+                    }
+                } else {
+                    binding.promoCardView.visibility = View.GONE
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Gagal load promo: ${e.message}")
+                binding.promoCardView.visibility = View.GONE
+            }
+        }
     }
 
     private fun setupObservers() {
-        viewModel.menuItems.observe(viewLifecycleOwner, Observer { menuList ->
+        // Observer Menu (Best Seller)
+        viewModel.menuItems.observe(viewLifecycleOwner) { menuList ->
             if (menuList != null) {
                 val bestSellerItems = getTopBestSellerItems(menuList)
                 bestSellerAdapter.updateData(bestSellerItems)
             }
-        })
+        }
 
+        // Observer Loyalty
         loyaltyViewModel.loyaltyUserStatus.observe(viewLifecycleOwner) { status ->
-            Log.d(TAG, "Loyalty status observed. Total points: ${status.totalPoints}, IsLoggedIn: ${SessionManager.isLoggedIn(requireContext())}")
-
             val isLoggedIn = SessionManager.isLoggedIn(requireContext())
             val userName = SessionManager.getUserName(requireContext())
 
-            // 1. Set "Welcome!" message
+            // Welcome Text
             if (isLoggedIn && !userName.isNullOrEmpty()) {
                 binding.textViewUserName.text = getString(R.string.welcome_format, userName)
             } else {
-                binding.textViewUserName.text = getString(R.string.greeting_salutation_default) // Menggunakan "Hi!" dari strings.xml
+                binding.textViewUserName.text = getString(R.string.greeting_salutation_default)
             }
 
-            // 2. Set visibility of loyalty elements
+            // Visibility Loyalty
             if (isLoggedIn) {
-                // Jika sudah login: tampilkan elemen loyalty
                 binding.textViewLoyaltyPoints.visibility = View.VISIBLE
                 binding.tvHomeStampCardTitle.visibility = View.VISIBLE
                 binding.stampCardView.visibility = View.VISIBLE
 
-                // Update Loyalty Points & Stamp Card Display
                 binding.textViewLoyaltyPoints.text = getString(R.string.loyalty_points_format, status.totalPoints)
-                binding.tvHomeStampCardTitle.text = getString(R.string.collect_stamps_for_rewards) // Menggunakan string resource
                 updateStampCardDisplay(status.totalPoints)
                 updateStampNavigationIndicator(status.totalPoints)
             } else {
-                // Jika belum login: sembunyikan semua elemen loyalty
                 binding.textViewLoyaltyPoints.visibility = View.GONE
                 binding.tvHomeStampCardTitle.visibility = View.GONE
                 binding.stampCardView.visibility = View.GONE
@@ -116,10 +146,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun getTopBestSellerItems(all: List<MenuApiItem>): List<MenuApiItem> {
-        return all.sortedByDescending { it.average_rating }
-            .take(5)
+        return all.sortedByDescending { it.average_rating }.take(5)
     }
 
+    // ... (Sisa kode Stamp Logic: setupStampCardSection, initializeStampViews, updateStampCardDisplay, updateStampNavigationIndicator TETAP SAMA seperti file aslimu) ...
     private fun setupStampCardSection() {
         Log.d(TAG, "setupStampCardSection called.")
         initializeStampViews()
@@ -250,15 +280,15 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        val totalPoints = loyaltyViewModel.loyaltyUserStatus.value?.totalPoints ?: 0
-        val totalStampPages = (maxStamps + stampsPerPage - 1) / stampsPerPage
-        val maxReachablePage = if (totalPoints > 0) (totalPoints - 1) / stampsPerPage else 0
+        // Refresh loyalty data
+        if (SessionManager.isLoggedIn(requireContext())) {
+            val totalPoints = loyaltyViewModel.loyaltyUserStatus.value?.totalPoints ?: 0
+            val totalStampPages = (maxStamps + stampsPerPage - 1) / stampsPerPage
+            val maxReachablePage = if (totalPoints > 0) (totalPoints - 1) / stampsPerPage else 0
 
-        currentStampPage = maxReachablePage.coerceIn(0, if (totalStampPages > 0) totalStampPages - 1 else 0)
-
-        Log.d(TAG, "onResume: Initial currentStampPage set to $currentStampPage for totalPoints $totalPoints")
-
-        loyaltyViewModel.refreshLoyaltyData()
+            currentStampPage = maxReachablePage.coerceIn(0, if (totalStampPages > 0) totalStampPages - 1 else 0)
+            loyaltyViewModel.refreshLoyaltyData()
+        }
     }
 
     override fun onDestroyView() {

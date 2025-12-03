@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class RecipeItem(
-    // --- FIELD WAJIB (Ada di by_metode.php & detail.php) ---
+
     @SerializedName("id_resep") val id: String,
     @SerializedName("nama_resep") val name: String,
     @SerializedName("deskripsi") val description: String,
@@ -15,12 +15,9 @@ data class RecipeItem(
     @SerializedName("waktu_ekstraksi") val extractionTimeInt: Int,
     @SerializedName("nama_pembuat") val brewerName: String? = null,
 
-    // --- FIELD DETAIL (Hanya ada di detail.php) ---
-    // Semua field ini harus Nullable (?) karena tidak dikirim oleh by_metode.php
-
     @SerializedName("suhu") val temp: Int? = null,
-    @SerializedName("grind_size") val grindSize: String? = null, // API kirim key "grind_size", bukan "ukuran_gilingan"
-    @SerializedName("brew_weight") val brewWeight: Int? = null, // API kirim key "brew_weight"
+    @SerializedName("grind_size") val grindSize: String? = null,
+    @SerializedName("brew_weight") val brewWeight: Int? = null,
     @SerializedName("tds") val tds: Int? = null,
 
     @SerializedName("ratio_text") val ratioText: String? = null,
@@ -29,11 +26,9 @@ data class RecipeItem(
 
     @SerializedName("equipment") val equipmentUsed: List<SubEquipmentItem>? = null,
 
-    // Field Lokal (Tidak dari API)
     var isMine: Boolean = false
 ) : Parcelable {
 
-    // Helper Properties untuk Format Text UI
     val waterAmount: String get() = "$waterAmountInt ml"
     val coffeeAmount: String get() = "$coffeeAmountInt g"
     val extractionTime: String get() = "${extractionTimeInt}s"

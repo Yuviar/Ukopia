@@ -18,7 +18,7 @@
         android:textColor="@color/black"
         android:layout_marginBottom="8dp"
         android:gravity="center"
-        tools:text="@string/login_required_dialog_title" /> <!-- Menggunakan string resource -->
+        tools:text="@string/login_required_dialog_title" />
 
     <TextView
         android:id="@+id/tv_dialog_login_message"
@@ -28,7 +28,7 @@
         android:textColor="@color/grey"
         android:layout_marginBottom="24dp"
         android:gravity="center"
-        tools:text="@string/login_required_dialog_message" /> <!-- Menggunakan string resource -->
+        tools:text="@string/login_required_dialog_message" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_dialog_login"

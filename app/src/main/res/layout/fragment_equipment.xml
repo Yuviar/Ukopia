@@ -7,7 +7,6 @@
     android:background="@color/black"
     tools:context=".ui.equipment.EquipmentFragment">
 
-    <!-- Header disamakan dengan AddRecipeFragment -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
@@ -79,9 +78,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     tools:itemCount="7"
-                    tools:listitem="@layout/item_equipment" /> <!-- Default list item -->
-
-                <!-- FLOATING ACTION BUTTON DIHAPUS -->
+                    tools:listitem="@layout/item_equipment" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -38,7 +38,6 @@ class SelectedEquipmentAdapter(
         val equipment = selectedEquipmentList[position]
         holder.name.text = equipment.name
 
-        // [UBAH] Pakai Coil untuk load gambar URL/SVG
         holder.icon.load(equipment.imageUrl) {
             crossfade(true)
             placeholder(R.drawable.ic_grinder)
@@ -48,7 +47,7 @@ class SelectedEquipmentAdapter(
 
     override fun getItemCount(): Int = selectedEquipmentList.size
 
-    fun removeItem(item: SubEquipmentItem) { // Hapus item dari list tampilan
+    fun removeItem(item: SubEquipmentItem) {
         val index = selectedEquipmentList.indexOf(item)
         if (index != -1) {
             selectedEquipmentList.removeAt(index)

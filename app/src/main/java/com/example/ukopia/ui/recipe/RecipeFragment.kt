@@ -36,23 +36,18 @@ class RecipeFragment : Fragment() {
         setupRecyclerView()
         setupSearch()
 
-        // Panggil API untuk ambil data metode
         recipeViewModel.loadBrewMethods()
 
-        // Observasi data dari ViewModel
         recipeViewModel.brewMethods.observe(viewLifecycleOwner) { methods ->
             allMethods = methods
             adapter.submitList(methods)
         }
         recipeViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            // Debugging: Cek di Logcat apakah ini terpanggil
             android.util.Log.d("LOADING_DEBUG", "Status Loading: $isLoading")
 
             if (isLoading) {
                 binding.progressBar.visibility = View.VISIBLE
-                // Jangan sembunyikan RecyclerView agar layout tidak "lompat"
-                // Cukup biarkan progress bar muncul di atasnya
-                binding.recyclerViewRecipe.alpha = 0.5f // Opsional: Efek transparan saat loading
+                binding.recyclerViewRecipe.alpha = 0.5f
             } else {
                 binding.progressBar.visibility = View.GONE
                 binding.recyclerViewRecipe.alpha = 1.0f
@@ -62,7 +57,6 @@ class RecipeFragment : Fragment() {
 
     private fun setupRecyclerView() {
         adapter = BrewMethodAdapter { method ->
-            // Navigasi ke List Resep saat tombol diklik
             val fragment = RecipeListFragment().apply {
                 arguments = Bundle().apply {
                     putInt("ID_METODE", method.id)
@@ -70,7 +64,7 @@ class RecipeFragment : Fragment() {
                 }
             }
             parentFragmentManager.beginTransaction()
-                .replace(com.example.ukopia.R.id.container, fragment) // Pastikan ID container benar
+                .replace(com.example.ukopia.R.id.container, fragment)
                 .addToBackStack(null)
                 .commit()
         }
@@ -90,7 +84,6 @@ class RecipeFragment : Fragment() {
                 val query = s.toString().trim()
                 binding.ivClearSearch.isVisible = query.isNotEmpty()
 
-                // Filter list lokal
                 val filteredList = if (query.isEmpty()) {
                     allMethods
                 } else {

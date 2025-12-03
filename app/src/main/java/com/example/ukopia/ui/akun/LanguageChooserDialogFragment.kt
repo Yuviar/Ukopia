@@ -80,13 +80,13 @@ class LanguageChooserDialogFragment : DialogFragment() {
             val displayMetrics = resources.displayMetrics
             val screenWidth = displayMetrics.widthPixels
 
-            val horizontalMarginDp = 24 // Sama dengan yang di fragment_logout_confirmation_dialog.xml
-            val horizontalMarginPx = (horizontalMarginDp * displayMetrics.density).toInt() * 2 // dikali 2 karena margin kanan dan kiri
+            val horizontalMarginDp = 24
+            val horizontalMarginPx = (horizontalMarginDp * displayMetrics.density).toInt() * 2
 
             val dialogWidth = screenWidth - horizontalMarginPx
 
             window.setLayout(dialogWidth, ViewGroup.LayoutParams.WRAP_CONTENT)
-            window.setGravity(Gravity.CENTER_HORIZONTAL) // Set dialog ke tengah horizontal
+            window.setGravity(Gravity.CENTER_HORIZONTAL)
         }
     }
 

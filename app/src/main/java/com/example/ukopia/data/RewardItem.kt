@@ -7,10 +7,10 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class RewardItem(
-    val id: Int, // Bisa menggunakan pointsRequired sebagai ID unik
+    val id: Int,
     val name: String,
     val pointsRequired: Int,
     @DrawableRes val iconResId: Int,
-    val pointsMet: Boolean, // True jika totalPoints user >= pointsRequired
-    val claimedDate: String? // Tanggal klaim oleh admin (format "YYYY-MM-DD"), null jika belum diklaim
+    val pointsMet: Boolean,
+    val claimedDate: String?
 ) : Parcelable

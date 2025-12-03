@@ -1,5 +1,3 @@
-// File: D:/github_rama/Ukopia/app/src/main/java/com/example/ukopia/SessionManager.kt
-
 package com.example.ukopia
 
 import android.content.Context
@@ -11,18 +9,14 @@ import com.google.gson.reflect.TypeToken
 
 object SessionManager {
     private const val PREF_NAME = "ukopia_prefs"
-
-    // Kunci Sesi Pengguna
     private const val KEY_IS_LOGGED_IN = "isLoggedIn"
     private const val KEY_USER_UID = "userUid"
     private const val KEY_USER_NAME = "userName"
     private const val KEY_USER_EMAIL = "userEmail"
 
-    // Kunci Loyalty
     private const val KEY_LOYALTY_TOTAL_POINTS = "loyaltyTotalPoints"
     private const val KEY_LOYALTY_ITEMS = "loyaltyItemsList"
 
-    // Kunci untuk setiap status klaim reward (disesuaikan dengan struktur statis LoyaltyUserStatus)
     private const val KEY_CLAIM_DATE_5 = "claimDate5"
     private const val KEY_CLAIM_DATE_10 = "claimDate10"
     private const val KEY_CLAIM_DATE_15 = "claimDate15"
@@ -50,15 +44,12 @@ object SessionManager {
 
     fun logout(context: Context) {
         val editor = getSharedPreferences(context).edit()
-        // Hapus data sesi
         editor.remove(KEY_IS_LOGGED_IN)
         editor.remove(KEY_USER_UID)
         editor.remove(KEY_USER_NAME)
         editor.remove(KEY_USER_EMAIL)
-        // Hapus data loyalty
         editor.remove(KEY_LOYALTY_TOTAL_POINTS)
         editor.remove(KEY_LOYALTY_ITEMS)
-        // Hapus juga semua kunci klaim individual
         editor.remove(KEY_CLAIM_DATE_5)
         editor.remove(KEY_CLAIM_DATE_10)
         editor.remove(KEY_CLAIM_DATE_15)
@@ -81,7 +72,6 @@ object SessionManager {
         editor.apply()
     }
 
-    // --- Fungsi Sesi Pengguna ---
     fun setLoggedIn(context: Context, loggedIn: Boolean) {
         getSharedPreferences(context).edit().putBoolean(KEY_IS_LOGGED_IN, loggedIn).apply()
     }
@@ -102,11 +92,6 @@ object SessionManager {
     fun getUserName(context: Context): String? = getSharedPreferences(context).getString(KEY_USER_NAME, null)
     fun getUserEmail(context: Context): String? = getSharedPreferences(context).getString(KEY_USER_EMAIL, null)
 
-    // --- Fungsi Loyalty & Reward ---
-
-    /**
-     * Menyimpan status loyalty (struktur statis) ke SharedPreferences.
-     */
     fun saveLoyaltyUserStatus(context: Context, status: LoyaltyUserStatus) {
         val editor = getSharedPreferences(context).edit()
         editor.putInt(KEY_LOYALTY_TOTAL_POINTS, status.totalPoints)
@@ -132,9 +117,6 @@ object SessionManager {
         editor.apply()
     }
 
-    /**
-     * Mengambil status loyalty (struktur statis) dari SharedPreferences.
-     */
     fun getLoyaltyUserStatus(context: Context): LoyaltyUserStatus {
         val prefs = getSharedPreferences(context)
         val points = prefs.getInt(KEY_LOYALTY_TOTAL_POINTS, 0)

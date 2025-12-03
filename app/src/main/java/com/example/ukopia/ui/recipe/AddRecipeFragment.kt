@@ -35,9 +35,8 @@ class AddRecipeFragment : Fragment() {
 
     private val recipeViewModel: RecipeViewModel by activityViewModels()
 
-    // Data dari Fragment Sebelumnya
     private var methodName: String? = null
-    private var methodId: Int = 0 // ID Metode (Wajib untuk API)
+    private var methodId: Int = 0
 
     private val selectedEquipmentList = mutableListOf<SubEquipmentItem>()
     private lateinit var selectedEquipmentAdapter: SelectedEquipmentAdapter
@@ -56,7 +55,6 @@ class AddRecipeFragment : Fragment() {
 
         (requireActivity() as MainActivity).setBottomNavVisibility(View.GONE)
 
-        // Ambil Argument dari RecipeListFragment
         methodName = arguments?.getString("METHOD_NAME")
         methodId = arguments?.getInt("ID_METODE") ?: 0
 
@@ -70,7 +68,6 @@ class AddRecipeFragment : Fragment() {
         updateRatios()
         updateSelectedEquipmentDisplay()
 
-        // Observe status loading (Opsional: Tambahkan ProgressBar di layout)
         recipeViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.buttonSimpanResep.isEnabled = !isLoading
             binding.buttonSimpanResep.text = if (isLoading) "Menyimpan..." else getString(R.string.add_recipe_button_text)
@@ -92,7 +89,7 @@ class AddRecipeFragment : Fragment() {
         }
 
         binding.buttonSimpanResep.setOnClickListener {
-            saveRecipeToApi() // Panggil fungsi simpan ke API
+            saveRecipeToApi()
         }
 
         binding.fabAddEquipmentRecipe.setOnClickListener {
@@ -157,7 +154,6 @@ class AddRecipeFragment : Fragment() {
             val category = bundle.getString(EquipmentFragment.BUNDLE_KEY_SELECTED_CATEGORY) ?: ""
             val nameWithDetail = bundle.getString(EquipmentFragment.BUNDLE_KEY_SELECTED_SUB_EQUIPMENT_NAME) ?: ""
 
-            // [PERUBAHAN] Menerima ID dan ImageUrl dari EquipmentFragment (Nanti disesuaikan di tahap selanjutnya)
             val equipId = bundle.getInt("BUNDLE_KEY_EQUIPMENT_ID", 0)
             val imageUrl = bundle.getString("BUNDLE_KEY_EQUIPMENT_IMAGE_URL") ?: ""
 
@@ -202,12 +198,9 @@ class AddRecipeFragment : Fragment() {
         }
     }
 
-    // --- FUNGSI UTAMA: SIMPAN KE API ---
     private fun saveRecipeToApi() {
-        // 1. Ambil UID dari Session (Wajib Login)
         val uid = SessionManager.getUid(requireContext())
 
-        // 2. Cek Data Wajib
         if (methodId == 0 || methodName == null) {
             Toast.makeText(requireContext(), getString(R.string.error_brewing_method_unknown), Toast.LENGTH_SHORT).show()
             return
@@ -217,7 +210,6 @@ class AddRecipeFragment : Fragment() {
             return
         }
 
-        // 3. Ambil Nilai Inputan
         val name = binding.editTextRecipeName.text.toString().trim()
         val description = binding.editTextDescription.text.toString().trim()
         val coffeeStr = binding.editTextCoffeeAmount.text.toString().removeSuffix(" g").trim()
@@ -229,7 +221,6 @@ class AddRecipeFragment : Fragment() {
         val timeStr = binding.editTextExtractionTime.text.toString().removeSuffix(" s").trim()
         val dateStr = binding.editTextDate.text.toString()
 
-        // 4. Validasi Input (Sama seperti sebelumnya)
         var isValid = true
         var firstErrorView: View? = null
 
@@ -248,7 +239,6 @@ class AddRecipeFragment : Fragment() {
             return
         }
 
-        // 5. Buat Object Request
         val request = CreateRecipeRequest(
             uid = uid,
             methodId = methodId,
@@ -260,17 +250,15 @@ class AddRecipeFragment : Fragment() {
             grindSize = grind,
             time = timeStr.toIntOrNull() ?: 0,
             weight = brewWeightStr.toIntOrNull() ?: 0,
-            tds = tdsStr.toIntOrNull() ?: 0, // Database pakai INT
-            equipmentIds = selectedEquipmentList.map { it.id } // Kirim Array ID Alat
+            tds = tdsStr.toIntOrNull() ?: 0,
+            equipmentIds = selectedEquipmentList.map { it.id }
         )
 
-        // 6. Kirim ke ViewModel
         recipeViewModel.createRecipe(
             request = request,
             onSuccess = {
                 Toast.makeText(requireContext(), getString(R.string.recipe_saved_success_toast, name), Toast.LENGTH_SHORT).show()
 
-                // Kembali ke list dan refresh otomatis (karena data diambil dari API/DB)
                 parentFragmentManager.popBackStack()
                 (requireActivity() as MainActivity).setBottomNavVisibility(View.VISIBLE)
             },
@@ -286,7 +274,6 @@ class AddRecipeFragment : Fragment() {
     }
 }
 
-// Class SuffixTextWatcher tetap sama
 class SuffixTextWatcher(
     private val editText: EditText,
     private val suffix: String,
@@ -313,7 +300,6 @@ class SuffixTextWatcher(
         val newText = s.toString()
         val oldSelection = editText.selectionStart
         val rawValueInput = newText.removeSuffix(suffix).trim()
-        // Regex untuk angka (termasuk desimal jika perlu, tapi di API kita pakai int, jadi bisa disesuaikan)
         val numberRegex = "^\\d*\\.?\\d*$".toRegex()
 
         if (rawValueInput.matches(numberRegex)) {
@@ -327,7 +313,6 @@ class SuffixTextWatcher(
                 editText.setSelection(newSelection)
             }
         } else {
-            // Revert jika input invalid
             val formattedText = if (currentRawValue.isNotEmpty()) "$currentRawValue$suffix" else ""
             if (editText.text.toString() != formattedText) {
                 editText.setText(formattedText)

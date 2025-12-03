@@ -6,7 +6,6 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
-// === UNTUK GET_MENU.PHP (Sekaligus Tabel Room) ===
 
 data class MenuApiResponse(
     @SerializedName("status")
@@ -16,9 +15,9 @@ data class MenuApiResponse(
 )
 
 @Parcelize
-@Entity(tableName = "menu_items") // Menandakan ini adalah tabel Room
+@Entity(tableName = "menu_items")
 data class MenuApiItem(
-    @PrimaryKey // id_menu adalah Kunci Utama
+    @PrimaryKey
     @SerializedName("id_menu")
     val id_menu: Int,
 
@@ -27,7 +26,7 @@ data class MenuApiItem(
     @SerializedName("deskripsi")
     val deskripsi: String,
     @SerializedName("gambar_url")
-    val gambar_url: String, // Ini String (URL)
+    val gambar_url: String,
     @SerializedName("nama_menu")
     val nama_menu: String,
     @SerializedName("average_rating")
@@ -35,9 +34,6 @@ data class MenuApiItem(
     @SerializedName("total_reviews")
     val total_reviews: Int
 ) : Parcelable
-
-
-// === UNTUK GET_DETAIL_MENU.PHP ===
 
 data class ReviewApiResponse(
     @SerializedName("status")
@@ -59,11 +55,8 @@ data class ReviewApiItem(
     @SerializedName("komentar")
     val komentar: String,
     @SerializedName("is_owner")
-    val is_owner: Int // GSON akan konversi 0/1 ke boolean
+    val is_owner: Int
 ) : Parcelable
-
-
-// === UNTUK POST/UPDATE/DELETE ULASAN ===
 
 data class ReviewPostRequest(
     val id_menu: Int,
@@ -84,8 +77,6 @@ data class ReviewDeleteRequest(
     val uid_akun: Int
 )
 
-// Tambahkan di file models/MenuModels.kt
-
 data class CategoryApiResponse(
     @SerializedName("success")
     val success: Boolean,
@@ -102,5 +93,5 @@ data class CategoryItem(
     @SerializedName("nama_kategori")
     val name: String,
     @SerializedName("biji")
-    val biji: Int? = 0 // Opsional sesuai PHP Anda
+    val biji: Int? = 0
 ) : Parcelable

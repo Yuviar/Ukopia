@@ -94,7 +94,6 @@ class MainActivity : AppCompatActivity() {
 
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
-        // Menggunakan string resource yang baru ditambahkan
         dialogBinding.tvDialogLoginTitle.text = getString(R.string.login_required_dialog_title)
         dialogBinding.tvDialogLoginMessage.text = getString(R.string.login_required_dialog_message)
         dialogBinding.buttonDialogLogin.text = getString(R.string.login_dialog_button_text)

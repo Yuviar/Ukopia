@@ -24,14 +24,13 @@ import com.example.ukopia.R
 import com.example.ukopia.SessionManager
 import com.example.ukopia.databinding.ActivityLoginBinding
 import com.example.ukopia.models.LoginRequest
-import com.example.ukopia.ui.akun.LocaleHelper // Pastikan file ini ada, jika tidak bisa dihapus
+import com.example.ukopia.ui.akun.LocaleHelper
 
 class LoginActivity : AppCompatActivity() {
     private var isPasswordVisible = false
     private lateinit var binding: ActivityLoginBinding
     private lateinit var authViewModel: AuthViewModel
 
-    // Konfigurasi Bahasa (Opsional, biarkan jika sudah ada file LocaleHelper)
     override fun attachBaseContext(newBase: Context?) {
         super.attachBaseContext(newBase?.let { LocaleHelper.onAttach(it) } ?: newBase)
     }
@@ -41,13 +40,11 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 1. Cek apakah user sudah login?
         if (SessionManager.isLoggedIn(this)) {
             goToMainActivity()
             return
         }
 
-        // 2. Inisialisasi ViewModel
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
 
         setupUIListeners()
@@ -55,7 +52,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setupUIListeners() {
-        // Toggle Visibility Password
         binding.btnTogglePassword.setOnClickListener {
             if (isPasswordVisible) {
                 binding.editPassword.transformationMethod = PasswordTransformationMethod.getInstance()
@@ -66,29 +62,23 @@ class LoginActivity : AppCompatActivity() {
                 binding.btnTogglePassword.setImageResource(R.drawable.ic_eye_off)
                 isPasswordVisible = true
             }
-            // Kembalikan kursor ke akhir teks
             binding.editPassword.setSelection(binding.editPassword.text.length)
         }
 
-        // Tombol Masuk
         binding.btnMasuk.setOnClickListener {
             handleLoginClick()
         }
 
-        // Tombol Lupa Password
         binding.btnLupaPassword.setOnClickListener {
             val intent = Intent(this, LupaPasswordActivity::class.java).apply {
                 putExtra(LupaPasswordActivity.EXTRA_SOURCE, LupaPasswordActivity.SOURCE_LOGIN)
             }
             startActivity(intent)
         }
-
-        // Teks "Daftar di sini"
         setupClickableRegisterText()
     }
 
     private fun handleLoginClick() {
-        // Animasi Tombol (Visual Feedback)
         val targetBackgroundTint = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
         val targetTextColor = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white))
         val flashColorBackground = ContextCompat.getColor(this, R.color.white)
@@ -98,11 +88,9 @@ class LoginActivity : AppCompatActivity() {
         binding.btnMasuk.setTextColor(flashColorText)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            // Kembalikan warna tombol
             binding.btnMasuk.backgroundTintList = targetBackgroundTint
             binding.btnMasuk.setTextColor(targetTextColor)
 
-            // Ambil Input
             val identifier = binding.editEmail.text.toString().trim()
             val password = binding.editPassword.text.toString().trim()
 
@@ -110,34 +98,28 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, getString(R.string.empty_email_password_error), Toast.LENGTH_SHORT).show()
                 return@postDelayed
             }
-
-            // Panggil ViewModel untuk Login
             authViewModel.login(LoginRequest(identifier, password))
 
         }, 150)
     }
 
     private fun setupObservers() {
-        // Observer: Loading State
         authViewModel.isLoading.observe(this) { isLoading ->
             showLoading(isLoading)
         }
 
-        // Observer: Pesan Error / Info
         authViewModel.message.observe(this) { message ->
             if (!message.isNullOrEmpty()) {
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show()
             }
         }
 
-        // Observer: Login Sukses (Data User)
         authViewModel.loginSuccess.observe(this) { loginResponse ->
             if (loginResponse != null && loginResponse.data != null) {
                 val user = loginResponse.data
 
-                // Simpan Sesi ke SharedPreferences
                 SessionManager.setLoggedIn(this, true)
-                // Simpan UID, Nama, dan Email (Penting untuk fitur lain seperti Resep)
+
                 SessionManager.saveUserData(this, user.uid, user.nama, user.email)
 
                 Toast.makeText(this, getString(R.string.login_success_toast), Toast.LENGTH_SHORT).show()
@@ -162,15 +144,14 @@ class LoginActivity : AppCompatActivity() {
 
     private fun goToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
-        // Clear backstack agar user tidak bisa kembali ke login dengan tombol back
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
     }
 
     private fun setupClickableRegisterText() {
-        val prefixText = getString(R.string.no_account_prefix) // "Belum punya akun? "
-        val clickablePartText = getString(R.string.create_account_clickable_part) // "Daftar di sini"
+        val prefixText = getString(R.string.no_account_prefix)
+        val clickablePartText = getString(R.string.create_account_clickable_part)
         val fullText = prefixText + clickablePartText
         val spannableString = SpannableString(fullText)
         val start = fullText.indexOf(clickablePartText)

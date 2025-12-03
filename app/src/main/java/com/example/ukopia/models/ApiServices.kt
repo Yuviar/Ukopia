@@ -1,4 +1,3 @@
-// File: D:/github_rama/Ukopia/app/src/main/java/com/example/ukopia/models/ApiServices.kt
 package com.example.ukopia.models
 
 import com.example.ukopia.data.ApiResponse
@@ -19,25 +18,25 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Query
-import com.google.gson.annotations.SerializedName // PENTING: Pastikan ini ada
+import com.google.gson.annotations.SerializedName
 
 interface ApiService {
 
     @Headers("Content-Type: application/json")
     @POST("auth/register.php")
     suspend fun registerUser(
-        @Body requestBody: RegisterRequest // Pastikan RegisterRequest didefinisikan di suatu tempat
-    ): Response<GenericResponse> // Pastikan GenericResponse didefinisikan di suatu tempat
+        @Body requestBody: RegisterRequest
+    ): Response<GenericResponse>
 
     @Headers("Content-Type: application/json")
     @POST("auth/login.php")
     suspend fun loginUser(
-        @Body requestBody: LoginRequest // Pastikan LoginRequest didefinisikan di suatu tempat
-    ): Response<LoginResponse> // Pastikan LoginResponse didefinisikan di suatu tempat
+        @Body requestBody: LoginRequest
+    ): Response<LoginResponse>
 
     @POST("auth/forgot.php")
     suspend fun forgotPassword(
-        @Body request: ForgotPasswordRequest // Pastikan ForgotPasswordRequest didefinisikan di suatu tempat
+        @Body request: ForgotPasswordRequest
     ): Response<GenericResponse>
 
     @GET("menu/get_menu.php")
@@ -50,18 +49,18 @@ interface ApiService {
     suspend fun getMenuDetails(
         @Query("id_menu") id_menu: Int,
         @Query("uid_akun") uid_akun: Int
-    ): Response<ReviewApiResponse> // Pastikan ReviewApiResponse didefinisikan di suatu tempat
+    ): Response<ReviewApiResponse>
 
     @Headers("Content-Type: application/json")
     @POST("ulasan/post_ulasan.php")
     suspend fun postReview(
-        @Body requestBody: ReviewPostRequest // Pastikan ReviewPostRequest didefinisikan di suatu tempat
-    ): Response<GeneralApiResponse> // GeneralApiResponse sekarang didefinisikan di bawah
+        @Body requestBody: ReviewPostRequest
+    ): Response<GeneralApiResponse>
 
     @Headers("Content-Type: application/json")
     @POST("ulasan/update_ulasan.php")
     suspend fun updateReview(
-        @Body requestBody: ReviewUpdateRequest // Pastikan ReviewUpdateRequest didefinisikan di suatu tempat
+        @Body requestBody: ReviewUpdateRequest
     ): Response<GenericResponse>
 
     @Headers("Content-Type: application/json")
@@ -70,7 +69,6 @@ interface ApiService {
         @Body body: Map<String, Int>
     ): Response<GenericResponse>
 
-    // ... endpoint lain seperti getBrewMethods, getEquipmentCategories, dll. ...
     @GET("resep/metode.php")
     suspend fun getBrewMethods(): Response<ApiResponse<List<BrewMethod>>>
 
@@ -124,19 +122,14 @@ interface ApiService {
     suspend fun getRewardHistory(
         @Query("uid") uid: Int
     ): Response<RewardHistoryResponse>
-    // ... endpoint lainnya ...
 
-    // API PROMO
     @GET("promo/latest.php")
     suspend fun getLatestPromo(): Response<PromoResponse>
-
-    // Tambahkan di dalam interface ApiService di models/ApiServices.kt
 
     @GET("menu/kategori.php")
     suspend fun getCategories(): Response<CategoryApiResponse>
 }
 
-// DEFINISI GeneralApiResponse: dipindahkan ke sini
 data class GeneralApiResponse(
     @SerializedName("status") val status: String,
     @SerializedName("message") val message: String?

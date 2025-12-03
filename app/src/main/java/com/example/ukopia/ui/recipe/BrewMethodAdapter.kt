@@ -27,12 +27,11 @@ class BrewMethodAdapter(
         fun bind(item: BrewMethod, onItemClick: (BrewMethod) -> Unit) {
             binding.textViewRecipeName.text = item.name.uppercase()
 
-            // Load Gambar dari URL (API) menggunakan Coil
             binding.imageViewRecipe.load(item.imageUrl) {
                 crossfade(true)
-                placeholder(R.drawable.ic_aeropress) // Gambar default saat loading
+                placeholder(R.drawable.ic_aeropress)
                 error(
-                    R.drawable.ic_error) // Gambar default jika error
+                    R.drawable.ic_error)
             }
 
             // Klik tombol selengkapnya

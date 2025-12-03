@@ -7,7 +7,6 @@
     android:background="@color/black"
     tools:context=".ui.recipe.RecipeDetailFragment">
 
-    <!-- Header disamakan dengan Loyalty -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
@@ -47,7 +46,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Wadah Konten Utama -->
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -102,7 +100,6 @@
                             android:textColor="@color/black"
                             tools:text="A recipe focusing on balanced acidity and sweetness." />
 
-                        <!-- BARU: Bagian Equipment -->
                         <TextView
                             android:id="@+id/labelEquipmentDetail"
                             android:layout_width="wrap_content"
@@ -124,9 +121,7 @@
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                             tools:itemCount="2"
                             tools:listitem="@layout/item_recipe_detail_equipment" />
-                        <!-- AKHIR BARU: Bagian Equipment -->
 
-                        <!-- GridLayout untuk parameter umum -->
                         <GridLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -134,7 +129,6 @@
                             android:columnCount="2"
                             android:rowCount="2">
 
-                            <!-- Jumlah Kopi -->
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -175,7 +169,6 @@
                                     tools:text="15 g" />
                             </LinearLayout>
 
-                            <!-- Jumlah Air -->
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -214,7 +207,6 @@
                                     tools:text="250 ml" />
                             </LinearLayout>
 
-                            <!-- Gilingan -->
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -254,7 +246,6 @@
                                     tools:text="Medium" />
                             </LinearLayout>
 
-                            <!-- Suhu (Temperature) -->
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -296,7 +287,6 @@
 
                         </GridLayout>
 
-                        <!-- NEW: Brew Weight -->
                         <LinearLayout
                             android:id="@+id/layoutBrewWeight"
                             android:layout_width="match_parent"
@@ -332,7 +322,6 @@
                                 tools:text="150 g"/>
                         </LinearLayout>
 
-                        <!-- NEW: TDS -->
                         <LinearLayout
                             android:id="@+id/layoutTds"
                             android:layout_width="match_parent"
@@ -368,7 +357,6 @@
                                 tools:text="1.25 %"/>
                         </LinearLayout>
 
-                        <!-- NEW: Coffee / Brew Ratio -->
                         <LinearLayout
                             android:id="@+id/layoutCoffeeBrewRatio"
                             android:layout_width="match_parent"
@@ -404,7 +392,6 @@
                                 tools:text="1:10.00"/>
                         </LinearLayout>
 
-                        <!-- NEW: Coffee / Water Ratio -->
                         <LinearLayout
                             android:id="@+id/layoutCoffeeWaterRatio"
                             android:layout_width="match_parent"
@@ -440,7 +427,6 @@
                                 tools:text="1:15.00"/>
                         </LinearLayout>
 
-                        <!-- Extraction Time -->
                         <LinearLayout
                             android:id="@+id/layoutExtractionTime"
                             android:layout_width="match_parent"
@@ -475,7 +461,6 @@
                                 tools:text="180 s"/>
                         </LinearLayout>
 
-                        <!-- BARU: Tanggal Detail -->
                         <TextView
                             android:id="@+id/tv_detail_date_label"
                             android:layout_width="wrap_content"
@@ -497,7 +482,6 @@
                             android:visibility="gone" tools:visibility="visible"
                             tools:text="2023-10-26"/>
 
-                        <!-- BARU: Catatan Detail -->
                         <TextView
                             android:id="@+id/tv_detail_notes_label"
                             android:layout_width="wrap_content"

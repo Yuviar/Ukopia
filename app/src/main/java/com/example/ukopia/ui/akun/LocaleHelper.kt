@@ -10,7 +10,7 @@ import java.util.Locale
 object LocaleHelper {
 
     private const val SELECTED_LANGUAGE = "Locale.Helper.Selected.Language"
-    const val DEFAULT_LANGUAGE = "en" // Tetapkan bahasa default di sini
+    const val DEFAULT_LANGUAGE = "en"
 
     fun onAttach(context: Context): Context {
         val lang = getLanguage(context)

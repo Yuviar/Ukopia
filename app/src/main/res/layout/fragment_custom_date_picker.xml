@@ -27,7 +27,7 @@
         android:calendarViewShown="true"
         android:layout_gravity="center_horizontal"
         android:theme="@style/DatePickerTheme"
-        android:elevation="0dp"/> <!-- Gunakan tema khusus untuk widget DatePicker -->
+        android:elevation="0dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"

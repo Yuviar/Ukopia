@@ -439,4 +439,12 @@
     <string name="reward_code_prefix">Code: </string>
     <string name="rewards_available_status">Rewards Available</string>
 
+    <string name="otp_sent_to_email_message">An OTP code has been sent to your email. Please enter the code below.</string>
+    <string name="enter_otp_title">Enter OTP Code</string>
+
+    <string name="resend_otp_button_text">Resend OTP</string>
+    <string name="verify_button_text">Verification</string>
+
+    <string name="no_internet_warning">No internet connection. Trying again...</string>
+
 </resources>

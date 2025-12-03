@@ -2,25 +2,22 @@ package com.example.ukopia.data
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.example.ukopia.R // <<< TAMBAHKAN BARIS INI
+import com.example.ukopia.R
 
-// Enum untuk tipe reward
 enum class LoyaltyRewardType {
     DISCOUNT_10,
     FREE_SERVE,
     FREE_TSHIRT
 }
 
-// Data class untuk merepresentasikan satu reward
 data class LoyaltyReward(
     val threshold: Int,
     val type: LoyaltyRewardType,
-    @StringRes val titleResId: Int, // MODIFIKASI: Ubah ke StringRes ID
-    @DrawableRes val iconResId: Int, // ID resource ikon reward
-    val claimDateKey: String // Kunci field di LoyaltyUserStatus
+    @StringRes val titleResId: Int,
+    @DrawableRes val iconResId: Int,
+    val claimDateKey: String
 )
 
-// Daftar semua reward yang telah didefinisikan (Icon diperbaiki di sini)
 val ALL_LOYALTY_REWARDS = listOf(
     // MODIFIKASI: Gunakan R.string.{nama_string} untuk title
     LoyaltyReward(5, LoyaltyRewardType.DISCOUNT_10, R.string.loyalty_reward_10_percent_discount_title, R.drawable.ic_discount, "discount10_claim_date"),
@@ -44,11 +41,7 @@ val ALL_LOYALTY_REWARDS = listOf(
     LoyaltyReward(95, LoyaltyRewardType.DISCOUNT_10, R.string.loyalty_reward_10_percent_discount_title, R.drawable.ic_discount, "discount10_95_claim_date")
 )
 
-/**
- * Helper function untuk menentukan status reward berdasarkan poin user.
- */
 fun LoyaltyReward.getStatus(currentPoints: Int, status: LoyaltyUserStatus): String {
-    // Gunakan fungsi getClaimDate untuk mengambil tanggal klaim dari LoyaltyUserStatus
     fun getClaimDate(threshold: Int, status: LoyaltyUserStatus): String? {
         return when(threshold) {
             5 -> status.discount10ClaimDate

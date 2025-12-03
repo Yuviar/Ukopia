@@ -15,27 +15,21 @@ import org.json.JSONObject
 
 class AuthViewModel : ViewModel() {
 
-    // Loading State
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-    // Pesan Error/Sukses Umum
     private val _message = MutableLiveData<String>()
     val message: LiveData<String> = _message
 
-    // LiveData khusus Login
     private val _loginSuccess = MutableLiveData<LoginResponse?>()
     val loginSuccess: LiveData<LoginResponse?> = _loginSuccess
 
-    // LiveData khusus Register
     private val _registerSuccess = MutableLiveData<Boolean>()
     val registerSuccess: LiveData<Boolean> = _registerSuccess
 
-    // LiveData khusus Lupa Password (otp_sent, otp_verified, password_reset)
     private val _forgotPasswordState = MutableLiveData<String?>()
     val forgotPasswordState: LiveData<String?> = _forgotPasswordState
 
-    // --- REGISTER ---
     fun register(request: RegisterRequest) {
         _isLoading.postValue(true)
         _registerSuccess.postValue(false)
@@ -61,7 +55,6 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    // --- LOGIN ---
     fun login(request: LoginRequest) {
         _isLoading.postValue(true)
         _loginSuccess.postValue(null)
@@ -86,7 +79,6 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    // --- LUPA PASSWORD: 1. KIRIM KODE ---
     fun sendOtp(email: String) {
         _isLoading.postValue(true)
         _forgotPasswordState.postValue(null)
@@ -108,7 +100,6 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    // --- LUPA PASSWORD: 2. VERIFIKASI KODE ---
     fun verifyOtp(email: String, code: String) {
         _isLoading.postValue(true)
         viewModelScope.launch {
@@ -116,7 +107,6 @@ class AuthViewModel : ViewModel() {
                 val request = ForgotPasswordRequest(action = "verify_code", email = email, code = code)
                 val response = ApiClient.instance.forgotPassword(request)
                 if (response.isSuccessful && response.body()?.success == true) {
-                    // Sukses verifikasi -> ubah state
                     _forgotPasswordState.postValue("otp_verified")
                 } else {
                     _message.postValue(response.body()?.message ?: "Kode salah")
@@ -129,7 +119,6 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    // --- LUPA PASSWORD: 3. RESET PASSWORD (INI YANG KAMU CARI) ---
     fun resetPassword(email: String, code: String, newPass: String) {
         _isLoading.postValue(true)
         viewModelScope.launch {
@@ -156,7 +145,6 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    // Helper Parsing Error JSON
     private fun parseError(jsonString: String?): String? {
         if (jsonString.isNullOrEmpty()) return null
         return try {

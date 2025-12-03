@@ -30,13 +30,11 @@ class RecipeDetailFragment : Fragment() {
 
         binding.btnBack.setOnClickListener { parentFragmentManager.popBackStack() }
 
-        // 1. Tampilkan Data Dasar (dari List) agar user tidak menunggu kosong
         val basicRecipe = arguments?.getParcelable<RecipeItem>("RECIPE_ITEM")
         if (basicRecipe != null) {
             bindBasicData(basicRecipe)
         }
 
-        // 2. Ambil Data Lengkap dari Server
         val recipeId = arguments?.getInt("ID_RESEP") ?: basicRecipe?.id?.toIntOrNull() ?: 0
         if (recipeId > 0) {
             loadRecipeDetail(recipeId)
@@ -66,56 +64,42 @@ class RecipeDetailFragment : Fragment() {
         binding.tvRecipeTitle.text = item.name
         binding.tvRecipeDescription.text = item.description
 
-        // Set Data Dasar
         binding.tvWaterAmount.text = item.waterAmount
         binding.tvCoffeeAmount.text = item.coffeeAmount
         binding.tvTime.text = item.extractionTime
     }
 
     private fun bindFullData(item: RecipeItem) {
-        // Update Data Dasar (Pastikan data terbaru tampil)
         binding.tvWaterAmount.text = item.waterAmount
         binding.tvCoffeeAmount.text = item.coffeeAmount
         binding.tvTime.text = item.extractionTime
 
-        // Update Data Detail
         binding.tvGrindSize.text = item.grindSize ?: "-"
         binding.tvHeat.text = item.temperature
         binding.tvBrewWeight.text = item.brewWeightText
         binding.tvTds.text = item.tdsText
 
-        // --- PERHITUNGAN RATIO ---
 
         val coffeeVal = item.coffeeAmountInt.toDouble()
 
-        // 1. WATER RATIO (Kopi : Jumlah Air)
-        // Rumus: Air / Kopi
         val waterVal = item.waterAmountInt.toDouble()
         if (coffeeVal > 0 && waterVal > 0) {
             val ratioWater = waterVal / coffeeVal
-            // Format 1 angka belakang koma, misal: 1:16.7
             binding.tvCoffeeWaterRatio.text = String.format("1:%.1f", ratioWater)
         } else {
             binding.tvCoffeeWaterRatio.text = "-"
         }
         binding.layoutCoffeeWaterRatio.visibility = View.VISIBLE
 
-        // 2. BREW RATIO (Kopi : Berat Minuman)
-        // Rumus: Berat Minuman / Kopi
         val brewWeightVal = item.brewWeight?.toDouble() ?: 0.0
         if (coffeeVal > 0 && brewWeightVal > 0) {
             val ratioBrew = brewWeightVal / coffeeVal
-            // Format 1 angka belakang koma, misal: 1:14.5
             binding.tvCoffeeBrewRatio.text = String.format("1:%.1f", ratioBrew)
         } else {
-            // Jika berat minuman tidak diisi (0), tampilkan strip
             binding.tvCoffeeBrewRatio.text = "-"
         }
         binding.layoutCoffeeBrewRatio.visibility = View.VISIBLE
 
-        // --- END PERHITUNGAN ---
-
-        // Bind Alat (Equipment)
         if (!item.equipmentUsed.isNullOrEmpty()) {
             binding.labelEquipmentDetail.visibility = View.VISIBLE
             binding.recyclerRecipeDetailEquipment.visibility = View.VISIBLE
@@ -126,7 +110,6 @@ class RecipeDetailFragment : Fragment() {
             binding.recyclerRecipeDetailEquipment.visibility = View.GONE
         }
 
-        // Tanggal & Notes
         if (!item.date.isNullOrEmpty()) {
             binding.tvDetailDate.text = item.date
             binding.tvDetailDateLabel.visibility = View.VISIBLE

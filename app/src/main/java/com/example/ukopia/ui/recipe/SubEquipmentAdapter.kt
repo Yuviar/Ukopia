@@ -22,13 +22,11 @@ class SubEquipmentAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: SubEquipmentItem) {
             binding.tvSubEquipmentName.text = item.name
-            // Jika ada detail (settingan), tampilkan. Jika tidak, sembunyikan.
             binding.tvSubEquipmentDetail.text = item.detail ?: ""
 
-            // Load Gambar dari URL menggunakan Coil (Support SVG)
             binding.ivSubEquipmentIcon.load(item.imageUrl) {
                 crossfade(true)
-                error(R.drawable.ic_error) // Gambar default jika error/kosong
+                error(R.drawable.ic_error)
                 placeholder(R.drawable.ic_grinder)
             }
 

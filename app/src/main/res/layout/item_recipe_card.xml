@@ -8,7 +8,6 @@
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp">
 
-    <!-- Main White Card -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/whiteBackgroundCard"
         android:layout_width="match_parent"
@@ -28,7 +27,6 @@
             android:paddingEnd="16dp"
             android:elevation="0dp">
 
-            <!-- Button Selengkapnya -->
             <Button
                 android:id="@+id/btnSelengkapnya"
                 android:layout_width="wrap_content"
@@ -49,7 +47,6 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Floating Dark Card for Image -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/darkFloatingCard"
         android:layout_width="90dp"
@@ -75,7 +72,6 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- TextView for Recipe Name, placed on the white card, to the right of the floating card -->
     <TextView
         android:id="@+id/textViewRecipeName"
         android:layout_width="0dp"

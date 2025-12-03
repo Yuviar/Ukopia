@@ -7,7 +7,6 @@
     android:background="@color/secondary"
     tools:context=".ui.menu.DetailMenuFragment">
 
-    <!-- ... (Bagian atas layout tetap sama) ... -->
     <ImageView
         android:id="@+id/detail_menu_image"
         android:layout_width="0dp"
@@ -118,7 +117,6 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- CardView untuk Rating Bintang (MODIFIKASI DI SINI) -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_rating_stars"
                 android:layout_width="match_parent"
@@ -143,7 +141,6 @@
                     tools:text="Rating: 4.8/5.0"
                     android:layout_marginBottom="8dp"/>
 
-                <!-- Bintang Rata-rata (MODIFIKASI DI SINI) -->
                 <LinearLayout
                     android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -168,7 +165,6 @@
                 android:textColor="@color/white"
                 android:layout_marginBottom="16dp"/>
 
-            <!-- Tampilan Rating dan Komentar Pengguna (MODIFIKASI DI SINI) -->
             <LinearLayout
                 android:id="@+id/user_rating_container"
                 android:layout_width="match_parent"
@@ -193,7 +189,6 @@
                     android:textStyle="bold"
                     android:textSize="16sp" />
 
-                <!-- Bintang Pengguna (MODIFIKASI DI SINI) -->
                 <LinearLayout
                     android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -219,6 +214,7 @@
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
+
 <TextView
 android:layout_width="wrap_content"
 android:layout_height="wrap_content"

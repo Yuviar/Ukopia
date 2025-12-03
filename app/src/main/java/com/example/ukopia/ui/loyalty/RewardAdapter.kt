@@ -1,4 +1,3 @@
-// File: D:/github_rama/Ukopia/app/src/main/java/com/example/ukopia/ui/loyalty/RewardAdapter.kt
 package com.example.ukopia.ui.loyalty
 
 import android.content.res.ColorStateList
@@ -30,18 +29,15 @@ class RewardAdapter : ListAdapter<RewardItem, RewardAdapter.RewardViewHolder>(Re
 
             val context = binding.root.context
 
-            // Tentukan status dan warna
             val statusText: String
             val backgroundColor: Int
             val textColor: Int
 
             if (item.claimedDate != null) {
-                // CLAIMED
                 statusText = "CLAIMED: ${item.claimedDate}"
                 backgroundColor = ContextCompat.getColor(context, R.color.black)
                 textColor = ContextCompat.getColor(context, R.color.white)
             } else {
-                // NOT YET CLAIMED
                 statusText = "NOT YET CLAIMED"
                 backgroundColor = ContextCompat.getColor(context, R.color.black)
                 textColor = ContextCompat.getColor(context, R.color.white)

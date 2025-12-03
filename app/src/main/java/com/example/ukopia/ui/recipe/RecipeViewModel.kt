@@ -11,27 +11,21 @@ import kotlinx.coroutines.launch
 
 class RecipeViewModel : ViewModel() {
 
-    // --- Brew Methods (Kategori Resep) ---
     private val _brewMethods = MutableLiveData<List<BrewMethod>>()
     val brewMethods: LiveData<List<BrewMethod>> = _brewMethods
 
-    // --- Recipes List ---
     private val _allRecipes = MutableLiveData<List<RecipeItem>>()
     val allRecipes: LiveData<List<RecipeItem>> = _allRecipes
 
-    // --- Equipment Categories ---
     private val _equipmentCategories = MutableLiveData<List<EquipmentItem>>()
     val equipmentCategories: LiveData<List<EquipmentItem>> = _equipmentCategories
 
-    // --- Sub Equipment List ---
     private val _subEquipmentList = MutableLiveData<List<SubEquipmentItem>>()
     val subEquipmentList: LiveData<List<SubEquipmentItem>> = _subEquipmentList
 
-    // --- Loading & Error State (Optional tapi bagus) ---
     val isLoading = MutableLiveData<Boolean>()
     val errorMessage = MutableLiveData<String>()
 
-    // 1. Load Metode (Dipanggil di RecipeFragment)
     fun loadBrewMethods() {
         viewModelScope.launch {
             isLoading.postValue(true)
@@ -48,10 +42,9 @@ class RecipeViewModel : ViewModel() {
         }
     }
 
-    // 2. Load Resep (Dipanggil di RecipeListFragment)
     fun loadRecipes(methodId: Int, type: String, uid: Int) {
         isLoading.value = true
-        Log.d("DEBUG_API", "Requesting: MethodID=$methodId, Type=$type, UID=$uid") // <--- CEK LOG INI
+        Log.d("DEBUG_API", "Requesting: MethodID=$methodId, Type=$type, UID=$uid")
 
         viewModelScope.launch {
             try {
@@ -59,7 +52,7 @@ class RecipeViewModel : ViewModel() {
                 if (response.isSuccessful && response.body()?.success == true) {
                     val recipes = response.body()?.data ?: emptyList()
                     _allRecipes.value = recipes
-                    Log.d("DEBUG_API", "Sukses! Dapat ${recipes.size} resep") // <--- CEK LOG INI
+                    Log.d("DEBUG_API", "Sukses! Dapat ${recipes.size} resep")
                 } else {
                     Log.e("DEBUG_API", "Gagal: ${response.message()}")
                     _allRecipes.value = emptyList()
@@ -73,7 +66,6 @@ class RecipeViewModel : ViewModel() {
         }
     }
 
-    // 3. Create Resep (Dipanggil di AddRecipeFragment)
     fun createRecipe(request: CreateRecipeRequest, onSuccess: () -> Unit, onError: (String) -> Unit) {
         isLoading.value = true
         viewModelScope.launch {
@@ -92,7 +84,6 @@ class RecipeViewModel : ViewModel() {
         }
     }
 
-    // 4. Load Kategori Alat
     fun loadEquipmentCategories() {
         viewModelScope.launch {
             try {
@@ -102,7 +93,6 @@ class RecipeViewModel : ViewModel() {
         }
     }
 
-    // 5. Load Alat by Kategori
     fun loadToolsByCategory(catId: Int) {
         viewModelScope.launch {
             try {

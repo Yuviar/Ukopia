@@ -72,7 +72,6 @@
                         android:orientation="vertical"
                         android:padding="16dp">
 
-                        <!-- Menu Name (Read-only) -->
                         <TextView
                             android:id="@+id/textViewMenuNameLabel"
                             android:layout_width="wrap_content"
@@ -92,7 +91,6 @@
                             android:textSize="16sp"
                             tools:text="Nama Kopi/Minuman" />
 
-                        <!-- Coffee Details (Conditional visibility) -->
                         <LinearLayout
                             android:id="@+id/linearLayoutCoffeeDetails"
                             android:layout_width="match_parent"
@@ -100,7 +98,6 @@
                             android:orientation="vertical"
                             android:visibility="gone">
 
-                            <!-- Coffee Bean Name (Read-only) -->
                             <TextView
                                 android:id="@+id/textViewCoffeeBeanLabel"
                                 android:layout_width="wrap_content"
@@ -121,7 +118,6 @@
                                 android:textSize="16sp"
                                 tools:text="Nama Beans Kopi" />
 
-                            <!-- Aroma -->
                             <LinearLayout
                                 android:id="@+id/layoutAroma"
                                 android:layout_width="match_parent"
@@ -173,7 +169,6 @@
                                     android:textColor="@android:color/black" />
                             </LinearLayout>
 
-                            <!-- Sweetness -->
                             <LinearLayout
                                 android:id="@+id/layoutSweetness"
                                 android:layout_width="match_parent"
@@ -225,7 +220,6 @@
                                     android:textColor="@android:color/black" />
                             </LinearLayout>
 
-                            <!-- Acidity -->
                             <LinearLayout
                                 android:id="@+id/layoutAcidity"
                                 android:layout_width="match_parent"
@@ -277,7 +271,6 @@
                                     android:textColor="@android:color/black" />
                             </LinearLayout>
 
-                            <!-- Bitterness -->
                             <LinearLayout
                                 android:id="@+id/layoutBitterness"
                                 android:layout_width="match_parent"
@@ -329,7 +322,6 @@
                                     android:textColor="@android:color/black" />
                             </LinearLayout>
 
-                            <!-- Body -->
                             <LinearLayout
                                 android:id="@+id/layoutBody"
                                 android:layout_width="match_parent"
@@ -383,7 +375,6 @@
 
                         </LinearLayout>
 
-                        <!-- Non-Coffee Details (Conditional visibility) -->
                         <LinearLayout
                             android:id="@+id/linearLayoutNonCoffeeDetails"
                             android:layout_width="match_parent"
@@ -391,7 +382,6 @@
                             android:orientation="vertical"
                             android:visibility="gone">
 
-                            <!-- Non-Coffee Item Name (Read-only) -->
                             <TextView
                                 android:id="@+id/textViewNonCoffeeItemLabel"
                                 android:layout_width="wrap_content"
@@ -433,7 +423,6 @@
                             android:textSize="16sp"
                             tools:text="2023-10-26" />
 
-                        <!-- Catatan (Editable) -->
                         <TextView
                             android:id="@+id/textViewCatatan"
                             android:layout_width="wrap_content"

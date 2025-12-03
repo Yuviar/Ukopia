@@ -19,7 +19,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Bagian header yang sudah ada -->
             <LinearLayout
                 android:id="@+id/header_container"
                 android:layout_width="match_parent"
@@ -79,7 +78,6 @@
                 android:orientation="vertical"
                 android:paddingHorizontal="16dp">
 
-                <!-- Loyalty Card Section (Stamps and Rewards) -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -130,7 +128,6 @@
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:tint="@color/black" />
 
-                            <!-- Stamps Grid Container -->
                             <LinearLayout
                                 android:id="@+id/stamps_grid_container"
                                 android:layout_width="0dp"
@@ -140,7 +137,6 @@
                                 app:layout_constraintStart_toEndOf="@+id/btn_prev_stamp"
                                 app:layout_constraintTop_toTopOf="parent">
 
-                                <!-- Baris 1 Stamps -->
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -174,7 +170,6 @@
                                     </FrameLayout>
                                 </LinearLayout>
 
-                                <!-- Baris 2 Stamps -->
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -210,7 +205,6 @@
                                 </LinearLayout>
                             </LinearLayout>
 
-                            <!-- Tombol Next Stamp -->
                             <ImageButton
                                 android:id="@+id/btn_next_stamp"
                                 android:layout_width="40dp"
@@ -268,7 +262,7 @@
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
-                            <!-- Tombol Prev Reward -->
+
                             <ImageButton
                                 android:id="@+id/btn_prev_reward"
                                 android:layout_width="40dp"
@@ -282,7 +276,6 @@
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:tint="@color/black" />
 
-                            <!-- Rewards Container -->
                             <LinearLayout
                                 android:id="@+id/rewards_container"
                                 android:layout_width="0dp"
@@ -348,7 +341,6 @@
 
                             </LinearLayout>
 
-                            <!-- Tombol Next Reward -->
                             <ImageButton
                                 android:id="@+id/btn_next_reward"
                                 android:layout_width="40dp"
@@ -378,7 +370,6 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Header "Loyalty History" -->
                 <TextView
                     android:id="@+id/textViewLoyaltyHistoryHeader"
                     android:layout_width="match_parent"
@@ -390,7 +381,6 @@
                     android:layout_marginTop="24dp"
                     android:layout_marginBottom="8dp" />
 
-                <!-- NEW: Search Bar untuk History Loyalty -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_search_loyalty"
                     android:layout_width="match_parent"
@@ -439,7 +429,6 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-
                 <LinearLayout
                     android:id="@+id/placeholderContainer"
                     android:layout_width="match_parent"
@@ -459,7 +448,6 @@
                         android:textSize="18sp" />
                 </LinearLayout>
 
-                <!-- RecyclerView for Loyalty History -->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewLoyaltyItems"
                     android:layout_width="match_parent"

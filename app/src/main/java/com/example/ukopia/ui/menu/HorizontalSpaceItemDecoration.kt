@@ -19,25 +19,20 @@ class HorizontalSpaceItemDecoration(
         val position = parent.getChildAdapterPosition(view)
         val itemCount = parent.adapter?.itemCount ?: 0
 
-        // Set margin kanan untuk semua item kecuali yang terakhir
         if (position < itemCount - 1) {
             outRect.right = horizontalSpaceWidth
         } else {
-            // Untuk item terakhir, set margin kanan menjadi 0
-            // Padding akhir akan ditambahkan oleh RecyclerView itu sendiri
             outRect.right = 0
         }
 
-        // Set padding awal untuk item pertama
         if (position == 0) {
             outRect.left = startPadding
         } else {
             outRect.left = 0
         }
 
-        // Set padding akhir untuk item terakhir
         if (position == itemCount - 1) {
-            outRect.right += endPadding // Menambahkan paddingEnd setelah margin kanan (jika ada)
+            outRect.right += endPadding
         }
     }
 }

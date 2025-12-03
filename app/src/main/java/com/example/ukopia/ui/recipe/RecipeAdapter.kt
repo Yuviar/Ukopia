@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ukopia.data.RecipeItem
-// Pastikan import ini sesuai dengan nama file XML kamu
 import com.example.ukopia.databinding.ItemRecipeCardSmallBinding
 
 class RecipeAdapter(
@@ -28,17 +27,13 @@ class RecipeAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: RecipeItem) {
-            // Binding data ke Layout XML kamu
             binding.tvRecipeTitle.text = item.name
             binding.tvRecipeDescription.text = item.description
 
-
-            // Menggunakan helper property dari RecipeItem.kt
             binding.tvWaterAmount.text = item.waterAmount
             binding.tvCoffeeAmount.text = item.coffeeAmount
             binding.tvTime.text = item.extractionTime
 
-            // Klik Card -> Pindah ke Detail
             binding.root.setOnClickListener {
                 onItemClick(item)
             }

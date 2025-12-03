@@ -13,7 +13,6 @@ interface MenuDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(menuItems: List<MenuApiItem>)
 
-    // LiveData akan otomatis update UI jika data di tabel ini berubah
     @Query("SELECT * FROM menu_items")
     fun getMenu(): LiveData<List<MenuApiItem>>
 

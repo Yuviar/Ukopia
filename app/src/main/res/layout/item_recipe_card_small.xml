@@ -35,14 +35,12 @@
             android:textColor="@color/black"
             tools:text="@string/recipe_description_placeholder" />
 
-        <!-- Water, Coffee, and Time Containers (Tampilan 3 Kolom) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:orientation="horizontal">
 
-            <!-- Water Amount -->
             <LinearLayout
                 android:id="@+id/layoutWaterAmount"
                 android:layout_width="0dp"
@@ -66,7 +64,6 @@
                     tools:text="@string/water_amount_placeholder" />
             </LinearLayout>
 
-            <!-- Coffee Amount -->
             <LinearLayout
                 android:id="@+id/layoutCoffeeAmount"
                 android:layout_width="0dp"
@@ -92,7 +89,6 @@
                     tools:text="@string/coffee_amount_placeholder" />
             </LinearLayout>
 
-            <!-- Time -->
             <LinearLayout
                 android:id="@+id/layoutTimer"
                 android:layout_width="0dp"

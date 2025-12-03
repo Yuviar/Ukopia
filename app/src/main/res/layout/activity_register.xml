@@ -7,8 +7,6 @@
     android:background="@color/black"
     android:gravity="top">
 
-    <!-- Bagian atas: Logo dan Slogan (Latar belakang hitam) -->
-    <!-- Menggunakan layout_weight="1" agar mengisi ruang yang tersisa di atas formulir -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -27,7 +25,6 @@
 
     </LinearLayout>
 
-    <!-- Bagian formulir register di dalam MaterialCardView (Latar belakang putih dengan rounded top corners) -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

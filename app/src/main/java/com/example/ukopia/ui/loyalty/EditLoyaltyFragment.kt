@@ -87,7 +87,6 @@ class EditLoyaltyFragment : Fragment() {
             binding.textViewCoffeeBeanValue.text = item.namaBeans
             binding.textViewCoffeeBeanValue.isEnabled = false
 
-            // Labels for Seekbars
             binding.layoutAroma.findViewById<TextView>(R.id.label_aroma_seekbar).text = getString(R.string.aroma_label) // Perlu ID label di XML
             binding.layoutSweetness.findViewById<TextView>(R.id.label_sweetness_seekbar).text = getString(R.string.sweetness_label)
             binding.layoutAcidity.findViewById<TextView>(R.id.label_acidity_seekbar).text = getString(R.string.acidity_label)

@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ukopia.R
-import com.example.ukopia.databinding.ItemLanguageOptionBinding // Pastikan nama binding ini sesuai
+import com.example.ukopia.databinding.ItemLanguageOptionBinding
 import androidx.core.content.ContextCompat
 
 class LanguageOptionAdapter(
@@ -20,10 +20,10 @@ class LanguageOptionAdapter(
             binding.root.setOnClickListener { onItemClick(languageItem.code) }
 
             if (isSelected) {
-                binding.textViewLanguageName.setTextColor(ContextCompat.getColor(itemView.context, R.color.black)) // Atau warna penanda aktif
+                binding.textViewLanguageName.setTextColor(ContextCompat.getColor(itemView.context, R.color.black))
                 binding.imageViewSelected.visibility = View.VISIBLE
             } else {
-                binding.textViewLanguageName.setTextColor(ContextCompat.getColor(itemView.context, R.color.black)) // Warna default
+                binding.textViewLanguageName.setTextColor(ContextCompat.getColor(itemView.context, R.color.black))
                 binding.imageViewSelected.visibility = View.GONE
             }
         }

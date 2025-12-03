@@ -13,25 +13,24 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.example.ukopia.ui.akun.LocaleHelper // Dipertahankan sesuai konteks Anda
+import com.example.ukopia.ui.akun.LocaleHelper
 import com.example.ukopia.MainActivity
 import com.example.ukopia.R
-import com.example.ukopia.SessionManager // Dipertahankan sesuai konteks Anda
+import com.example.ukopia.SessionManager
 import com.example.ukopia.databinding.FragmentAkunBinding
 import com.example.ukopia.databinding.FragmentLogoutConfirmationDialogBinding
 import com.example.ukopia.ui.auth.LoginActivity
 import com.example.ukopia.ui.auth.LupaPasswordActivity
 import com.example.ukopia.ui.auth.RegisterActivity
 import com.example.ukopia.ui.loyalty.LoyaltyViewModel
-import android.content.res.ColorStateList // Tambahan untuk ColorStateList
-import androidx.core.content.ContextCompat // Tambahan untuk ContextCompat
+import android.content.res.ColorStateList
+import androidx.core.content.ContextCompat
 
 class AkunFragment : Fragment() {
 
     private var _binding: FragmentAkunBinding? = null
     private val binding get() = _binding!!
 
-    // loyaltyViewModel tetap dipertahankan karena mungkin digunakan untuk hal lain
     private val loyaltyViewModel: LoyaltyViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -50,7 +49,6 @@ class AkunFragment : Fragment() {
         setupClickListeners()
         updateUI()
 
-        // Mendengarkan hasil dari LanguageChooserDialogFragment
         parentFragmentManager.setFragmentResultListener(
             LanguageChooserDialogFragment.REQUEST_KEY,
             viewLifecycleOwner
@@ -61,7 +59,7 @@ class AkunFragment : Fragment() {
                     val currentLang = LocaleHelper.getLanguage(requireContext())
                     if (newLang != currentLang) {
                         LocaleHelper.setLocale(requireContext(), newLang)
-                        requireActivity().recreate() // Recreate activity untuk menerapkan bahasa baru
+                        requireActivity().recreate()
                     }
                 }
             }
@@ -74,48 +72,39 @@ class AkunFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
-        // Animasi flash untuk tombol Masuk
+
         binding.btnMasuk.setOnClickListener {
-            // Definisikan warna TARGET yang diinginkan setelah flash (White Background, Black Text)
             val targetBackgroundTint = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white))
             val targetTextColors = ContextCompat.getColorStateList(requireContext(), R.color.black)
 
-            // Definisikan warna saat flash terjadi (Black Background, White Text)
             val flashColorBackground = ContextCompat.getColor(requireContext(), R.color.black)
             val flashColorText = ContextCompat.getColor(requireContext(), R.color.white)
 
-            // Terapkan warna flash
             binding.btnMasuk.backgroundTintList = ColorStateList.valueOf(flashColorBackground)
             binding.btnMasuk.setTextColor(flashColorText)
 
-            // Setelah delay, kembalikan ke warna target yang diinginkan dan lakukan aksi
             Handler(Looper.getMainLooper()).postDelayed({
                 binding.btnMasuk.backgroundTintList = targetBackgroundTint
                 binding.btnMasuk.setTextColor(targetTextColors)
                 startActivity(Intent(requireContext(), LoginActivity::class.java))
-            }, 150) // Durasi animasi flash: 150 milidetik
+            }, 150)
         }
 
-        // Animasi flash untuk tombol Daftar
         binding.btnDaftar.setOnClickListener {
-            // Definisikan warna TARGET yang diinginkan setelah flash (White Background, Black Text)
             val targetBackgroundTint = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white))
             val targetTextColors = ContextCompat.getColorStateList(requireContext(), R.color.black)
 
-            // Definisikan warna saat flash terjadi (Black Background, White Text)
             val flashColorBackground = ContextCompat.getColor(requireContext(), R.color.black)
             val flashColorText = ContextCompat.getColor(requireContext(), R.color.white)
 
-            // Terapkan warna flash
             binding.btnDaftar.backgroundTintList = ColorStateList.valueOf(flashColorBackground)
             binding.btnDaftar.setTextColor(flashColorText)
 
-            // Setelah delay, kembalikan ke warna target yang diinginkan dan lakukan aksi
             Handler(Looper.getMainLooper()).postDelayed({
                 binding.btnDaftar.backgroundTintList = targetBackgroundTint
                 binding.btnDaftar.setTextColor(targetTextColors)
                 startActivity(Intent(requireContext(), RegisterActivity::class.java))
-            }, 150) // Durasi animasi flash: 150 milidetik
+            }, 150)
         }
 
         binding.btnForgotPassword.setOnClickListener {
@@ -150,7 +139,6 @@ class AkunFragment : Fragment() {
         Log.d("AkunFragmentDebug", "updateUI() called")
         binding.progressBar.visibility = View.GONE
 
-        // PERBAIKAN: Memanggil SessionManager yang sudah disederhanakan
         if (SessionManager.isLoggedIn(requireContext())) {
             Log.d("AkunFragmentDebug", "User is logged in.")
             binding.displayName.visibility = View.VISIBLE
@@ -158,7 +146,6 @@ class AkunFragment : Fragment() {
             binding.opsiAkun.visibility = View.VISIBLE
             binding.ivProfilePhoto.visibility = View.VISIBLE
 
-            // PERBAIKAN: Memanggil SessionManager yang sudah disederhanakan
             val userName = SessionManager.getUserName(requireContext())
             val userEmail = SessionManager.getUserEmail(requireContext())
 
@@ -190,11 +177,9 @@ class AkunFragment : Fragment() {
 
             binding.progressBar.visibility = View.VISIBLE
 
-            // PERBAIKAN: Memanggil SessionManager.logout() yang sudah ada dan disederhanakan
             SessionManager.logout(requireContext())
             Toast.makeText(requireContext(), getString(R.string.logged_out_toast), Toast.LENGTH_SHORT).show()
 
-            // Perbarui UI setelah logout dengan sedikit penundaan
             Handler(Looper.getMainLooper()).postDelayed({
                 if (isAdded && activity != null) {
                     updateUI()

@@ -25,21 +25,13 @@ class LoyaltyAdapter(
 
     class LoyaltyViewHolder(private val binding: ItemLoyaltyCardBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: LoyaltyItemV2, onItemClick: (LoyaltyItemV2) -> Unit, position: Int) {
-            // Ambil total jumlah item dari adapter.
-            // bindingAdapter adalah referensi ke adapter yang mengikat ViewHolder ini.
             val totalItems = bindingAdapter?.itemCount ?: 0
 
-            // Logika penomoran dibalik: totalItems - position
-            // Jika totalItems = 3:
-            // Posisi 0 (terbaru) -> #3
-            // Posisi 1 (tengah)  -> #2
-            // Posisi 2 (terlama) -> #1
             binding.textViewLoyaltyNumber.text = "#${totalItems - position}"
 
             binding.textViewNamaMenu.text = item.namaMenu
             binding.textViewTanggal.text = item.tanggal
 
-            // Tampilkan nama beans (kopi) atau nama menu (non-kopi)
             binding.textViewBeans.text = if(item.isCoffee) item.namaBeans else item.namaMenu
 
             binding.btnSelengkapnya.setOnClickListener {

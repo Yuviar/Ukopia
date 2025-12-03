@@ -19,11 +19,9 @@ class SetNewPasswordActivity : AppCompatActivity() {
         binding = ActivitySetNewPasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Ambil data dari LupaPasswordActivity
         email = intent.getStringExtra("EMAIL")
         code = intent.getStringExtra("CODE")
 
-        // Validasi data
         if (email == null || code == null) {
             Toast.makeText(this, "Terjadi kesalahan data session", Toast.LENGTH_SHORT).show()
             finish()
@@ -45,11 +43,9 @@ class SetNewPasswordActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Panggil API Reset Password dengan Email, Kode, dan Password Baru
             authViewModel.resetPassword(email!!, code!!, newPass)
         }
 
-        // Observer Hasil Reset
         authViewModel.forgotPasswordState.observe(this) { state ->
             if (state == "password_reset") {
                 Toast.makeText(this, "Password Berhasil Diubah! Silakan Login.", Toast.LENGTH_LONG).show()
@@ -60,7 +56,6 @@ class SetNewPasswordActivity : AppCompatActivity() {
             }
         }
 
-        // Observer Error
         authViewModel.message.observe(this) { msg ->
             if (!msg.isNullOrEmpty()) Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
         }

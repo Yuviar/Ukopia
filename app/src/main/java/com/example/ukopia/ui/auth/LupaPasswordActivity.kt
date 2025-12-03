@@ -14,7 +14,6 @@ class LupaPasswordActivity : AppCompatActivity() {
     private lateinit var authViewModel: AuthViewModel
 
     private var userEmail = ""
-    // [PENTING] Variabel untuk menyimpan kode OTP sementara
     private var currentOtpCode = ""
 
     companion object {

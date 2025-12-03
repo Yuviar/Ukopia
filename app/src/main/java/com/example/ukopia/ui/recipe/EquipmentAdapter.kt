@@ -8,10 +8,9 @@ import com.example.ukopia.databinding.ItemEquipmentBinding
 
 class EquipmentAdapter(
     private var equipmentList: List<EquipmentItem>,
-    private val onItemClick: (EquipmentItem) -> Unit // Kirim object EquipmentItem lengkap
+    private val onItemClick: (EquipmentItem) -> Unit
 ) : RecyclerView.Adapter<EquipmentAdapter.EquipmentViewHolder>() {
 
-    // Fungsi update data dari API
     fun submitList(newList: List<EquipmentItem>) {
         equipmentList = newList
         notifyDataSetChanged()
@@ -23,7 +22,6 @@ class EquipmentAdapter(
             binding.tvEquipmentName.text = equipment.name
             binding.tvEquipmentCount.text = equipment.count.toString()
 
-            // Klik item mengirim ID kategori ke fragment selanjutnya
             binding.root.setOnClickListener { onItemClick(equipment) }
         }
     }

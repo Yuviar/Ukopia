@@ -1,11 +1,8 @@
-// File: D:/github_rama/Ukopia/app/src/main/java/com/example/ukopia/data/DataModels.kt
 package com.example.ukopia.data
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
-
-// --- Response Wrappers ---
 
 data class LoyaltyListResponse(
     @SerializedName("success") val success: Boolean,
@@ -38,7 +35,7 @@ data class LoyaltyNilai(
 data class RewardHistoryResponse(
     @SerializedName("success") val success: Boolean,
     @SerializedName("message") val message: String?,
-    @SerializedName("data") val data: List<RewardHistoryItem>? // Pakai tanda tanya (?)
+    @SerializedName("data") val data: List<RewardHistoryItem>?
 )
 
 @Parcelize

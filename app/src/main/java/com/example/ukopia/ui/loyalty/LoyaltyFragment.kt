@@ -35,8 +35,6 @@ class LoyaltyFragment : Fragment() {
     private var _binding: FragmentLoyaltyBinding? = null
     private val binding get() = _binding!!
 
-    // Menggunakan activityViewModels karena LoyaltyViewModel mungkin perlu dibagikan antar Activity
-    // Pastikan ViewModel ini sudah benar dan diinisialisasi melalui Factory jika perlu
     private val viewModel: LoyaltyViewModel by activityViewModels()
 
     // Menggunakan LoyaltyAdapter yang sudah ada di konteks Anda

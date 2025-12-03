@@ -5,7 +5,6 @@ import com.example.ukopia.ui.menu.AppDatabase
 import com.example.ukopia.ui.menu.MenuRepository
 
 class UkopiaApplication : Application() {
-    // Inisialisasi database dan repository
     val database by lazy { AppDatabase.getDatabase(this) }
     val repository by lazy { MenuRepository(database.menuDao()) }
 }

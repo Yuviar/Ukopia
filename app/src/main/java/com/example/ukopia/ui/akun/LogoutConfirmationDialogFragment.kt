@@ -39,26 +39,21 @@ class LogoutConfirmationDialogFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonDialogYes.setOnClickListener {
-            // Panggil fungsi logout dari SessionManager
             SessionManager.logout(requireContext())
 
-            // Menggunakan string resource untuk pesan Toast
             Toast.makeText(requireContext(), getString(R.string.logged_out_toast), Toast.LENGTH_SHORT).show()
 
-            // Beritahu listener (AkunFragment) bahwa logout berhasil
             logoutListener?.onLogoutConfirmed()
 
-            // Tutup dialog
             dismiss()
 
-            // Kembali ke MainActivity dan clear back stack
             val intent = Intent(requireContext(), MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
 
         binding.buttonDialogNo.setOnClickListener {
-            dismiss() // Tutup dialog
+            dismiss()
         }
     }
 

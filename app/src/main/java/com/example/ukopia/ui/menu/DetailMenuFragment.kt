@@ -28,7 +28,7 @@ import com.example.ukopia.models.MenuApiItem
 import com.example.ukopia.models.ReviewApiItem
 import com.example.ukopia.ui.auth.LoginActivity
 import java.util.Locale
-import android.util.Log // Tambahkan import ini
+import android.util.Log
 
 class DetailMenuFragment : Fragment() {
 
@@ -69,7 +69,7 @@ class DetailMenuFragment : Fragment() {
             Log.d("DetailMenuFragment", "onViewCreated: Menu ID found: $menuId")
             setupListeners()
             setupObservers()
-            setLoadingState(true) // Set loading state awal
+            setLoadingState(true)
             viewModel.fetchMenuDetails(menuId, SessionManager.getUid(requireContext()))
         } else {
             Log.e("DetailMenuFragment", "onViewCreated: Menu item ID not found in arguments!")
@@ -79,7 +79,7 @@ class DetailMenuFragment : Fragment() {
     }
 
     private fun setupInitialUI(menuItem: MenuApiItem) {
-        currentMenuItem = menuItem // Update currentMenuItem lokal
+        currentMenuItem = menuItem
         Log.d("DetailMenuFragment", "setupInitialUI: currentMenuItem updated to: ${menuItem.nama_menu}")
 
         binding.detailMenuTitle.text = menuItem.nama_menu
@@ -88,12 +88,11 @@ class DetailMenuFragment : Fragment() {
         Glide.with(this)
             .load(menuItem.gambar_url)
             .placeholder(R.drawable.sample_coffee)
-            .error(R.drawable.sample_coffee) // Tambahkan ini agar ada fallback jika gambar_url kosong/error
+            .error(R.drawable.sample_coffee)
             .into(binding.detailMenuImage)
 
         val averageRatingValue = menuItem.average_rating.toFloat()
-        binding.tvAverageRatingText.text = getString(R.string.average_rating_prefix) + " " +
-                String.format(Locale.ROOT, "%.1f/5.0", averageRatingValue)
+        binding.tvAverageRatingText.text = getString(R.string.average_rating_prefix) + " " + String.format(Locale.ROOT, "%.1f/5.0", averageRatingValue)
         displayStarsWithProgress(averageRatingValue, averageStarImageViews)
 
         binding.btnShare.setOnClickListener {
@@ -110,7 +109,7 @@ class DetailMenuFragment : Fragment() {
                 Toast.makeText(requireContext(), getString(R.string.no_app_to_share), Toast.LENGTH_SHORT).show()
             }
         }
-        setLoadingState(false) // Set loading state to false ketika data menu utama dimuat
+        setLoadingState(false)
     }
 
     private fun setupListeners() {
@@ -139,7 +138,7 @@ class DetailMenuFragment : Fragment() {
                 binding.btnRateThisMenu.setTextColor(targetTextColors)
 
                 if (SessionManager.isLoggedIn(requireContext())) {
-                    currentMenuItem?.let { // Cek currentMenuItem di sini
+                    currentMenuItem?.let {
                         Log.d("DetailMenuFragment", "Navigating to RatingFragment for menu: ${it.nama_menu}")
                         navigateToRatingFragment(it, currentUserReview)
                     } ?: run {
@@ -160,7 +159,6 @@ class DetailMenuFragment : Fragment() {
             Log.d("DetailMenuFragment", "currentDetailMenuItem LiveData observed. Value: ${menuItem?.nama_menu ?: "null"}")
             menuItem?.let {
                 setupInitialUI(it)
-                // setLoadingState(false) // Ini sudah dipanggil di setupInitialUI
             } ?: run {
                 Log.w("DetailMenuFragment", "currentDetailMenuItem LiveData returned null value.")
                 setLoadingState(false)
@@ -205,13 +203,11 @@ class DetailMenuFragment : Fragment() {
         if (isLoading) {
             binding.btnRateThisMenu.text = "Loading..."
         } else {
-            // Teks tombol diatur setelah data dimuat dan currentUserReview diperbarui
-            if (currentUserReview != null) { // Jika ada ulasan pengguna, berarti bisa update
+            if (currentUserReview != null) {
                 binding.btnRateThisMenu.text = getString(R.string.update_your_rating)
-            } else { // Jika belum ada, berarti bisa rate baru
+            } else {
                 binding.btnRateThisMenu.text = getString(R.string.rate_button_text)
             }
-            // Pastikan tombol aktif jika tidak loading dan tidak ada error
             if (viewModel.errorMessage.value == null) {
                 binding.btnRateThisMenu.isEnabled = true
             }

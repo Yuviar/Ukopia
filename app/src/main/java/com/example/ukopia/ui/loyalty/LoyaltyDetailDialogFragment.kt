@@ -48,13 +48,13 @@ class LoyaltyDetailDialogFragment : DialogFragment() {
             val displayMetrics = resources.displayMetrics
             val screenWidth = displayMetrics.widthPixels
 
-            val horizontalMarginDp = 24 // Sama dengan yang di fragment_logout_confirmation_dialog.xml
-            val horizontalMarginPx = (horizontalMarginDp * displayMetrics.density).toInt() * 2 // dikali 2 karena margin kanan dan kiri
+            val horizontalMarginDp = 24
+            val horizontalMarginPx = (horizontalMarginDp * displayMetrics.density).toInt() * 2
 
             val dialogWidth = screenWidth - horizontalMarginPx
 
             window.setLayout(dialogWidth, ViewGroup.LayoutParams.WRAP_CONTENT)
-            window.setGravity(Gravity.CENTER_HORIZONTAL) // Set dialog ke tengah horizontal
+            window.setGravity(Gravity.CENTER_HORIZONTAL)
         }
     }
 
@@ -66,7 +66,6 @@ class LoyaltyDetailDialogFragment : DialogFragment() {
             binding.textViewDialogNamaMenu.text = data.namaMenu
             binding.textViewDialogTanggal.text = data.tanggal
 
-            // Isi Catatan
             binding.textViewDialogCatatan.text = if (data.nilai?.catatan.isNullOrEmpty()) {
                 "Catatan: -"
             } else {
@@ -79,7 +78,6 @@ class LoyaltyDetailDialogFragment : DialogFragment() {
 
                 binding.textViewDialogNamaBeans.text = data.namaBeans ?: data.namaMenu
 
-                // Ambil nilai review
                 val nilai = data.nilai
                 binding.textViewDetailAroma.text = "Aroma: ${nilai?.aroma ?: 0}"
                 binding.textViewDetailSweetness.text = "Sweetness: ${nilai?.kemanisan ?: 0}"
@@ -91,17 +89,14 @@ class LoyaltyDetailDialogFragment : DialogFragment() {
                 binding.linearLayoutDialogKopi.visibility = View.GONE
                 binding.linearLayoutDialogNonKopi.visibility = View.VISIBLE
                 binding.textViewDialogNamaNonKopi.text = data.namaMenu
-                // Hapus data taste profil untuk non-kopi
                 binding.textViewTasteProfil.visibility = View.GONE
             }
 
-            // --- MODIFIKASI DIMULAI DI SINI ---
             binding.buttonDialogEdit.setOnClickListener {
-                dismiss() // <<< Tambahkan baris ini untuk menutup dialog sebelum navigasi
+                dismiss()
                 val editFragment = EditLoyaltyFragment.newInstance(data)
                 (activity as? MainActivity)?.navigateToFragment(editFragment)
             }
-            // --- MODIFIKASI BERAKHIR DI SINI ---
         }
 
         binding.buttonDialogClose.setOnClickListener { dismiss() }

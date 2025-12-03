@@ -42,7 +42,7 @@ class RewardListFragment : Fragment(R.layout.fragment_reward_list) {
             parentFragmentManager.popBackStack()
         }
 
-        binding.tvHeaderTitleRewards.text = getString(R.string.all_rewards_title) // Menggunakan string resource
+        binding.tvHeaderTitleRewards.text = getString(R.string.all_rewards_title)
 
         val context = requireContext()
         val uid = SessionManager.getUid(context)
@@ -50,7 +50,7 @@ class RewardListFragment : Fragment(R.layout.fragment_reward_list) {
         if (uid > 0) {
             viewModel.fetchRewardHistory(uid)
         } else {
-            binding.emptyStateText.text = getString(R.string.login_required_message) // Menggunakan string resource
+            binding.emptyStateText.text = getString(R.string.login_required_message)
             binding.emptyStateText.visibility = View.VISIBLE
         }
 
@@ -65,7 +65,7 @@ class RewardListFragment : Fragment(R.layout.fragment_reward_list) {
             } else {
                 adapter.submitList(emptyList())
                 binding.emptyStateText.visibility = View.VISIBLE
-                binding.emptyStateText.text = getString(R.string.no_rewards_defined) // Menggunakan string resource
+                binding.emptyStateText.text = getString(R.string.no_rewards_defined)
             }
         }
     }
@@ -92,7 +92,6 @@ class RewardListFragment : Fragment(R.layout.fragment_reward_list) {
 
         btnCopy.setOnClickListener {
             val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            // MODIFIKASI: Menggunakan string resource untuk label ClipData
             val clip = ClipData.newPlainText(getString(R.string.clipboard_reward_label), item.kodeUnik)
             clipboard.setPrimaryClip(clip)
             Toast.makeText(requireContext(), getString(R.string.code_copied_toast), Toast.LENGTH_SHORT).show()

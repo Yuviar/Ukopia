@@ -16,7 +16,6 @@ class VerificationSentDialogFragment : DialogFragment() {
     private var _binding: FragmentVerificationSentDialogBinding? = null
     private val binding get() = _binding!!
 
-    // [BARU] Variable untuk menampung aksi klik
     var onOkClickListener: (() -> Unit)? = null
 
     override fun onCreateView(
@@ -43,10 +42,9 @@ class VerificationSentDialogFragment : DialogFragment() {
         binding.textViewDialogTitle.text = title
         binding.textViewDialogMessage.text = message
 
-        // [UBAH] Saat tombol OK ditekan
         binding.buttonDialogOk.setOnClickListener {
-            dismiss() // Tutup dialog
-            onOkClickListener?.invoke() // Jalankan aksi pindah halaman (jika ada)
+            dismiss()
+            onOkClickListener?.invoke()
         }
     }
 

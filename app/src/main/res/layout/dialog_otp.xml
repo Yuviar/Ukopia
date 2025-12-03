@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        android:text="Kode OTP telah dikirimkan ke email Anda. Silakan masukkan kode di bawah ini."
+        android:text="@string/otp_sent_to_email_message"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="16sp" />
@@ -119,7 +119,7 @@
         android:id="@+id/textViewResendOtp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Kirim ulang OTP"
+        android:text="@string/resend_otp_button_text"
         android:textColor="@color/black"
         android:layout_marginBottom="24dp" />
 
@@ -127,7 +127,7 @@
         android:id="@+id/buttonDialogVerify"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Verifikasi"
+        android:text="@string/verify_button_text"
         android:backgroundTint="@color/black"
         android:textColor="@color/white"
         app:cornerRadius="8dp" />

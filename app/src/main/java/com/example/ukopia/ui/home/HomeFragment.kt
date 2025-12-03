@@ -40,7 +40,6 @@ class HomeFragment : Fragment() {
     private val loyaltyViewModel: LoyaltyViewModel by activityViewModels()
     private lateinit var bestSellerAdapter: BestSellerAdapter
 
-    // Variables for Stamp Logic
     private var currentStampPage = 0
     private val stampsPerPage = 10
     private val maxStamps = 100
@@ -62,7 +61,6 @@ class HomeFragment : Fragment() {
         setupObservers()
         setupStampCardSection()
 
-        // [BARU] Load Promo Banner
         loadPromoBanner()
     }
 
@@ -75,7 +73,6 @@ class HomeFragment : Fragment() {
         binding.bestSellerRecyclerView.adapter = bestSellerAdapter
     }
 
-    // [FUNGSI BARU] Load Promo dari API
     private fun loadPromoBanner() {
         lifecycleScope.launch {
             try {
@@ -84,17 +81,13 @@ class HomeFragment : Fragment() {
                     val promoData = response.body()
 
                     if (promoData?.hasPromo == true && !promoData.imageUrl.isNullOrEmpty()) {
-                        // Tampilkan Card
                         binding.promoCardView.visibility = View.VISIBLE
 
-                        // Load Gambar dengan Coil
                         binding.promoImage.load(promoData.imageUrl) {
                             crossfade(true)
-                            placeholder(R.drawable.sample_coffee) // Gambar placeholder
-                            error(R.drawable.ic_error) // Gambar error
+                            error(R.drawable.ic_error)
                         }
                     } else {
-                        // Sembunyikan jika tidak ada promo
                         binding.promoCardView.visibility = View.GONE
                     }
                 } else {
@@ -108,7 +101,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        // Observer Menu (Best Seller)
         viewModel.menuItems.observe(viewLifecycleOwner) { menuList ->
             if (menuList != null) {
                 val bestSellerItems = getTopBestSellerItems(menuList)
@@ -116,19 +108,16 @@ class HomeFragment : Fragment() {
             }
         }
 
-        // Observer Loyalty
         loyaltyViewModel.loyaltyUserStatus.observe(viewLifecycleOwner) { status ->
             val isLoggedIn = SessionManager.isLoggedIn(requireContext())
             val userName = SessionManager.getUserName(requireContext())
 
-            // Welcome Text
             if (isLoggedIn && !userName.isNullOrEmpty()) {
                 binding.textViewUserName.text = getString(R.string.welcome_format, userName)
             } else {
                 binding.textViewUserName.text = getString(R.string.greeting_salutation_default)
             }
 
-            // Visibility Loyalty
             if (isLoggedIn) {
                 binding.textViewLoyaltyPoints.visibility = View.VISIBLE
                 binding.tvHomeStampCardTitle.visibility = View.VISIBLE
@@ -146,10 +135,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun getTopBestSellerItems(all: List<MenuApiItem>): List<MenuApiItem> {
-        return all.sortedByDescending { it.average_rating }.take(5)
+        return all.sortedByDescending { it.average_rating }.take(2)
     }
 
-    // ... (Sisa kode Stamp Logic: setupStampCardSection, initializeStampViews, updateStampCardDisplay, updateStampNavigationIndicator TETAP SAMA seperti file aslimu) ...
     private fun setupStampCardSection() {
         Log.d(TAG, "setupStampCardSection called.")
         initializeStampViews()

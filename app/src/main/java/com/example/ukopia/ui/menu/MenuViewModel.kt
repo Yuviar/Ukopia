@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
 
     private val apiService = ApiClient.instance
-    val menuItems: LiveData<List<MenuApiItem>> = repository.allMenuItems // Data Menu dari DB
+    val menuItems: LiveData<List<MenuApiItem>> = repository.allMenuItems
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -34,11 +34,8 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
     private val _currentDetailMenuItem = MutableLiveData<MenuApiItem?>()
     val currentDetailMenuItem: LiveData<MenuApiItem?> = _currentDetailMenuItem
 
-    // --- TAMBAHAN BARU: LiveData Kategori ---
     private val _categories = MutableLiveData<List<String>>()
     val categories: LiveData<List<String>> = _categories
-
-    // --- FUNGSI ---
 
     fun fetchMenuItems() {
         viewModelScope.launch {
@@ -46,14 +43,10 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
         }
     }
 
-    // --- TAMBAHAN BARU: Fetch Kategori ---
     fun fetchCategories(defaultCategoryName: String) {
         viewModelScope.launch {
-            // Memanggil fungsi getCategories() yang sudah Anda buat di Repository
-            // Pastikan MenuRepository.kt sudah diupdate!
             val apiCategories = repository.getCategories()
 
-            // Menggabungkan "All" dengan hasil dari API
             val fullList = mutableListOf(defaultCategoryName)
             fullList.addAll(apiCategories)
 
@@ -66,7 +59,6 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
         _errorMessage.value = null
         viewModelScope.launch {
             try {
-                // 1. Fetch reviews
                 val responseReviews = apiService.getMenuDetails(menuId, userId)
                 if (responseReviews.isSuccessful) {
                     val allReviews = responseReviews.body()?.data_ulasan ?: emptyList()
@@ -76,7 +68,6 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
                     _errorMessage.value = "Gagal memuat ulasan: ${responseReviews.message()}"
                 }
 
-                // 2. Fetch specific menu item details
                 val responseMenuItem = apiService.getMenu(id_kategori = null, menuId = menuId)
                 if (responseMenuItem.isSuccessful) {
                     val menuItemData = responseMenuItem.body()?.data

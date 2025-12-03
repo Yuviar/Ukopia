@@ -52,36 +52,29 @@ class RecipeListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as MainActivity).setBottomNavVisibility(View.GONE)
 
-        // 1. Ambil Argument
         methodId = arguments?.getInt("ID_METODE") ?: 0
         methodName = arguments?.getString("SELECTED_METHOD_NAME")
 
         binding.tvHeaderTitle.text = methodName?.uppercase() ?: "RECIPES"
 
-        // 2. Setup RecyclerView
         setupAdapter()
 
-        // 3. Setup Listeners
         setupListeners()
 
-        // 4. Observe Data
         recipeViewModel.allRecipes.observe(viewLifecycleOwner) { recipes ->
             recipeAdapter.submitList(recipes)
 
-            // Bisa tambah logic menampilkan "Data Kosong" jika recipes.isEmpty()
         }
 
         recipeViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
 
-        // 5. Load Data
         loadData()
     }
 
     private fun setupAdapter() {
         recipeAdapter = RecipeAdapter { recipe ->
-            // Klik item -> Buka Detail Fragment
             navigateToRecipeDetail(recipe)
         }
         binding.recyclerViewRecipeList.apply {

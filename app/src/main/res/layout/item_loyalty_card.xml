@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:padding="15dp">
 
-        <!-- NEW: TextView untuk nomor Loyalty -->
         <TextView
             android:id="@+id/textViewLoyaltyNumber"
             android:layout_width="wrap_content"

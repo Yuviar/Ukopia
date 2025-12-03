@@ -17,7 +17,6 @@
         android:orientation="vertical"
         android:elevation="0dp">
 
-        <!-- Gambar Item Menu -->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_menu_image"
             android:layout_width="match_parent"
@@ -41,7 +40,6 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <!-- TextView untuk Rating (MODIFIKASI DI SINI) -->
             <TextView
                 android:id="@+id/tv_menu_rating"
                 android:layout_width="match_parent"
@@ -51,7 +49,7 @@
                 android:textSize="12sp"
                 android:drawableStart="@drawable/ic_star_filled"
                 android:drawablePadding="4dp"
-                android:textColor="@color/black"/> <!-- Tambahkan textColor agar angkanya terlihat -->
+                android:textColor="@color/black"/>
 
         </LinearLayout>
     </LinearLayout>

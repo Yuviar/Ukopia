@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.setFragmentResult // Penting: Tambahkan import ini
-import com.example.ukopia.R // Pastikan import R
-import com.example.ukopia.databinding.FragmentCustomDatePickerBinding // Pastikan ini terdeteksi
+import androidx.fragment.app.setFragmentResult
+import com.example.ukopia.R
+import com.example.ukopia.databinding.FragmentCustomDatePickerBinding
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -36,7 +36,6 @@ class CustomDatePickerDialogFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Gunakan FullScreenDialogTheme Anda untuk gaya dialog secara keseluruhan
         setStyle(STYLE_NORMAL, R.style.FullScreenDialogTheme)
     }
 
@@ -55,17 +54,14 @@ class CustomDatePickerDialogFragment : DialogFragment() {
         val btnCancel = binding.btnCancel
         val btnOk = binding.btnOk
 
-        // Atur tanggal awal jika ada di argumen
         val initialDateString = arguments?.getString(BUNDLE_KEY_INITIAL_DATE)
         val calendar = Calendar.getInstance()
         if (initialDateString != null) {
             try {
                 val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                // Mengatur waktu menjadi tengah malam agar perbandingan tanggal lebih akurat
                 calendar.time = sdf.parse(initialDateString) ?: Calendar.getInstance().time
             } catch (e: Exception) {
                 e.printStackTrace()
-                // Jika parsing gagal, fallback ke tanggal hari ini
                 calendar.time = Calendar.getInstance().time
             }
         }
@@ -77,12 +73,12 @@ class CustomDatePickerDialogFragment : DialogFragment() {
         )
 
         btnCancel.setOnClickListener {
-            dismiss() // Tutup dialog
+            dismiss()
         }
 
         btnOk.setOnClickListener {
             val selectedDay = datePicker.dayOfMonth
-            val selectedMonth = datePicker.month // Bulan adalah 0-indexed
+            val selectedMonth = datePicker.month
             val selectedYear = datePicker.year
 
             val selectedCalendar = Calendar.getInstance()
@@ -91,11 +87,10 @@ class CustomDatePickerDialogFragment : DialogFragment() {
             val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             val formattedDate = sdf.format(selectedCalendar.time)
 
-            // Kirim hasil kembali ke fragment pemanggil
             setFragmentResult(REQUEST_KEY_DATE_PICKER, Bundle().apply {
                 putString(BUNDLE_KEY_SELECTED_DATE, formattedDate)
             })
-            dismiss() // Tutup dialog
+            dismiss()
         }
     }
 

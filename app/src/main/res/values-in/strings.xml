@@ -439,4 +439,11 @@
     <string name="reward_code_prefix">Kode: </string>
     <string name="rewards_available_status">Hadiah Tersedia</string>
 
+    <string name="otp_sent_to_email_message">Kode OTP telah dikirimkan ke email Anda. Silakan masukkan kode di bawah ini.</string>
+    <string name="enter_otp_title">Masukkan Kode OTP</string>
+    <string name="resend_otp_button_text">Kirim ulang OTP</string>
+    <string name="verify_button_text">Verifikasi</string>
+
+    <string name="no_internet_warning">Tidak ada koneksi internet. Mencoba lagi...</string>
+
 </resources>

@@ -10,23 +10,19 @@ import com.example.ukopia.SessionManager
 import com.example.ukopia.data.LoyaltyItemV2
 import com.example.ukopia.data.LoyaltyUserStatus
 import com.example.ukopia.data.RewardHistoryItem
-import com.example.ukopia.data.RewardHistoryResponse // <--- Import ini WAJIB ada
+import com.example.ukopia.data.RewardHistoryResponse
 import com.example.ukopia.models.ApiClient
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class LoyaltyViewModel(application: Application) : AndroidViewModel(application) {
 
-    // LiveData untuk daftar Loyalty (Jurnal/Review)
     private val _loyaltyItems = MutableLiveData<List<LoyaltyItemV2>>()
     val loyaltyItems: LiveData<List<LoyaltyItemV2>> = _loyaltyItems
 
-    // LiveData untuk Status User (Poin Total)
     private val _loyaltyUserStatus = MutableLiveData<LoyaltyUserStatus>()
     val loyaltyUserStatus: LiveData<LoyaltyUserStatus> = _loyaltyUserStatus
 
-    // --- LiveData untuk Riwayat Reward ---
-    // Menggunakan List? agar bisa menghandle state awal
     private val _rewardHistory = MutableLiveData<List<RewardHistoryItem>?>()
     val rewardHistory: LiveData<List<RewardHistoryItem>?> = _rewardHistory
 
@@ -49,32 +45,23 @@ class LoyaltyViewModel(application: Application) : AndroidViewModel(application)
         _loyaltyUserStatus.value = newStatus
     }
 
-    // --- FUNGSI FETCH REWARD HISTORY (VERSI PALING AMAN) ---
     fun fetchRewardHistory(uid: Int) {
         if (uid == 0) return
 
         _isLoading.value = true
         viewModelScope.launch {
             try {
-                // 1. Panggil API
                 val response = ApiClient.instance.getRewardHistory(uid)
 
-                // 2. Simpan body ke variabel
                 val body = response.body()
 
-                // 3. Cek sukses dengan Safe Call (?.)
-                // body?.success == true otomatis mengembalikan false jika body null
                 if (response.isSuccessful && body?.success == true) {
 
-                    // 4. Ambil data dengan Elvis Operator
-                    // Jika body.data NULL, maka diganti dengan list kosong (emptyList)
-                    // Ini mencegah Type Mismatch Error
                     val items = body.data ?: emptyList()
 
                     _rewardHistory.value = items
                     Log.d("LoyaltyViewModel", "Reward history fetched: ${items.size} items")
                 } else {
-                    // 5. Handle Error dengan aman
                     val msg = body?.message ?: response.errorBody()?.string() ?: "Unknown error"
                     Log.e("LoyaltyViewModel", "Failed to fetch reward history: $msg")
 
@@ -111,7 +98,6 @@ class LoyaltyViewModel(application: Application) : AndroidViewModel(application)
 
                 val allLoyaltyItems = mutableListOf<LoyaltyItemV2>()
 
-                // Gunakan ?.data ?: emptyList() untuk keamanan
                 if (pendingRes.isSuccessful) {
                     allLoyaltyItems.addAll(pendingRes.body()?.data ?: emptyList())
                 }

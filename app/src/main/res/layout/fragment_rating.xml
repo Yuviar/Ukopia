@@ -28,7 +28,6 @@
         android:layout_marginBottom="32dp"
         tools:text="@string/rate_for_placeholder"/>
 
-    <!-- Rating Stars Container (MODIFIKASI DI SINI) -->
     <LinearLayout
         android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -37,7 +36,6 @@
     android:layout_marginBottom="32dp"
     android:paddingHorizontal="16dp">
 
-    <!-- Setiap ImageView sekarang memiliki lebar 0dp dan layout_weight 1 untuk distribusi rata -->
     <ImageView android:id="@+id/star_1"
         android:layout_width="0dp"
         android:layout_weight="1"

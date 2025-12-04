@@ -1,13 +1,17 @@
 package com.example.ukopia.ui.menu
 
+import android.graphics.drawable.ClipDrawable
+import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.Observer
 import com.example.ukopia.MainActivity
 import com.example.ukopia.R
@@ -17,8 +21,6 @@ import com.example.ukopia.databinding.FragmentRatingBinding
 import com.example.ukopia.models.MenuApiItem
 import com.example.ukopia.models.ReviewApiItem
 import com.example.ukopia.models.ReviewPostRequest
-import android.graphics.drawable.ClipDrawable
-import android.graphics.drawable.LayerDrawable
 import java.util.Locale
 
 class RatingFragment : Fragment() {
@@ -32,10 +34,9 @@ class RatingFragment : Fragment() {
     private var selectedRating: Float = 0f
     private val starImageViews: MutableList<ImageView> = mutableListOf()
 
-    private val viewModel: MenuViewModel by viewModels {
+    private val viewModel: MenuViewModel by activityViewModels {
         MenuViewModelFactory((requireActivity().application as UkopiaApplication).repository)
     }
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentRatingBinding.inflate(inflater, container, false)
@@ -49,16 +50,23 @@ class RatingFragment : Fragment() {
         currentMenuItem = arguments?.getParcelable(ARG_MENU_ITEM)
         existingReview = arguments?.getParcelable(ARG_EXISTING_REVIEW)
 
+        // 1. Bersihkan list dulu untuk mencegah penumpukan jika Fragment di-recreate
+        starImageViews.clear()
         starImageViews.addAll(listOf(binding.star1, binding.star2, binding.star3, binding.star4, binding.star5))
 
         currentMenuItem?.let { menuItem ->
             binding.tvRatingMenuTitle.text = getString(R.string.rate_for_prefix) + " " + menuItem.nama_menu
 
+            // Jika ada review sebelumnya, ambil ratingnya. Jika tidak, selectedRating tetap 0f.
             existingReview?.let {
                 selectedRating = it.rating.toFloat()
-                updateStarSelectionUI(selectedRating)
                 binding.editTextKomentar.setText(it.komentar)
             }
+
+            // 2. [PENTING] Panggil update UI di sini secara UNCONDITIONAL.
+            // Jika selectedRating 0 (belum ada review), bintang akan jadi hitam/kosong.
+            // Jika ada review, bintang akan terisi sesuai rating lama.
+            updateStarSelectionUI(selectedRating)
 
             starImageViews.forEachIndexed { index, starView ->
                 starView.setOnClickListener {
@@ -82,8 +90,10 @@ class RatingFragment : Fragment() {
         viewModel.reviewPostSuccess.observe(viewLifecycleOwner, Observer { isSuccess ->
             if (isSuccess) {
                 Toast.makeText(requireContext(), "Ulasan berhasil disimpan", Toast.LENGTH_SHORT).show()
-                viewModel.resetReviewPostStatus() // Reset status
-                parentFragmentManager.popBackStack() // Kembali ke Detail
+                setFragmentResult("request_refresh_rating", bundleOf("refresh" to true))
+
+                viewModel.resetReviewPostStatus()
+                parentFragmentManager.popBackStack()
             }
         })
 
@@ -99,11 +109,18 @@ class RatingFragment : Fragment() {
             binding.btnSubmitRating.text = if(isLoading) "Loading..." else getString(R.string.submit_rating_button_text)
         })
     }
+
     private fun updateStarSelectionUI(rating: Float) {
         for (i in starImageViews.indices) {
-            val starDrawable = starImageViews[i].drawable as LayerDrawable
+            // 3. Gunakan .mutate() agar aman diubah
+            val starDrawable = starImageViews[i].drawable?.mutate() as? LayerDrawable ?: continue
             val clipDrawable = starDrawable.findDrawableByLayerId(R.id.clip_star_item) as ClipDrawable
+
+            // Set level: 10000 = Penuh (Kuning), 0 = Kosong (Hitam/Abu)
             clipDrawable.level = if ((i + 1) <= rating) 10000 else 0
+
+            // 4. Paksa gambar ulang agar perubahan langsung terlihat
+            starImageViews[i].invalidate()
         }
     }
 
@@ -119,7 +136,7 @@ class RatingFragment : Fragment() {
         }
 
         val comment = binding.editTextKomentar.text.toString().trim()
-        val uid = SessionManager.getUid(requireContext()) // Ambil UID dari SessionManager
+        val uid = SessionManager.getUid(requireContext())
 
         val request = ReviewPostRequest(
             id_menu = menuItem.id_menu,
@@ -129,7 +146,6 @@ class RatingFragment : Fragment() {
         )
 
         viewModel.submitReview(request)
-
     }
 
     override fun onDestroyView() {

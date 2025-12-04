@@ -446,4 +446,6 @@
 
     <string name="no_internet_warning">Tidak ada koneksi internet. Mencoba lagi...</string>
 
+    <string name="send_code_button_text">Kirim Kode</string>
+
 </resources>

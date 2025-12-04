@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
-            android:drawableStart="@drawable/ic_star"
+            android:drawableStart="@drawable/ic_star_filled"
             android:drawablePadding="4dp"
             android:gravity="center_vertical"
             android:textSize="14sp"

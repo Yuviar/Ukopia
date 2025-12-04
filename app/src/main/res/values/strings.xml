@@ -447,4 +447,6 @@
 
     <string name="no_internet_warning">No internet connection. Trying again...</string>
 
+    <string name="send_code_button_text">Send Code</string>
+
 </resources>

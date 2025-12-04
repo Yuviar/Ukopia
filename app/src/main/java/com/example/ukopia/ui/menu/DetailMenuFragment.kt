@@ -15,7 +15,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.setFragmentResult
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.example.ukopia.MainActivity
@@ -27,8 +28,10 @@ import com.example.ukopia.databinding.FragmentDetailMenuBinding
 import com.example.ukopia.models.MenuApiItem
 import com.example.ukopia.models.ReviewApiItem
 import com.example.ukopia.ui.auth.LoginActivity
+import androidx.fragment.app.activityViewModels
 import java.util.Locale
 import android.util.Log
+import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.LinearLayoutManager
 
 class DetailMenuFragment : Fragment() {
@@ -39,10 +42,9 @@ class DetailMenuFragment : Fragment() {
     private var currentMenuItem: MenuApiItem? = null
     private var currentUserReview: ReviewApiItem? = null
 
-    private val viewModel: MenuViewModel by viewModels {
-        MenuViewModelFactory((requireActivity().application as UkopiaApplication).repository) // PASTIKAN MENGGUNAKAN menuRepository
+    private val viewModel: MenuViewModel by activityViewModels {
+        MenuViewModelFactory((requireActivity().application as UkopiaApplication).repository)
     }
-
     private lateinit var reviewAdapter: ReviewAdapter
 
     private val averageStarImageViews: MutableList<ImageView> = mutableListOf()
@@ -55,8 +57,12 @@ class DetailMenuFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         Log.d("DetailMenuFragment", "onViewCreated: Fragment started")
         (requireActivity() as MainActivity).setBottomNavVisibility(View.GONE)
+
+        averageStarImageViews.clear()
+        userStarImageViews.clear()
 
         averageStarImageViews.addAll(listOf(binding.star1, binding.star2, binding.star3, binding.star4, binding.star5))
         userStarImageViews.addAll(listOf(binding.userStar1, binding.userStar2, binding.userStar3, binding.userStar4, binding.userStar5))
@@ -78,6 +84,17 @@ class DetailMenuFragment : Fragment() {
             Toast.makeText(requireContext(), "Menu item ID not found!", Toast.LENGTH_SHORT).show()
             parentFragmentManager.popBackStack()
         }
+        setFragmentResultListener("request_refresh_rating") { _, bundle ->
+            val shouldRefresh = bundle.getBoolean("refresh")
+            if (shouldRefresh) {
+                val uid = SessionManager.getUid(requireContext())
+                val menuId = arguments?.getParcelable<MenuApiItem>(ARG_MENU_ITEM)?.id_menu
+
+                if (menuId != null) {
+                    viewModel.fetchMenuDetails(menuId, uid)
+                }
+            }
+        }
     }
 
     private fun setupInitialUI(menuItem: MenuApiItem) {
@@ -95,6 +112,7 @@ class DetailMenuFragment : Fragment() {
 
         val averageRatingValue = menuItem.average_rating.toFloat()
         binding.tvAverageRatingText.text = getString(R.string.average_rating_prefix) + " " + String.format(Locale.ROOT, "%.1f/5.0", averageRatingValue)
+
         displayStarsWithProgress(averageRatingValue, averageStarImageViews)
 
         binding.btnShare.setOnClickListener {
@@ -113,6 +131,8 @@ class DetailMenuFragment : Fragment() {
         }
         setLoadingState(false)
     }
+
+
 
     private fun setupListeners() {
         binding.btnBack.setOnClickListener {
@@ -231,7 +251,8 @@ class DetailMenuFragment : Fragment() {
 
     private fun displayStarsWithProgress(rating: Float, starViews: List<ImageView>) {
         for (i in starViews.indices) {
-            val starDrawable = starViews[i].drawable as LayerDrawable
+            val starDrawable = starViews[i].drawable?.mutate() as? LayerDrawable ?: continue
+
             val clipDrawable = starDrawable.findDrawableByLayerId(R.id.clip_star_item) as ClipDrawable
             val level = when {
                 (rating - i) >= 1f -> 10000
@@ -239,6 +260,8 @@ class DetailMenuFragment : Fragment() {
                 else -> 0
             }
             clipDrawable.level = level
+
+            starViews[i].invalidate()
         }
     }
 

@@ -83,28 +83,50 @@ private fun loadPromoBanner() {
                 if (response.isSuccessful && response.body()?.success == true) {
                     val promoData = response.body()
 
+                    if (_binding == null) {
+                        Log.w(TAG, "loadPromoBanner: View destroyed, skipping UI update for promo success.")
+                        return@launch
+                    }
+
                     if (promoData?.hasPromo == true && !promoData.imageUrl.isNullOrEmpty()) {
                         bind.promoCardView.visibility = View.VISIBLE
 
                         bind.promoImage.load(promoData.imageUrl) {
+                        binding.promoCardView.visibility = View.VISIBLE
+                        binding.promoImage.load(promoData.imageUrl) {
                             crossfade(true)
                             error(R.drawable.ic_error)
                         }
-                    } else {
+                    } }else {
                         bind.promoCardView.visibility = View.GONE
                     }
                 } else {
                     bind.promoCardView.visibility = View.GONE
+                    if (_binding == null) {
+                        Log.w(TAG, "loadPromoBanner: View destroyed, skipping UI update for promo failure.")
+                        return@launch
+                    }
+                    binding.promoCardView.visibility = View.GONE
                 }
             }
         } catch (e: Exception) {
             Log.e(TAG, "Gagal load promo: ${e.message}")
-            _binding?.promoCardView?.visibility = View.GONE
+            if (_binding == null) {
+                Log.w(TAG, "loadPromoBanner: View destroyed, skipping UI update for promo exception.")
+                return@launch
+            }
+            binding.promoCardView.visibility = View.GONE
         }
     }
 }
+
+
     private fun setupObservers() {
         viewModel.menuItems.observe(viewLifecycleOwner) { menuList ->
+            if (_binding == null) {
+                Log.w(TAG, "setupObservers: View destroyed, skipping menu items update.")
+                return@observe
+            }
             if (menuList != null) {
                 val bestSellerItems = getTopBestSellerItems(menuList)
                 bestSellerAdapter.updateData(bestSellerItems)
@@ -112,6 +134,11 @@ private fun loadPromoBanner() {
         }
 
         loyaltyViewModel.loyaltyUserStatus.observe(viewLifecycleOwner) { status ->
+            if (_binding == null) {
+                Log.w(TAG, "loyaltyUserStatus observer: View destroyed, skipping UI update.")
+                return@observe
+            }
+
             val isLoggedIn = SessionManager.isLoggedIn(requireContext())
             val userName = SessionManager.getUserName(requireContext())
 
@@ -159,6 +186,11 @@ private fun loadPromoBanner() {
         initializeStampViews()
 
         binding.btnNextStamp.setOnClickListener {
+            if (_binding == null) {
+                Log.w(TAG, "btnNextStamp click: View destroyed, skipping action.")
+                return@setOnClickListener
+            }
+
             val totalPoints = loyaltyViewModel.loyaltyUserStatus.value?.totalPoints ?: 0
             val maxStampPageBasedOnPoints = if (totalPoints == 0) 0 else (totalPoints - 1) / stampsPerPage
 
@@ -170,6 +202,11 @@ private fun loadPromoBanner() {
         }
 
         binding.btnPrevStamp.setOnClickListener {
+            if (_binding == null) {
+                Log.w(TAG, "btnPrevStamp click: View destroyed, skipping action.")
+                return@setOnClickListener
+            }
+
             if (currentStampPage > 0) {
                 currentStampPage--
                 updateStampCardDisplay(loyaltyViewModel.loyaltyUserStatus.value?.totalPoints ?: 0)
@@ -183,6 +220,11 @@ private fun loadPromoBanner() {
         stampNumbers.clear()
         stampCheckmarks.clear()
         Log.d(TAG, "initializeStampViews: Cleared previous lists.")
+
+        if (_binding == null) {
+            Log.w(TAG, "initializeStampViews: _binding is null, stopping initialization.")
+            return
+        }
 
         for (i in 1..stampsPerPage) {
             val backgroundId = resources.getIdentifier("iv_stamp_background_$i", "id", requireContext().packageName)
@@ -225,6 +267,11 @@ private fun loadPromoBanner() {
             Log.e(TAG, "updateStampCardDisplay: Stamp view lists are empty. Cannot update display.")
             return
         }
+        if (_binding == null) {
+            Log.w(TAG, "updateStampCardDisplay: View destroyed, skipping UI update.")
+            return
+        }
+
         Log.d(TAG, "updateStampCardDisplay: Lists are populated. Sizes: bg=${stampBackgrounds.size}, num=${stampNumbers.size}, check=${stampCheckmarks.size}")
 
 
@@ -261,6 +308,11 @@ private fun loadPromoBanner() {
     }
 
     private fun updateStampNavigationIndicator(totalPoints: Int) {
+        if (_binding == null) {
+            Log.w(TAG, "updateStampNavigationIndicator: View destroyed, skipping UI update.")
+            return
+        }
+
         val startStamp = currentStampPage * stampsPerPage + 1
         val endStamp = (currentStampPage * stampsPerPage + stampsPerPage).coerceAtMost(maxStamps)
 
@@ -284,8 +336,12 @@ private fun loadPromoBanner() {
 
     override fun onResume() {
         super.onResume()
-        // Refresh loyalty data
         if (SessionManager.isLoggedIn(requireContext())) {
+            if (_binding == null) {
+                Log.w(TAG, "onResume: View destroyed, skipping loyalty refresh UI update.")
+                return
+            }
+
             val totalPoints = loyaltyViewModel.loyaltyUserStatus.value?.totalPoints ?: 0
             val totalStampPages = (maxStamps + stampsPerPage - 1) / stampsPerPage
             val maxReachablePage = if (totalPoints > 0) (totalPoints - 1) / stampsPerPage else 0

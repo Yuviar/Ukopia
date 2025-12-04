@@ -6,6 +6,19 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="http" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
+        </intent>
+        <package android:name="com.instagram.android" />
+        <package android:name="com.google.android.youtube" />
+        <package android:name="com.android.chrome" />
     </queries>
 
     <application
@@ -45,7 +58,7 @@
         <activity
             android:name="com.example.ukopia.ui.auth.LupaPasswordActivity"
             android:exported="false" />
-        <!-- ADD THIS LINE -->
+
         <activity android:name=".ui.auth.SetNewPasswordActivity" />
 
 

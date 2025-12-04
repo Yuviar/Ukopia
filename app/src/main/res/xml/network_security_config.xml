@@ -1,21 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
-    <!--
-        Konfigurasi dasar untuk seluruh aplikasi.
-        Secara default, hanya izinkan koneksi aman (HTTPS).
-    -->
     <base-config cleartextTrafficPermitted="false">
         <trust-anchors>
             <certificates src="system" />
         </trust-anchors>
     </base-config>
 
-    <!--
-        Konfigurasi khusus untuk domain produksi Anda.
-        Ini menegaskan bahwa hanya HTTPS yang diizinkan untuk domain ini.
-        Secara teknis, ini sudah dicakup oleh base-config,
-        tapi menuliskannya secara eksplisit adalah praktik yang baik.
-    -->
     <domain-config cleartextTrafficPermitted="false">
         <domain includeSubdomains="true">ruangseduh.ukopia.id</domain>
     </domain-config>

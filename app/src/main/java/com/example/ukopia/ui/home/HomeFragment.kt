@@ -33,7 +33,7 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: MenuViewModel by viewModels {
+    private val viewModel: MenuViewModel by activityViewModels {
         MenuViewModelFactory((requireActivity().application as UkopiaApplication).repository)
     }
 
@@ -56,6 +56,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as? MainActivity)?.setBottomNavVisibility(View.VISIBLE)
+        viewModel.loadPromo()
 
         setupBestSellerRecyclerView()
         setupObservers()
@@ -73,33 +74,35 @@ class HomeFragment : Fragment() {
         binding.bestSellerRecyclerView.adapter = bestSellerAdapter
     }
 
-    private fun loadPromoBanner() {
-        lifecycleScope.launch {
-            try {
-                val response = ApiClient.instance.getLatestPromo()
+private fun loadPromoBanner() {
+    lifecycleScope.launch {
+        try {
+            val response = ApiClient.instance.getLatestPromo()
+
+            _binding?.let { bind ->
                 if (response.isSuccessful && response.body()?.success == true) {
                     val promoData = response.body()
 
                     if (promoData?.hasPromo == true && !promoData.imageUrl.isNullOrEmpty()) {
-                        binding.promoCardView.visibility = View.VISIBLE
+                        bind.promoCardView.visibility = View.VISIBLE
 
-                        binding.promoImage.load(promoData.imageUrl) {
+                        bind.promoImage.load(promoData.imageUrl) {
                             crossfade(true)
                             error(R.drawable.ic_error)
                         }
                     } else {
-                        binding.promoCardView.visibility = View.GONE
+                        bind.promoCardView.visibility = View.GONE
                     }
                 } else {
-                    binding.promoCardView.visibility = View.GONE
+                    bind.promoCardView.visibility = View.GONE
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Gagal load promo: ${e.message}")
-                binding.promoCardView.visibility = View.GONE
             }
+        } catch (e: Exception) {
+            Log.e(TAG, "Gagal load promo: ${e.message}")
+            _binding?.promoCardView?.visibility = View.GONE
         }
     }
-
+}
     private fun setupObservers() {
         viewModel.menuItems.observe(viewLifecycleOwner) { menuList ->
             if (menuList != null) {
@@ -130,6 +133,19 @@ class HomeFragment : Fragment() {
                 binding.textViewLoyaltyPoints.visibility = View.GONE
                 binding.tvHomeStampCardTitle.visibility = View.GONE
                 binding.stampCardView.visibility = View.GONE
+            }
+        }
+        viewModel.promoData.observe(viewLifecycleOwner) { promoData ->
+            _binding?.let { bind ->
+                if (promoData?.hasPromo == true && !promoData.imageUrl.isNullOrEmpty()) {
+                    bind.promoCardView.visibility = View.VISIBLE
+                    bind.promoImage.load(promoData.imageUrl) {
+                        crossfade(true)
+                        error(R.drawable.ic_error)
+                    }
+                } else {
+                    bind.promoCardView.visibility = View.GONE
+                }
             }
         }
     }

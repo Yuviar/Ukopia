@@ -69,6 +69,20 @@ class RecipeListFragment : Fragment() {
         recipeViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
+        binding.swipeRefresh.setOnRefreshListener {
+            val type = if (isMyRecipeActive) "my" else "all"
+            val uid = SessionManager.getUid(requireContext())
+            recipeViewModel.refreshRecipes(methodId, type, uid)
+        }
+        recipeViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.swipeRefresh.isRefreshing = isLoading
+
+            if (binding.swipeRefresh.isRefreshing) {
+                binding.progressBar.visibility = View.GONE
+            } else {
+                binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            }
+        }
 
         loadData()
     }

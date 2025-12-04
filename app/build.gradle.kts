@@ -69,10 +69,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
-    // ViewModel & LiveData (Lifecycle)
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
-
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
     implementation("androidx.room:room-ktx:$room_version") // Untuk Coroutines
@@ -83,5 +79,5 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:$glide_version")
     kapt("com.github.bumptech.glide:compiler:$glide_version")
     implementation("io.coil-kt:coil:2.6.0")
-    implementation("io.coil-kt:coil-svg:2.6.0")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 }

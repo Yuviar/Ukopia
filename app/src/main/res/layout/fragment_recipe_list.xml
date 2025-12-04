@@ -14,7 +14,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
-
         <ImageButton
             android:id="@+id/btn_back"
             android:layout_width="48dp"
@@ -70,7 +69,6 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:weightSum="2">
-
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonSemuaResep"
                     android:layout_width="0dp"
@@ -94,15 +92,24 @@
                     app:cornerRadius="8dp" />
             </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewRecipeList"
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipeRefresh"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:clipToPadding="false"
-                android:paddingHorizontal="16dp"
-                android:paddingBottom="80dp"
-                tools:listitem="@layout/item_recipe_card_small" /> </LinearLayout>
+                android:layout_weight="1">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewRecipeList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:paddingHorizontal="16dp"
+                    android:paddingBottom="80dp"
+                    tools:listitem="@layout/item_recipe_card_small" />
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        </LinearLayout>
     </androidx.cardview.widget.CardView>
 
     <ProgressBar

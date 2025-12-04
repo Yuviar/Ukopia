@@ -386,6 +386,11 @@ class LoyaltyFragment : Fragment() {
         val nextRewardIndex = ALL_LOYALTY_REWARDS.indexOfFirst { it.threshold > totalPoints }
         val targetDefaultRewardPage: Int
 
+        val hasData = !viewModel.loyaltyItems.value.isNullOrEmpty() && viewModel.loyaltyUserStatus.value != null
+
+        if (!hasData) {
+            viewModel.refreshLoyaltyData()
+        }
         if (nextRewardIndex != -1) {
             targetDefaultRewardPage = (nextRewardIndex / rewardsPerPage).coerceIn(0, if (totalRewardPages > 0) totalRewardPages - 1 else 0)
         } else {

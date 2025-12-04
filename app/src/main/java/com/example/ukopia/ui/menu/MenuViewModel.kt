@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.ukopia.data.PromoResponse
 import com.example.ukopia.models.ApiClient
 import com.example.ukopia.models.MenuApiItem
 import com.example.ukopia.models.ReviewApiItem
@@ -36,20 +37,38 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
 
     private val _categories = MutableLiveData<List<String>>()
     val categories: LiveData<List<String>> = _categories
+    private val _promoData = MutableLiveData<PromoResponse?>()
+    val promoData: LiveData<PromoResponse?> = _promoData
+    private var isMenuLoaded = false
 
     fun fetchMenuItems() {
+        if (isMenuLoaded) return
+
+        _isLoading.value = true
+
         viewModelScope.launch {
-            repository.refreshMenu()
+            try {
+                repository.refreshMenu()
+                isMenuLoaded = true
+            } catch (e: Exception) {
+                Log.e("MenuViewModel", "Error fetching menu", e)
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
+    fun forceRefreshMenu() {
+        isMenuLoaded = false
+        fetchMenuItems()
+    }
     fun fetchCategories(defaultCategoryName: String) {
+        if (!_categories.value.isNullOrEmpty()) return
+
         viewModelScope.launch {
             val apiCategories = repository.getCategories()
-
             val fullList = mutableListOf(defaultCategoryName)
             fullList.addAll(apiCategories)
-
             _categories.value = fullList
         }
     }
@@ -117,5 +136,21 @@ class MenuViewModel(private val repository: MenuRepository) : ViewModel() {
 
     fun resetReviewPostStatus() {
         _reviewPostSuccess.value = false
+    }
+    fun loadPromo() {
+        if (_promoData.value != null) return
+
+        viewModelScope.launch {
+            try {
+                val response = ApiClient.instance.getLatestPromo()
+                if (response.isSuccessful && response.body()?.success == true) {
+                    _promoData.value = response.body()
+                } else {
+                    _promoData.value = null
+                }
+            } catch (e: Exception) {
+                _promoData.value = null
+            }
+        }
     }
 }

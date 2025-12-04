@@ -25,8 +25,11 @@ class RecipeViewModel : ViewModel() {
 
     val isLoading = MutableLiveData<Boolean>()
     val errorMessage = MutableLiveData<String>()
+    private var lastLoadedParams: Triple<Int, String, Int>? = null
 
     fun loadBrewMethods() {
+        if (!_brewMethods.value.isNullOrEmpty()) return
+
         viewModelScope.launch {
             isLoading.postValue(true)
             try {
@@ -36,15 +39,23 @@ class RecipeViewModel : ViewModel() {
                 }
             } catch (e: Exception) {
                 Log.e("API_METODE", "Error: ${e.message}")
-            }finally {
+            } finally {
                 isLoading.postValue(false)
             }
         }
     }
 
     fun loadRecipes(methodId: Int, type: String, uid: Int) {
+        // Simpan parameter saat ini
+        val currentParams = Triple(methodId, type, uid)
+
+        if (currentParams == lastLoadedParams && !_allRecipes.value.isNullOrEmpty()) {
+            Log.d("RecipeViewModel", "Using cached recipes")
+            return
+        }
+
         isLoading.value = true
-        Log.d("DEBUG_API", "Requesting: MethodID=$methodId, Type=$type, UID=$uid")
+        lastLoadedParams = currentParams // Update parameter terakhir
 
         viewModelScope.launch {
             try {
@@ -85,6 +96,8 @@ class RecipeViewModel : ViewModel() {
     }
 
     fun loadEquipmentCategories() {
+        if (!_equipmentCategories.value.isNullOrEmpty()) return
+
         viewModelScope.launch {
             try {
                 val res = ApiClient.instance.getEquipmentCategories()
@@ -99,6 +112,25 @@ class RecipeViewModel : ViewModel() {
                 val res = ApiClient.instance.getToolsByCategory(catId)
                 if(res.isSuccessful) _subEquipmentList.value = res.body()?.data ?: emptyList()
             } catch (e: Exception) { Log.e("API_TOOL", "${e.message}") }
+        }
+    }
+    fun refreshRecipes(methodId: Int, type: String, uid: Int) {
+        lastLoadedParams = null
+        loadRecipes(methodId, type, uid)
+    }
+    fun refreshBrewMethods() {
+        viewModelScope.launch {
+            isLoading.postValue(true)
+            try {
+                val response = ApiClient.instance.getBrewMethods()
+                if (response.isSuccessful && response.body()?.success == true) {
+                    _brewMethods.value = response.body()?.data ?: emptyList()
+                }
+            } catch (e: Exception) {
+                Log.e("API_METODE", "Error: ${e.message}")
+            } finally {
+                isLoading.postValue(false)
+            }
         }
     }
 }

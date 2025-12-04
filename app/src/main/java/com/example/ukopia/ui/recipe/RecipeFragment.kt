@@ -32,6 +32,27 @@ class RecipeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as MainActivity).setBottomNavVisibility(View.VISIBLE)
+        binding.swipeRefresh.setOnRefreshListener {
+            recipeViewModel.refreshBrewMethods()
+        }
+        recipeViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            if (isLoading) {
+                // LOGIKA UI:
+                // Jika user sedang melakukan Swipe (isRefreshing == true), JANGAN tampilkan ProgressBar tengah.
+                // Jika ini load awal (bukan swipe), tampilkan ProgressBar tengah.
+                if (binding.swipeRefresh.isRefreshing) {
+                    binding.progressBar.visibility = View.GONE
+                } else {
+                    binding.progressBar.visibility = View.VISIBLE
+                    binding.recyclerViewRecipe.alpha = 0.5f
+                }
+            } else {
+                // Selesai Loading: Matikan semua indikator
+                binding.swipeRefresh.isRefreshing = false
+                binding.progressBar.visibility = View.GONE
+                binding.recyclerViewRecipe.alpha = 1.0f
+            }
+        }
 
         setupRecyclerView()
         setupSearch()

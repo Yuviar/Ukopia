@@ -46,6 +46,17 @@ class RewardListFragment : Fragment(R.layout.fragment_reward_list) {
 
         val context = requireContext()
         val uid = SessionManager.getUid(context)
+        binding.swipeRefresh.setOnRefreshListener {
+            if (uid > 0) {
+                viewModel.fetchRewardHistory(uid, forceUpdate = true)
+            } else {
+                binding.swipeRefresh.isRefreshing = false
+                Toast.makeText(context, getString(R.string.login_required_message), Toast.LENGTH_SHORT).show()
+            }
+        }
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.swipeRefresh.isRefreshing = isLoading
+        }
 
         if (uid > 0) {
             viewModel.fetchRewardHistory(uid)

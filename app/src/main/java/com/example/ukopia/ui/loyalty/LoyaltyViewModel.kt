@@ -10,10 +10,11 @@ import com.example.ukopia.SessionManager
 import com.example.ukopia.data.LoyaltyItemV2
 import com.example.ukopia.data.LoyaltyUserStatus
 import com.example.ukopia.data.RewardHistoryItem
-import com.example.ukopia.data.RewardHistoryResponse
 import com.example.ukopia.models.ApiClient
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
+
 
 class LoyaltyViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -45,9 +46,12 @@ class LoyaltyViewModel(application: Application) : AndroidViewModel(application)
         _loyaltyUserStatus.value = newStatus
     }
 
-    fun fetchRewardHistory(uid: Int) {
+    fun fetchRewardHistory(uid: Int, forceUpdate: Boolean = false) {
         if (uid == 0) return
 
+        if (!_rewardHistory.value.isNullOrEmpty()) return
+
+        if (!forceUpdate && !_rewardHistory.value.isNullOrEmpty()) return
         _isLoading.value = true
         viewModelScope.launch {
             try {
@@ -76,6 +80,7 @@ class LoyaltyViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+
     fun refreshLoyaltyData() {
         val context = getApplication<Application>()
         val uid = SessionManager.getUid(context)
@@ -88,30 +93,40 @@ class LoyaltyViewModel(application: Application) : AndroidViewModel(application)
         _isLoading.value = true
         viewModelScope.launch {
             try {
-                val pendingDef = async { ApiClient.instance.getLoyaltyList(uid, "pending") }
-                val historyDef = async { ApiClient.instance.getLoyaltyList(uid, "history") }
-                val statusDef = async { ApiClient.instance.getLoyaltyStatus(uid) }
+                supervisorScope {
+                    val pendingDef = async {
+                        try { ApiClient.instance.getLoyaltyList(uid, "pending") }
+                        catch (e: Exception) { null }
+                    }
+                    val historyDef = async {
+                        try { ApiClient.instance.getLoyaltyList(uid, "history") }
+                        catch (e: Exception) { null }
+                    }
+                    val statusDef = async {
+                        try { ApiClient.instance.getLoyaltyStatus(uid) }
+                        catch (e: Exception) { null }
+                    }
 
-                val pendingRes = pendingDef.await()
-                val historyRes = historyDef.await()
-                val statusRes = statusDef.await()
+                    val pendingRes = pendingDef.await()
+                    val historyRes = historyDef.await()
+                    val statusRes = statusDef.await()
 
-                val allLoyaltyItems = mutableListOf<LoyaltyItemV2>()
+                    val allLoyaltyItems = mutableListOf<LoyaltyItemV2>()
 
-                if (pendingRes.isSuccessful) {
-                    allLoyaltyItems.addAll(pendingRes.body()?.data ?: emptyList())
+                    if (pendingRes?.isSuccessful == true) {
+                        allLoyaltyItems.addAll(pendingRes.body()?.data ?: emptyList())
+                    }
+
+                    if (historyRes?.isSuccessful == true) {
+                        allLoyaltyItems.addAll(historyRes.body()?.data ?: emptyList())
+                    }
+
+                    _loyaltyItems.value = allLoyaltyItems.sortedByDescending { it.tanggal }
+
+                    if (statusRes?.isSuccessful == true) {
+                        statusRes.body()?.data?.let { updateLoyaltyStatus(it) }
+                    }
                 }
-
-                if (historyRes.isSuccessful) {
-                    allLoyaltyItems.addAll(historyRes.body()?.data ?: emptyList())
-                }
-
-                _loyaltyItems.value = allLoyaltyItems.sortedByDescending { it.tanggal }
-
-                if (statusRes.isSuccessful) {
-                    statusRes.body()?.data?.let { updateLoyaltyStatus(it) }
-                }
-
             } catch (e: Exception) {
                 Log.e("LoyaltyViewModel", "Error refreshing loyalty data: ${e.message}", e)
             } finally {

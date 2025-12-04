@@ -29,6 +29,7 @@ import com.example.ukopia.models.ReviewApiItem
 import com.example.ukopia.ui.auth.LoginActivity
 import java.util.Locale
 import android.util.Log
+import androidx.recyclerview.widget.LinearLayoutManager
 
 class DetailMenuFragment : Fragment() {
 
@@ -60,6 +61,7 @@ class DetailMenuFragment : Fragment() {
         averageStarImageViews.addAll(listOf(binding.star1, binding.star2, binding.star3, binding.star4, binding.star5))
         userStarImageViews.addAll(listOf(binding.userStar1, binding.userStar2, binding.userStar3, binding.userStar4, binding.userStar5))
 
+        binding.rvReviews.layoutManager = LinearLayoutManager(requireContext())
         reviewAdapter = ReviewAdapter(emptyList())
         binding.rvReviews.adapter = reviewAdapter
 

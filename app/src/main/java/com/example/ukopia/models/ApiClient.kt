@@ -7,7 +7,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import java.util.concurrent.TimeUnit
 
 object ApiClient {
-    private const val BASE_URL = "http://192.168.18.13/si-ukopia/backoffice/api/"
+    private const val BASE_URL = "http://192.168.180.148/si-ukopia/backoffice/api/"
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY

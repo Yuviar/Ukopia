@@ -1,3 +1,5 @@
+// D:/github_rama/Ukopia/app/src/main/java/com/example/ukopia/ui/akun/AkunFragment.kt
+
 package com.example.ukopia.ui.akun
 
 import android.content.Intent
@@ -11,9 +13,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.example.ukopia.ui.akun.LocaleHelper
 import com.example.ukopia.MainActivity
 import com.example.ukopia.R
 import com.example.ukopia.SessionManager
@@ -24,7 +26,8 @@ import com.example.ukopia.ui.auth.LupaPasswordActivity
 import com.example.ukopia.ui.auth.RegisterActivity
 import com.example.ukopia.ui.loyalty.LoyaltyViewModel
 import android.content.res.ColorStateList
-import androidx.core.content.ContextCompat
+import android.content.pm.PackageManager // Tambahkan ini
+import android.content.pm.ResolveInfo // Tambahkan ini
 
 class AkunFragment : Fragment() {
 
@@ -32,6 +35,7 @@ class AkunFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val loyaltyViewModel: LoyaltyViewModel by activityViewModels()
+    private val TAG = "AkunFragment"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -123,7 +127,7 @@ class AkunFragment : Fragment() {
         }
 
         binding.btnInstagram1.setOnClickListener {
-            openUrl("https://www.instagram.com/ukopiaindonesia/")
+            openUrl("https://www.instagram.com/ukopiaindonesia?igsh=MWN2ODBrdTZ4bDJoOA==")
         }
 
         binding.btnInstagram2.setOnClickListener {
@@ -137,6 +141,10 @@ class AkunFragment : Fragment() {
 
     private fun updateUI() {
         Log.d("AkunFragmentDebug", "updateUI() called")
+        if (_binding == null) {
+            Log.w(TAG, "updateUI: View destroyed, skipping UI update.")
+            return
+        }
         binding.progressBar.visibility = View.GONE
 
         if (SessionManager.isLoggedIn(requireContext())) {
@@ -175,6 +183,10 @@ class AkunFragment : Fragment() {
             Log.d("AkunFragmentDebug", "Logout confirmed. Calling SessionManager.logout().")
             customAlertDialog.dismiss()
 
+            if (_binding == null) {
+                Log.w(TAG, "showLogoutConfirmationDialog: View destroyed before progressBar access.")
+                return@setOnClickListener
+            }
             binding.progressBar.visibility = View.VISIBLE
 
             SessionManager.logout(requireContext())
@@ -204,12 +216,62 @@ class AkunFragment : Fragment() {
 
     private fun openUrl(url: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        if (intent.resolveActivity(requireActivity().packageManager) != null) {
+        intent.addCategory(Intent.CATEGORY_BROWSABLE)
+
+        val packageManager = requireActivity().packageManager
+
+        // --- Logging Detail START ---
+        Log.d(TAG, "--- Attempting to open URL ---")
+        Log.d(TAG, "URL: $url")
+        Log.d(TAG, "Intent Action: ${intent.action}")
+        Log.d(TAG, "Intent Data: ${intent.data}")
+        Log.d(TAG, "Intent Categories: ${intent.categories}")
+        // --- Logging Detail END ---
+
+        // Menggunakan 0 untuk flag untuk mendapatkan *semua* aktivitas yang mungkin, tidak hanya default.
+        // Ini adalah perubahan utama untuk debugging.
+        val resolvedActivity: ResolveInfo? = try {
+            packageManager.resolveActivity(intent, 0) // Perubahan di sini: dari MATCH_DEFAULT_ONLY menjadi 0
+        } catch (e: Exception) {
+            Log.e(TAG, "Error resolving activity: ${e.message}")
+            null
+        }
+
+        if (resolvedActivity != null) {
+            Log.d(TAG, "Resolved activity found!")
+            Log.d(TAG, "Handler Package: ${resolvedActivity.activityInfo.packageName}")
+            Log.d(TAG, "Handler Class: ${resolvedActivity.activityInfo.name}")
             startActivity(intent)
         } else {
             Toast.makeText(requireContext(), getString(R.string.error_no_app_to_handle_link), Toast.LENGTH_SHORT).show()
-            Log.w("AkunFragment", "No app can handle the URL: $url")
+            Log.e(TAG, "FATAL: No app resolved by resolveActivity for URL: $url")
+
+            // Log semua aktivitas yang *dapat* menangani intent, tanpa filter default
+            val availableHandlers = packageManager.queryIntentActivities(intent, 0) // Perubahan di sini: dari MATCH_DEFAULT_ONLY menjadi 0
+            if (availableHandlers.isEmpty()) {
+                Log.e(TAG, "CRITICAL: queryIntentActivities also found NO activities that can handle this intent.")
+            } else {
+                Log.w(TAG, "queryIntentActivities found ${availableHandlers.size} potential handlers, but none resolved as default:")
+                availableHandlers.forEachIndexed { index, info ->
+                    Log.w(TAG, "  [$index] Handler: ${info.activityInfo.packageName}/${info.activityInfo.name} (Priority: ${info.priority}, Preferred: ${info.isDefault})" )
+                    info.filter?.let { filter ->
+                        Log.w(TAG, "    Filter schemes: ${filter.schemesIterator().asSequence().joinToString()}")
+                        Log.w(TAG, "    Filter categories: ${filter.categoriesIterator().asSequence().joinToString()}")
+                    }
+                }
+            }
+
+            // Test dengan URL Google yang sangat umum sebagai fallback
+            val testGoogleIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com"))
+            testGoogleIntent.addCategory(Intent.CATEGORY_BROWSABLE)
+            val resolvedGoogleActivity = packageManager.resolveActivity(testGoogleIntent, 0) // Perubahan di sini: dari MATCH_DEFAULT_ONLY menjadi 0
+            if (resolvedGoogleActivity != null) {
+                Log.w(TAG, "TEST: https://www.google.com CAN be resolved by: ${resolvedGoogleActivity.activityInfo.packageName}")
+            } else {
+                Log.e(TAG, "CRITICAL TEST: Even https://www.google.com CANNOT be resolved. This indicates a very deep problem with the device's browser setup or manifest processing.")
+            }
         }
+        Log.d(TAG, "--- End URL attempt ---")
     }
 
     override fun onDestroyView() {
